@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> Train Ticket Reservation </title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <form class="box" action="Registration" method="POST">
+        <h1>Registration</h1>
+        <input name="user" type="text" placeholder="Username" required>
+        <input name="email" type="email" placeholder="Email ID" required>
+        <input name="phno" type="text" placeholder="Phone number" required pattern="[6-9]{1}[0-9]{9}" title="Enter a valid mobile number">
+        <input name="gender" type="radio" Value="Male" required><a id="ch">MALE</a> 
+        <input name="gender" type="radio" Value="Female" required><a id="ch">FEMALE</a> 
+        <input name="gender" type="radio" Value="Others" required> <a id="ch">OTHERS</a>
+        <input name="pass1"  id="psw" type="password" placeholder="Password" required>
+        <div>
+<!--                <h3>Password must contain the following:</h3>-->
+                <p id="length" class="invalid">Password must contain Minimum 8 characters</p>
+                <i id="check"  class="fa fa-check" aria-hidden="true"></i>
+        </div>
+<!--        <input id="confirm_pass1"  type="password" placeholder="Confirm Password" required>-->
+        <input type="submit" value="Done">
+    </form>
+    <script>
+              var myInput = document.getElementById("psw");
+              var length = document.getElementById("length");
+
+              function showAlert(){
+                alert("Username or Password Incorrect !")
+              }
+
+              myInput.onfocus = function() {
+               document.getElementById("length").style.display = "block";
+              }
+              myInput.onblur = function(){
+                document.getElementById("length").style.display="none";
+              }
+
+              myInput.onkeyup = function() {
+              // Validate length
+              if(myInput.value.length >= 8) {
+               document.getElementById("length").style.color="#2ecc71";
+               document.getElementById("check").style.display="block";
+              } else {
+                document.getElementById("length").style.color="#e74c3c";
+                  document.getElementById("check").style.display="none";
+              }
+            }
+    </script>
+</body>
+</html>
