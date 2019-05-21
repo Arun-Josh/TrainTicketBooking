@@ -15,10 +15,30 @@
     h1{
       color: #2ecc71 !important;
     }
+    #name{
+      float: left;
+      color: #2ecc71 !important;
+    }
+    #pnr{
+      float: left;
+      color:white;
+      text-decoration: none;
+    }
+    #tsn{
+      float: right;
+      /*margin-right: 100px ;*/
+      color: #2ecc71 !important;
+    }
+    #ts{
+      float: right;
+      color:white;
+      text-decoration: none;
+    }
     p{
       float:right;
       color: #2ecc71 !important;
     }
+
     table {
       width:100%;
     }
@@ -46,30 +66,54 @@
 <%--<% HttpSession ses = request.getSession(true); %>--%>
 <form class="box" action="" method="post">
   <h1 >BOOKING SUCCESSFULL <i class="fa fa-check" aria-hidden="true"></i> </h1> 
-  <table>
+<%--  <table>--%>
+  <h3 id="name">PNR NUMBER : </h3>
+  <h3 id="pnr"> &emsp; <%= request.getAttribute("pnr") %></h3>
+
+
+  <h3 id="ts"> &emsp; <%= (String) request.getAttribute("ticketstatus") %></h3>
+  <h3 id="tsn">TICKET : </h3>
+
     <table id="t01">
       <tr>
-        <th>PNR NUMBER</th>
+        <th>S.NO</th>
         <th>TRAIN NO</th>
         <th>TRAIN NAME</th>
         <th>PASSENGER NAME</th>
+        <th>AGE</th>
         <th>DEPARTURE STATION</th>
         <th>ARRIVAL STATION</th>
         <th>SOURCE TIME</th>
         <th>DEST TIME</th>
         <th>SEAT NUMBER</th>
       </tr>
+
+      <% ServletContext sc = getServletConfig().getServletContext(); %>
+
+      <%
+          String passenger[] =  ((String)sc.getAttribute("passengers")).split(",");
+          String age[] =    ((String)sc.getAttribute("ages")).split(",");
+          String gender[] =    ((String)sc.getAttribute("genders")).split(",");
+          String seat[] =  ((String) request.getAttribute("seatnos")).split(",");
+          int seatcount = (Integer) request.getAttribute("seatcount");
+//        int seatcount = 3;
+        for(int i=0;i<seatcount;i++) {%>
       <tr>
-        <td> <%= request.getAttribute("pnr") %> </td>
-        <td> <%= request.getAttribute("trainno") %> </td>
-        <td> <%= request.getAttribute("trainname") %> </td>
-        <td> <%= request.getAttribute("username") %> </td>
-        <td> <%= request.getAttribute("source") %> </td>
-        <td> <%= request.getAttribute("dest") %> </td>
-        <td> <%= request.getAttribute("stime") %> </td>
-        <td> <%= request.getAttribute("dtime") %> </td>
-        <td> <%= request.getAttribute("seatno") %> </td>
+        <td> <%= (i+1) %> </td>
+
+        <td> <%= sc.getAttribute("trainnumber") %> </td>
+        <td> <%= sc.getAttribute("trainname") %> </td>
+        <td> <%= passenger[i] %> </td>
+        <td> <%= age[i] %> </td>
+        <td> <%= sc.getAttribute("source") %> </td>
+        <td> <%= sc.getAttribute("dest") %> </td>
+        <td> <%= sc.getAttribute("stime") %> </td>
+        <td> <%= sc.getAttribute("dtime") %> </td>
+        <td> <%= seat[i] %> </td>
       </tr>
+
+      <%}
+      %>
     </table>
     <P>*Please note the PNR number for future reference</P>
 </form>

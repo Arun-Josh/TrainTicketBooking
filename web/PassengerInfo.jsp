@@ -1,4 +1,7 @@
-<%--
+<%@ page import="java.sql.DriverManager" %>
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.PreparedStatement" %><%--
   Created by IntelliJ IDEA.
   User: dragon
   Date: 15-05-2019
@@ -14,12 +17,28 @@
   
 </head>
 <body>
-<% request.getAttribute("trainname");%>
+<%  ServletContext sc = getServletConfig().getServletContext();%>
+
 <form class="box" action="passengerinfo" method="post">
-    <input id= "seatcount" name= "seatcount" type="number" placeholder="Number of Passengers">
+
+    <a id="from"> FROM :</a> <a id="fromname"> <%= sc.getAttribute("from")%> </a>
+    <a id="trainname"> TRAIN : </a> <a id="ch"> <%= sc.getAttribute("trainname")%> </a>
+    <a id="toname"> <%= sc.getAttribute("to")%> </a> <a id="to"> TO :</a>
+    <br><br>
+    <input id= "seatcount" name= "seatcount" type="number" placeholder="Number of Passengers"  pattern="[1-5]{1}" >
     <input id= "cbtn" type="button" onclick="userinfo()" value="Confirm">
-  <h1 >Enter Passenger Details</h1> 
-  <table>
+
+
+    <%
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation","root","root");
+        PreparedStatement ps= con.prepareStatement("SELECT * FROM SEATSINFO WHERE TRAINID = ?");
+        ps.setString(1,"1");
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()) { %>
+               <input name = "seattype" type="radio" value="test" required>  <a id="ch"> <%= rs.getString("seattype") %> </a>
+      <%}%>
+    <h1 >Enter Passenger Details</h1>
     <table id="t01">
       <tr>
           <th>Name</th>
@@ -31,9 +50,7 @@
                
     </table>
 
-    <div id="sbutton">
-
-    </div>
+    <div id="sbutton"> </div>
 
     <P>*Please Enter Details As per your goverment issued ID</P>
     
@@ -44,11 +61,11 @@
     var i = 1;
     while(seat>0){
       document.getElementById("newrow").innerHTML +=  ' <tr> '
-                +  '<td><input type="text" name= "pname'+ i +'" placeholder="Passenger '+ i +' Name" required>  </td>' 
+                +  '<td><input id="dark" type="text" name= "pname'+ i +'" placeholder="Passenger '+ i +' Name" required>  </td>'
                 +  '<td> <input type="number" name= "page'+ i +'" placeholder="Passenger '+ i +' Age" required> </td>' 
-                +  '<td> <input name="gender'+ i +'" type="radio" Value="Male" required><a id="ch">MALE</a>'  
-                +   '<input name="gender'+ i +'" type="radio" Value="Female" required><a id="ch">FEMALE</a>'
-                +    '<input name="gender'+ i +'" type="radio" Value="Others" required> <a id="ch">OTHERS</a> </td> ' 
+                +  '<td> <input name="gender'+ i +'" type="radio" Value="Male" required><a id="dark">MALE</a>'
+                +   '<input name="gender'+ i +'" type="radio" Value="Female" required><a id="dark">FEMALE</a>'
+                +    '<input name="gender'+ i +'" type="radio" Value="Others" required> <a id="dark">OTHERS</a> </td> '
                 + '</tr>';
       i++;
       // document.getElementById("newrow").innerHTML +=  "HAI !";

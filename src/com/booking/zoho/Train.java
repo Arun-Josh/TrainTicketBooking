@@ -1,24 +1,46 @@
 package com.booking.zoho;
 
+import java.util.LinkedList;
+
 public class Train {
+    String trainid ;
     String trainnumber;
     String trainname;
     String source;
     String dest;
     String sourcetime;
     String desttime;
-    int seats;
-    int remseats;
+    LinkedList<Seats> seats;
+    int srcstop ;
+    int dststop ;
 
-    public Train(String trainnumber, String trainname, String source, String dest, String sourcetime, String desttime, int seats, int remseats) {
+    public Train(String trainid, String trainnumber, String trainname, String source, String dest, String sourcetime, String desttime, LinkedList<Seats> seat, int srcstop, int dststop) {
         this.trainnumber = trainnumber;
         this.trainname = trainname;
         this.source = source;
         this.dest = dest;
         this.sourcetime = sourcetime;
         this.desttime = desttime;
-        this.seats = seats;
-        this.remseats = remseats;
+        this.seats = seat;
+        this.srcstop = srcstop;
+        this.dststop = dststop;
+        this.trainid = trainid;
+    }
+
+    public String getTrainid() {
+        return trainid;
+    }
+
+    public LinkedList<Seats> getSeats() {
+        return seats;
+    }
+
+    public int getSrcstop() {
+        return srcstop;
+    }
+
+    public int getDststop() {
+        return dststop;
     }
 
     public String getTrainnumber() {
@@ -43,13 +65,5 @@ public class Train {
 
     public String getDesttime() {
         return desttime;
-    }
-
-    public int getSeats() {
-        return seats;
-    }
-
-    public int getRemseats() {
-        return remseats;
     }
 }

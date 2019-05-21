@@ -1,14 +1,17 @@
 package com.booking.zoho;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.logging.Logger;
 
 @WebServlet("/search")
@@ -20,60 +23,131 @@ public class Search extends HttpServlet {
         try{
             String source = request.getParameter("from");
             String dest   = request.getParameter("to");
+            String date = request.getParameter("date");
 
-            String date = "2019-05-20";
+            ServletContext sc = getServletContext();
+            sc.setAttribute("date",date);
 
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation","root","root");
-            PreparedStatement ps = con.prepareStatement("SELECT * From traininfo");
+            PreparedStatement ps = con.prepareStatement("SELECT * From STATIONNAMES WHERE STATIONNAME = ?");
+            ps.setString(1,source);
             ResultSet rs = ps.executeQuery();
+            rs.next();
+            String sourceid = rs.getString("stationid");
+
+            ps = con.prepareStatement("SELECT * FROM STATIONNAMES WHERE STATIONNAME = ?");
+            ps.setString(1,dest);
+            rs = ps.executeQuery();
+            rs.next();
+            String destid = rs.getString("stationid");
 
 
+            log.info("Source : " + sourceid + " Dest : "+ destid);
 
-            Boolean status = false;
+            ps = con.prepareStatement("SELECT * FROM STATIONS WHERE STATIONID = ?");
+            ps.setString(1,sourceid);
+            rs = ps.executeQuery();
+
             ArrayList<Train> trains = new ArrayList<Train>();
+
             while(rs.next()){
-                status = true;
-                boolean routestatus = false;
+                String sourcetime = rs.getString("stationarrtime");
+                int t2stopno = rs.getInt("stopno");
+                ps = con.prepareStatement("SELECT  * FROM STATIONS WHERE TRAINID= ? AND STATIONID = ? ");
+                ps.setString(1,rs.getString("trainid"));
+                ps.setString(2,destid);
+                ResultSet rs1 = ps.executeQuery();
+                if(rs1.next()){
+                    String trainid = rs1.getString("trainid");
+                    String desttime = rs1.getString("stationarrtime");
+                    int t1stopno =  rs1.getInt("stopno");
+                    PreparedStatement ps1 = con.prepareStatement("SELECT * FROM TRAINNAMES WHERE TRAINID = ?");
+                    ps1.setString(1,trainid);
+                    ResultSet rs2 = ps1.executeQuery();
+                    if(rs2.next()){
+                        String trainnumber = rs2.getString("trainnumber");
+                        String trainname = rs2.getString("trainname");
+//trains.add(new Train(rs.getString("trainnumber"),rs.getString("trainname"),source,dest,time[tstime],time[tdtime],rs.getInt("totalseats"),trs.getInt("remseats")));
+                        LinkedList<Seats> seat = new LinkedList();
 
-                String route[] =  rs.getString("route").split(",");
+                        PreparedStatement ps3 = con.prepareStatement("SELECT * FROM SEATSINFO WHERE TRAINID = ?");
+                        ps3.setString(1,trainid);
+                        ResultSet rs3 = ps3.executeQuery();
 
-                int tstime = 0;
-                int tdtime = 0;
-
-                for(int i=0;i<route.length;i++){
-                    if(route[i].equals(source)){
-                        tstime = i;
-                        for(int j=i+1;j<route.length;j++){
-                            if( route[j].equals(dest)){
-                                tdtime = j;
-                                routestatus = true;
-                                break;
-                            }
+                        while(rs3.next()){
+                            String seattype = rs3.getString("seattype");
+                            int seatcount = rs3.getInt("seatcount");
+                            seat.add( new Seats(seattype,seatcount));
                         }
-                        if(routestatus) break;
+
+                        if(t1stopno > t2stopno){
+                            trains.add(new Train(trainid, trainnumber,trainname,source, dest, sourcetime, desttime, seat, t1stopno,t2stopno));
+                            log.info("tstime = "+sourcetime +" tdtime = " +desttime+ " train no  = "+ trainnumber +" trainn name = " + trainname + " source "+source + "dest "+ dest + "\n");
+                        for(int i=0;i < seat.size();i++){
+                            log.info("SEAT TYPE "+ seat.get(i).seattype);
+                            log.info("SEAT COUNT "+ seat.get(i).seatcount);
+                        }
+                            log.info("tttid"+ trainid);
+                        }
+
                     }
                 }
-
-
-                if(routestatus){
-                    ps = con.prepareStatement("SELECT * from trains WHERE trainnumber = ? and date = ?");
-                    ps.setString(1,rs.getString("trainnumber"));
-                    ps.setString(2,date);
-
-                    ResultSet trs = ps.executeQuery();
-                    trs.next();
-
-                    String[] time = rs.getString("stationtime").split(",");
-                    log.info("tstime = "+tstime +" tdtime = " +tdtime+ " time[tstime] = "+ time[tstime]+" time[tdtime] = " + time[tdtime] + "\n");
-                    trains.add(new Train(rs.getString("trainnumber"),rs.getString("trainname"),source,dest,time[tstime],time[tdtime],rs.getInt("totalseats"),trs.getInt("remseats")));
-                }
             }
+
             request.setAttribute("trains",trains);
+            HttpSession session = request.getSession(true);
             request.getRequestDispatcher("searchresult.jsp").forward(request,response);
-           if(!status){
-                out.print("Train Not Found !!");
-            }
+
+
+//            ResultSet rs = ps.executeQuery();
+//
+//            Boolean status = false;
+//
+//
+//            ArrayList<Train> trains = new ArrayList<Train>();
+//            while(rs.next()){
+//                status = true;
+//                boolean routestatus = false;
+//
+//                String route[] =  rs.getString("route").split(",");
+//
+//                int tstime = 0;
+//                int tdtime = 0;
+//
+//                for(int i=0;i<route.length;i++){
+//                    if(route[i].equals(source)){
+//                        tstime = i;
+//                        for(int j=i+1;j<route.length;j++){
+//                            if( route[j].equals(dest)){
+//                                tdtime = j;
+//                                routestatus = true;
+//                                break;
+//                            }
+//                        }
+//                        if(routestatus) break;
+//                    }
+//                }
+//
+//
+//                if(routestatus){
+//                    ps = con.prepareStatement("SELECT * from trains WHERE trainnumber = ? and date = ?");
+//                    ps.setString(1,rs.getString("trainnumber"));
+//                    ps.setString(2,date);
+//
+//                    ResultSet trs = ps.executeQuery();
+//                    trs.next();
+//
+//                    String[] time = rs.getString("stationtime").split(",");
+//                    log.info("tstime = "+tstime +" tdtime = " +tdtime+ " time[tstime] = "+ time[tstime]+" time[tdtime] = " + time[tdtime] + "\n");
+//                    trains.add(new Train(rs.getString("trainnumber"),rs.getString("trainname"),source,dest,time[tstime],time[tdtime],rs.getInt("totalseats"),trs.getInt("remseats")));
+//                }
+//            }
+//            request.setAttribute("trains",trains);
+//            request.getRequestDispatcher("searchresult.jsp").forward(request,response);
+//           if(!status){
+//                out.print("Train Not Found !!");
+//            }
 
         }
         catch (Exception e){

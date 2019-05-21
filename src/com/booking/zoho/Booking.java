@@ -1,6 +1,7 @@
 package com.booking.zoho;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,31 +25,29 @@ public class Booking extends HttpServlet {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
-        String traininfo = request.getParameter("traininfo");
-
-//        String trainname = train[0];
-//        String source = train[1];
-//        String dest = train[2];
-//        String stime = train[3];
-//        String dtime = train[4];
-//        String trainid = train[5];
-//        int seatno = 0;
-
+        String[] traininfo = request.getParameter("traininfo").split("#");
+        logger.info("ttinfoo "+request.getParameter("traininfo"));
+        String trainid = traininfo[0];
+        logger.info("trainnn info "+ request.getParameter("traininfo"));
         HttpSession session = request.getSession(true);
         session.setAttribute("traininfo",traininfo);
         String uname = (String)session.getAttribute("username");
 
         if (uname==null) {
             out.print("<body><script>alert(\"Please Login Again !\")</script></body>");
-            RequestDispatcher rd = request.getRequestDispatcher("index.html");
+            RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
             rd.include(request,response);
         }
-        String mail  = (String) session.getAttribute("mail");
-        session.setAttribute("mail",mail);
-//        Logger log = Logger.getLogger(Booking.class.getName());
-//        log.info("book i "+ uname+" STIME "+stime+"  dtime "+dtime);
-//        for(String s:train)
-//            log.info(s +" ");
+//        String mail  = (String) session.getAttribute("mail");
+//        session.setAttribute("mail",mail);
+//        request.setAttribute("trainid",trainid);
+
+
+        ServletContext sc = getServletContext();
+        sc.setAttribute("trainid", trainid);
+        sc.setAttribute("trainname", traininfo[1]);
+        sc.setAttribute("from",traininfo[2]);
+        sc.setAttribute("to",traininfo[3]);
         try{
             request.getRequestDispatcher("PassengerInfo.jsp").forward(request,response);
         }

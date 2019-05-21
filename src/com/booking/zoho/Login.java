@@ -1,6 +1,7 @@
 package com.booking.zoho;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,13 +13,12 @@ import java.io.PrintWriter;
 import java.sql.*;
 import java.util.logging.Logger;
 
-
-
 @WebServlet("/login")
 public class Login extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(Login.class.getName());
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
+
         response.setContentType("text/html");
         String mail = request.getParameter("mail");
         String pass = request.getParameter("pass");
@@ -31,24 +31,33 @@ public class Login extends HttpServlet {
             Connection con= DriverManager.getConnection
                     ("jdbc:mysql://localhost/trainreservation","root","root");
             Boolean status = false;
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM USERS WHERE email=? AND pass=?");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM USERS WHERE mailid=? AND password=?");
             ps.setString(1,mail);
             ps.setString(2,pass);
             ResultSet rs = ps.executeQuery();
             status = rs.next();
 
-            LOGGER.info("this i s a test msg"+ status);
+//            LOGGER.info("this i s a test msg"+ status);
             if(status){
-                String uname = rs.getString(2);
-                session.setAttribute("username",uname);
-                session.setAttribute("mail",mail);
-                session.setAttribute("pass",pass);
-                RequestDispatcher rd = request.getRequestDispatcher("searchtrain.html");
-                rd.include(request,response);
+                String uname = rs.getString("name");
+                String userid = rs.getString("userid");
+                String mailid = rs.getString("mailid");
+//                session.setAttribute("username",uname);
+//                session.setAttribute("mail",mail);
+                ServletContext sc = getServletContext();
+                sc.setAttribute("userid", userid);
+                sc.setAttribute("mailid", mailid);
+
+                if(rs.getInt("privilege")==1){
+                    RequestDispatcher rd = request.getRequestDispatcher("searchtrain.html");
+                    rd.include(request,response);
+                }
+                else if(rs.getInt("privilege")==10){
+                    // Admin Dash yet to Design
+                }
             }
             else{
-
-                RequestDispatcher rd = request.getRequestDispatcher("index.html");
+                RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
                 rd.include(request,response);
                 out.append("<html><style>/* Popup container - can be anything you want */\n" +
                         ".popup {\n" +

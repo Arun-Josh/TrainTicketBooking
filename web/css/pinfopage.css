@@ -1,13 +1,41 @@
 h1{
     color: #2ecc71 !important;
   }
-  a{
+  /* a #rad{
       color: black !important;
+      text-decoration: none;
+  } */
+  #ch{
+    color: white !important;
   }
   p{
     float:right;
     color: #2ecc71 !important;
   }
+  #fromname{
+    color:whitesmoke; 
+    float: left;
+
+  }
+  #toname{
+    color:whitesmoke; 
+    float: right;
+  }
+  #trainname{
+    float: center;
+    color: #2ecc71 !important;
+  }
+
+  #from {
+    float: left;
+    color: #2ecc71 !important;
+  }
+
+  #to{
+    float: right;
+    color: #2ecc71 !important;
+  }
+
   table {
     width:100%;
   }
@@ -64,17 +92,46 @@ body{
     text-decoration: none;
     color: #2ecc71;
 }
-.box input[type="date"]{
-    text-transform: uppercase;
-    color: gray;
+/*.box input[type="date"]{*/
+/*    text-transform: uppercase;*/
+/*    color: gray;*/
+/*}*/
+#seatcount{
+  border:0;
+  display: block;
+  text-align: center;
+  background: none;
+  margin: 20px auto;
+  border: 2px solid #3498db;
+  padding: 14px 10px;
+  width: 200px;
+  outline: none;
+  color: white !important;
+  border-color: #2ecc71;
+  border-radius: 30px;
 }
 
-.box input[type="text"]:focus, .box input[type="password"]:focus{
-    /* width: 250px; */
+.box input[type="text"] , .box input[type="password"], .box input[type="number"], .box input[type="email"]{
+    border:0;
+    display: block;
+    text-align: center;
+    background: none;
+    margin: 20px auto;
+    border: 2px solid #3498db;
+    padding: 14px 10px;
+    width: 200px;
+    outline: none;
+    color: black;
     border-color: #2ecc71;
+    border-radius: 30px;
 }
 
-.box input[type="submit"]{
+/*.box input[type="text"]:focus, .box input[type="password"]:focus{*/
+/*    !* width: 250px; *!*/
+/*    border-color: #2ecc71;*/
+/*}*/
+
+.box input[type="submit"], .box input[type="button"]{
     border:0;
     display: block;
     text-align: center;
@@ -91,10 +148,16 @@ body{
     background: #2ecc71;
 }
 
-.box a{
-    color:whitesmoke; 
+/* .box a #dark{
+    color:black !important; 
     padding-bottom: 10px; 
-    text-decoration: underline;
+    text-decoration: none;
+} */
+
+.box a #ch{
+  color:whitesmoke; 
+  padding-bottom: 10px; 
+  text-decoration: none;
 }
 
 #seat {

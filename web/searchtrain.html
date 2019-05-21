@@ -6,9 +6,20 @@
 <body>
     <form class="box" action="search" method="POST">
         <h1>Search Train</h1>
-        <input name="from" type="text" placeholder="From">
-        <input name="to"  type="text" placeholder="To">
-        <input name="date"  type="date" value="Date" >
+        <input id = "from" name="from" type="text" placeholder="From" REQUIRED>
+        <input type="button" onclick="swap()" value="<>">
+        <input id = "to" name="to"  type="text" placeholder="To" REQUIRED>
+        <input name="date"  type="date" value="Date" required >
         <input type="submit" value="Seach Trains">
     </form>
 </body>
+<script>
+    function swap() {
+        var from = document.getElementById("from");
+        var to = document.getElementById("to");
+        var temp = from.value;
+        from.value = to.value;
+        to.value   = temp;
+    }
+</script>
+</html>

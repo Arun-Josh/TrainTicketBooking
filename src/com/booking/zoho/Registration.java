@@ -36,7 +36,7 @@ public class Registration extends HttpServlet {
             ps.setString(5,pass);
             ps.executeUpdate();
             out.print("<body><script>alert(\"Account Creation Success\")</script></body>");
-            RequestDispatcher rd = request.getRequestDispatcher("index.html");
+            RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
             rd.include(request,response);
         }
         catch (Exception E){
