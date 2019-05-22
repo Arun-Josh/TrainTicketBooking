@@ -35,6 +35,7 @@ public class PassengerInfo extends HttpServlet {
 //        LOG.info("ii"+request.getParameter("pname3"));
 
         int seats = Integer.valueOf(request.getParameter("seatcount"));
+        String seattype = request.getParameter("seattype");
 
         String passengers = "";
         String ages = "";
@@ -54,6 +55,7 @@ public class PassengerInfo extends HttpServlet {
         sc.setAttribute("ages",ages);
         sc.setAttribute("genders",gender);
         sc.setAttribute("seatcount", seats);
+        sc.setAttribute("seattype",seattype);
 
         LOG.info("nnname" + passengers + " ages" + ages + " gneder " + gender);
         LOG.info("tttid" +  sc.getAttribute("trainid"));

@@ -36,7 +36,7 @@
         ps.setString(1,"1");
         ResultSet rs = ps.executeQuery();
         while(rs.next()) { %>
-               <input name = "seattype" type="radio" value="test" required>  <a id="ch"> <%= rs.getString("seattype") %> </a>
+               <input name = "seattype" type="radio" value="<%= rs.getString("seattype") %>" required>  <a id="ch"> <%= rs.getString("seattype") %> </a>
       <%}%>
     <h1 >Enter Passenger Details</h1>
     <table id="t01">

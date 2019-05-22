@@ -27,7 +27,12 @@ public class PnrCheck extends HttpServlet {
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation","root","root");
             LOG.info(request.getParameter("pnr"));
-            int pnr = Integer.valueOf(request.getParameter("pnr"));
+            int pnr = 0;
+            if(request.getParameter("pnr")!=null){
+                pnr = Integer.valueOf(request.getParameter("pnr"));
+            }else if(request.getAttribute("pnr")!=null){
+                pnr = Integer.valueOf((String) request.getAttribute("pnr"));
+            }
             LOG.info("PNR N " +pnr);
             PreparedStatement ps = con.prepareStatement("SELECT * FROM bookings where pnr = ?" );
             ps.setInt(1,pnr);
@@ -91,19 +96,19 @@ public class PnrCheck extends HttpServlet {
 
             LOG.info("SEAT NOOO "+seatnos    +  ticketstatus  );
 
-            ServletContext sc = getServletContext();
+            ServletContext servletcontext = getServletContext();
 
             request.setAttribute("pnr",pnr);
-            sc.setAttribute("trainno",trainid);
-            sc.setAttribute("trainnumber",trainnumber);
-            sc.setAttribute("trainname",trainname);
-            sc.setAttribute("source",sourceid);
-            sc.setAttribute("dest",destid);
-            sc.setAttribute("dtime",dtime);
-            sc.setAttribute("stime",stime);
-            sc.setAttribute("passengers",passengers);
-            sc.setAttribute("ages",ages);
-            sc.setAttribute("genders",genders);
+            servletcontext.setAttribute("trainno",trainid);
+            servletcontext.setAttribute("trainnumber",trainnumber);
+            servletcontext.setAttribute("trainname",trainname);
+            servletcontext.setAttribute("source",sourceid);
+            servletcontext.setAttribute("dest",destid);
+            servletcontext.setAttribute("dtime",dtime);
+            servletcontext.setAttribute("stime",stime);
+            servletcontext.setAttribute("passengers",passengers);
+            servletcontext.setAttribute("ages",ages);
+            servletcontext.setAttribute("genders",genders);
             request.setAttribute("ticketstatus",ticketstatus);
             request.setAttribute("seatnos",seatnos);
             request.setAttribute("seatcount", seatcount );

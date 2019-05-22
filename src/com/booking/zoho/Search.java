@@ -54,15 +54,20 @@ public class Search extends HttpServlet {
             while(rs.next()){
                 String sourcetime = rs.getString("stationarrtime");
                 int t2stopno = rs.getInt("stopno");
-                ps = con.prepareStatement("SELECT  * FROM STATIONS WHERE TRAINID= ? AND STATIONID = ? ");
+                ps = con.prepareStatement("SELECT  * FROM STATIONS WHERE TRAINID= ? AND STATIONID = ?");
                 ps.setString(1,rs.getString("trainid"));
                 ps.setString(2,destid);
+
                 ResultSet rs1 = ps.executeQuery();
                 if(rs1.next()){
+
                     String trainid = rs1.getString("trainid");
                     String desttime = rs1.getString("stationarrtime");
                     int t1stopno =  rs1.getInt("stopno");
-                    PreparedStatement ps1 = con.prepareStatement("SELECT * FROM TRAINNAMES WHERE TRAINID = ?");
+
+                    new TrainManipulation().insertTrainIfNot(trainid,sourceid,destid,date);
+
+                    PreparedStatement ps1 = con.prepareStatement("SELECT * FROM TRAINNAMES WHERE TRAINID = ? ");
                     ps1.setString(1,trainid);
                     ResultSet rs2 = ps1.executeQuery();
                     if(rs2.next()){
@@ -71,17 +76,21 @@ public class Search extends HttpServlet {
 //trains.add(new Train(rs.getString("trainnumber"),rs.getString("trainname"),source,dest,time[tstime],time[tdtime],rs.getInt("totalseats"),trs.getInt("remseats")));
                         LinkedList<Seats> seat = new LinkedList();
 
-                        PreparedStatement ps3 = con.prepareStatement("SELECT * FROM SEATSINFO WHERE TRAINID = ?");
+                        PreparedStatement ps3 = con.prepareStatement("SELECT * FROM SEATSAVAILABLE WHERE TRAINID = ? AND DAY = ? AND STATIONID = ?");
                         ps3.setString(1,trainid);
+                        ps3.setString(2,date);
+                        ps3.setString(3,sourceid);
                         ResultSet rs3 = ps3.executeQuery();
+                        Boolean seatvail = false;
 
                         while(rs3.next()){
+                            seatvail = true;
                             String seattype = rs3.getString("seattype");
-                            int seatcount = rs3.getInt("seatcount");
+                            int seatcount = rs3.getInt("seatsavailable");
                             seat.add( new Seats(seattype,seatcount));
                         }
 
-                        if(t1stopno > t2stopno){
+                        if(t1stopno > t2stopno && seatvail){
                             trains.add(new Train(trainid, trainnumber,trainname,source, dest, sourcetime, desttime, seat, t1stopno,t2stopno));
                             log.info("tstime = "+sourcetime +" tdtime = " +desttime+ " train no  = "+ trainnumber +" trainn name = " + trainname + " source "+source + "dest "+ dest + "\n");
                         for(int i=0;i < seat.size();i++){

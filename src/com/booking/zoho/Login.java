@@ -53,7 +53,9 @@ public class Login extends HttpServlet {
                     rd.include(request,response);
                 }
                 else if(rs.getInt("privilege")==10){
-                    // Admin Dash yet to Design
+                    out.println("<CENTER>ADMIN DASHBOARD UNDER CONSTRUCTION </CENTER>" );
+//                    RequestDispatcher rd = request.getRequestDispatcher("Login");
+//                    rd.forward(request,response);
                 }
             }
             else{

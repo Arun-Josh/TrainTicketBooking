@@ -28,7 +28,9 @@ public class Booking extends HttpServlet {
         String[] traininfo = request.getParameter("traininfo").split("#");
         logger.info("ttinfoo "+request.getParameter("traininfo"));
         String trainid = traininfo[0];
-        logger.info("trainnn info "+ request.getParameter("traininfo"));
+        String srcstopno = traininfo[7];
+        String dststopno = traininfo[8];
+
         HttpSession session = request.getSession(true);
         session.setAttribute("traininfo",traininfo);
         String uname = (String)session.getAttribute("username");
@@ -48,6 +50,9 @@ public class Booking extends HttpServlet {
         sc.setAttribute("trainname", traininfo[1]);
         sc.setAttribute("from",traininfo[2]);
         sc.setAttribute("to",traininfo[3]);
+        sc.setAttribute("srcstopno",srcstopno);
+        sc.setAttribute("dststopno",dststopno);
+
         try{
             request.getRequestDispatcher("PassengerInfo.jsp").forward(request,response);
         }

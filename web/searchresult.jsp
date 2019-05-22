@@ -26,7 +26,7 @@
     <%}
     else
     for(Train train : data){%>
-    <input id="rad" name="traininfo" type="radio" value= "<%= train.getTrainid()+"#"+train.getTrainname()+"#"+train.getSource()+"#"+train.getDest()+"#"+train.getSourcetime()+"#"+train.getDesttime()+"#"+train.getTrainnumber() %>" required > <a id="ch">
+    <input id="rad" name="traininfo" type="radio" value= "<%= train.getTrainid()+"#"+train.getTrainname()+"#"+train.getSource()+"#"+train.getDest()+"#"+train.getSourcetime()+"#"+train.getDesttime()+"#"+train.getTrainnumber()+"#"+train.getSrcstop()+"#"+train.getDststop() %>" required > <a id="ch">
     <%= "<a id=\"side\"> Train Number : </a> "+
       "<a id=\"op\">" + train.getTrainnumber() +"</a> " +
     " <a id=\"side\"> Train Name : </a> "+
