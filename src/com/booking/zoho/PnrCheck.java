@@ -50,6 +50,7 @@ public class PnrCheck extends HttpServlet {
             String sourceid = rs.getString("source");
             String destid = rs.getString("dest");
             String ticketstatus = rs.getString("TICKETSTATUS");
+            String fare = rs.getString("fare");
 
             ps = con.prepareStatement("SELECT  * FROM TRAINNAMES WHERE TRAINID = ?");
             ps.setString(1,trainid);
@@ -112,6 +113,7 @@ public class PnrCheck extends HttpServlet {
             request.setAttribute("ticketstatus",ticketstatus);
             request.setAttribute("seatnos",seatnos);
             request.setAttribute("seatcount", seatcount );
+            request.setAttribute("fare", fare );
 //            LOG.info("ALLL NOO "+seatnos
 //                    + trainid
 //                    + sourceid

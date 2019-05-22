@@ -33,15 +33,26 @@ public class Search extends HttpServlet {
             PreparedStatement ps = con.prepareStatement("SELECT * From STATIONNAMES WHERE STATIONNAME = ?");
             ps.setString(1,source);
             ResultSet rs = ps.executeQuery();
-            rs.next();
-            String sourceid = rs.getString("stationid");
+            String sourceid = "";
+            if(rs.next()){
+                sourceid = rs.getString("stationid");
+            }
+            else{
+                out.print(" SOURCE STATION NOT AVAILABLE");
+                return;
+            }
 
             ps = con.prepareStatement("SELECT * FROM STATIONNAMES WHERE STATIONNAME = ?");
             ps.setString(1,dest);
             rs = ps.executeQuery();
-            rs.next();
-            String destid = rs.getString("stationid");
-
+            String destid = "";
+            if(rs.next()){
+                destid = rs.getString("stationid");
+            }
+            else{
+                out.print("DESTINATION STATION NOT AVAILABLE");
+                return;
+            }
 
             log.info("Source : " + sourceid + " Dest : "+ destid);
 

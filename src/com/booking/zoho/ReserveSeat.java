@@ -32,15 +32,18 @@ public class ReserveSeat extends HttpServlet {
                 String ifsccode = (String) sc.getAttribute("ifsccode");
                 String cardnumber = (String) sc.getAttribute("cardnumber");
                 String ticketstatus = "CONFIRMED";
+
                 String dateoftravel = (String) sc.getAttribute("date");
                 String source = (String) sc.getAttribute("from");
                 String dest = (String) sc.getAttribute("to");
                 String seattype = (String) sc.getAttribute("seattype");
+                String fare = (String) sc.getAttribute("fare");
 
                 log.info("seeet" + seattype);
 
-                if(userid == null){
+                if(userid == null ){
                     request.getRequestDispatcher("index.jsp").forward(request,response);
+                    return;
                 }
 
 
@@ -59,8 +62,8 @@ public class ReserveSeat extends HttpServlet {
                 rs = ps.executeQuery();
                 rs.next();
                 String destid   = rs.getString("stationid");
-
-                ps = con.prepareStatement("INSERT INTO BOOKINGS(USERID, TRAINID, MAILID, MODEOFPAYMENT, PAYMENTSTATUS, ACCOUNTNUMBER, IFSCCODE, CARDNUMBER, TICKETSTATUS, DATEOFTRAVEL, SOURCE, DEST ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?) ");
+                log.info("ffare " +fare);
+                ps = con.prepareStatement("INSERT INTO BOOKINGS(USERID, TRAINID, MAILID, MODEOFPAYMENT, PAYMENTSTATUS, ACCOUNTNUMBER, IFSCCODE, CARDNUMBER, TICKETSTATUS, DATEOFTRAVEL, SOURCE, DEST, FARE ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) ");
                 ps.setString(1,userid);
                 ps.setString(2,trainid);
                 ps.setString(3,mailid);
@@ -73,6 +76,7 @@ public class ReserveSeat extends HttpServlet {
                 ps.setString(10,dateoftravel);
                 ps.setString(11,sourceid);
                 ps.setString(12,destid);
+                ps.setString(13,fare);
                 ps.executeUpdate();
 
                 ps = con.prepareStatement("SELECT * FROM BOOKINGS WHERE MAILID = ? AND TRAINID = ?");
@@ -166,6 +170,10 @@ public class ReserveSeat extends HttpServlet {
                 rsseatavail.next();
                 int t2 = rsseatavail.getInt("seatsavailable") + 1 ;
 
+//                if(t1<1 || t2< 1){
+//                    PreparedStatement psbook = con.prepareStatement("UPDATE ")
+//                }
+
                 int t3 = (t1>t2)?t2:t1;
 
                 for(int i=0;i<seats;i++){
@@ -224,7 +232,7 @@ public class ReserveSeat extends HttpServlet {
                 request.setAttribute("ticketstatus",ticketstatus);
                 request.setAttribute("seatnos",seatnumbers);
                 request.setAttribute("seatcount", seats );
-
+                request.setAttribute("fare", fare );
             }
             catch (Exception E){
                 E.printStackTrace();

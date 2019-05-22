@@ -8,8 +8,12 @@ h1{
   #ch{
     color: white !important;
   }
-  p{
+  #pright{
     float:right;
+    color: #2ecc71 !important;
+  }
+  #pleft{
+    float:left;
     color: #2ecc71 !important;
   }
   #fromname{
@@ -62,6 +66,7 @@ body{
     margin: 0;
     padding: 0;
     font-family: sans-serif;
+    text-align: center !important;
     /* background-color: #34495e; */
     background-image: url("img/vintage.png");
     background-repeat: no-repeat;

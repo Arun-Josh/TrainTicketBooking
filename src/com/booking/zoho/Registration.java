@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.logging.Logger;
 
 @WebServlet("/Registration")
 public class Registration extends HttpServlet {
@@ -28,14 +29,30 @@ public class Registration extends HttpServlet {
         try{
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation","root","root");
-            PreparedStatement ps = con.prepareStatement("Insert INTO USERS(email,phno,name,gender,pass) VALUES(?,?,?,?,?)");
+
+            PreparedStatement pscheck = con.prepareStatement("SELECT * FROM USERS WHERE MAILID = ?");
+            pscheck.setString(1,email);
+            ResultSet rscheck = pscheck.executeQuery();
+
+            if(rscheck.next()){
+                out.print("<body><center>\"Mail ID already registered \"<center></body>");
+                return;
+            }
+
+            PreparedStatement ps = con.prepareStatement("Insert INTO USERS(mailid,phone,name, gender,password) VALUES(?,?,?,?,?)");
             ps.setString(1,email);
             ps.setString(2,phno);
             ps.setString(3,uname);
             ps.setString(4,gender);
             ps.setString(5,pass);
-            ps.executeUpdate();
-            out.print("<body><script>alert(\"Account Creation Success\")</script></body>");
+            int n = ps.executeUpdate();
+            Logger log = Logger.getLogger(Registration.class.getName());
+            log.info("ps returns "+n);
+//            if(n==0){
+//                out.print("<body><script>alert(\"Mail ID already registered \")</script></body>");
+//            }else{
+                out.print("<body><script>alert(\"Account Creation Success\")</script></body>");
+//            }
             RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
             rd.include(request,response);
         }

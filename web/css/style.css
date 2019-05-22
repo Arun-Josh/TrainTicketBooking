@@ -103,3 +103,11 @@ input[type=number]::-webkit-outer-spin-button {
     display: none;
     color: green;
 }
+
+#green{
+    color: #2ecc71 !important;
+}
+
+#white{
+    color: white !important;
+}

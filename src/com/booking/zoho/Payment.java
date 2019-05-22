@@ -19,6 +19,9 @@ public class Payment extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
         String modeofpayment = request.getParameter("submit");
+
+        System.out.println("mop" + modeofpayment);
+
         ServletContext sc = getServletContext();
         sc.setAttribute("modeofpayment",modeofpayment);
         if(modeofpayment.equals("Debit Cars") || modeofpayment.equals("Credit Card")){
@@ -28,7 +31,7 @@ public class Payment extends HttpServlet {
             sc.setAttribute("ifsccode","SBIN0012345");
             sc.setAttribute("accountnumber","0123456789213");
         }
-
+        sc.setAttribute("fare",request.getParameter("fare"));
 
         request.getRequestDispatcher("/reserveseats").forward(request,response);
 

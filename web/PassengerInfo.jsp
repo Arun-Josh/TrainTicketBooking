@@ -28,12 +28,12 @@
     <input id= "seatcount" name= "seatcount" type="number" placeholder="Number of Passengers"  pattern="[1-5]{1}" >
     <input id= "cbtn" type="button" onclick="userinfo()" value="Confirm">
 
-
+    <%String trainid = (String )sc.getAttribute("trainid");%>
     <%
         Class.forName("com.mysql.jdbc.Driver");
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation","root","root");
         PreparedStatement ps= con.prepareStatement("SELECT * FROM SEATSINFO WHERE TRAINID = ?");
-        ps.setString(1,"1");
+        ps.setString(1,trainid);
         ResultSet rs = ps.executeQuery();
         while(rs.next()) { %>
                <input name = "seattype" type="radio" value="<%= rs.getString("seattype") %>" required>  <a id="ch"> <%= rs.getString("seattype") %> </a>
@@ -52,17 +52,19 @@
 
     <div id="sbutton"> </div>
 
-    <P>*Please Enter Details As per your goverment issued ID</P>
+    <P id="pright">*Please Enter Details As per your goverment issued ID</P>
+    <P id="pleft">Only upto four seats can be booked per ticket</P>
     
 </form>
 <script>
   function userinfo() {
     var seat = document.getElementById("seatcount").value;
     var i = 1;
-    while(seat>0){
+    var t = seat;
+    while(seat>0 && seat <=4){
       document.getElementById("newrow").innerHTML +=  ' <tr> '
                 +  '<td><input id="dark" type="text" name= "pname'+ i +'" placeholder="Passenger '+ i +' Name" required>  </td>'
-                +  '<td> <input type="number" name= "page'+ i +'" placeholder="Passenger '+ i +' Age" required> </td>' 
+                +  '<td> <input type="text" name= "page'+ i +'" placeholder="Passenger '+ i +' Age" pattern="[0-9]{1,3}" required> </td>'
                 +  '<td> <input name="gender'+ i +'" type="radio" Value="Male" required><a id="dark">MALE</a>'
                 +   '<input name="gender'+ i +'" type="radio" Value="Female" required><a id="dark">FEMALE</a>'
                 +    '<input name="gender'+ i +'" type="radio" Value="Others" required> <a id="dark">OTHERS</a> </td> '
@@ -71,9 +73,12 @@
       // document.getElementById("newrow").innerHTML +=  "HAI !";
       seat--;
     }
-      document.getElementById("sbutton").innerHTML += '<input type="submit" value = "Confirm Booking" >';
-      document.getElementById("cbtn").style.display = "none";
-      document.getElementById("seatcount").style.display = "none";
+    if(t > 0 && t <=4){
+        document.getElementById("sbutton").innerHTML += '<input type="submit" value = "Confirm Booking" >';
+        document.getElementById("cbtn").style.display = "none";
+        document.getElementById("seatcount").style.display = "none";
+
+    }
 
   }
 </script>

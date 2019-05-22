@@ -24,6 +24,7 @@
       color:white;
       text-decoration: none;
     }
+
     #tsn{
       float: right;
       /*margin-right: 100px ;*/
@@ -60,6 +61,14 @@
       background-color: black;
       color: white;
     }
+    .centergreen{
+      color:  #2ecc71 !important;
+      text-align: center; !important;
+    }
+    .centerwhite{
+      color: white !important;
+      text-align: center; !important;
+    }
   </style>
 </head>
 <body>
@@ -69,7 +78,6 @@
 <%--  <table>--%>
   <h3 id="name">PNR NUMBER : </h3>
   <h3 id="pnr"> &emsp; <%= request.getAttribute("pnr") %></h3>
-
 
   <h3 id="ts"> &emsp; <%= (String) request.getAttribute("ticketstatus") %></h3>
   <h3 id="tsn">TICKET : </h3>
@@ -115,8 +123,17 @@
       <%}
       %>
     </table>
-    <P>*Please note the PNR number for future reference</P>
-</form>
+  <input type="button" id="cbtn" onclick="printTicket()" value="PRINT TICKET">
 
+  <h3 id="name">AMOUNT PAID : </h3>
+  <h3 id="pnr"> &emsp; Rs. <%= (String) request.getAttribute("fare") %></h3>
+
+  <P>*Please note the PNR number for future reference</P>
+</form>
+<script>
+  function printTicket() {
+    window.print();
+  }
+</script>
 </body>
 </html>

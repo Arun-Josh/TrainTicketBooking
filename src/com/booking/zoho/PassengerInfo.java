@@ -20,20 +20,6 @@ public class PassengerInfo extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
 
-//        String[] train = ((String)session.getAttribute("traininfo")).split("#");
-////        String[] train = request.getParameter("traininfo").split("#");
-//        String mail = (String) session.getAttribute("mail");
-//        String trainname = train[0];
-//        String source = train[1];
-//        String dest = train[2];
-//        String stime = train[3];
-//        String dtime = train[4];
-//        String trainid = train[5];
-
-//        int seatno = 0;
-//        LOG.info("ii" + request.getParameter("pname1"));
-//        LOG.info("ii"+request.getParameter("pname3"));
-
         int seats = Integer.valueOf(request.getParameter("seatcount"));
         String seattype = request.getParameter("seattype");
 
@@ -59,6 +45,20 @@ public class PassengerInfo extends HttpServlet {
 
         LOG.info("nnname" + passengers + " ages" + ages + " gneder " + gender);
         LOG.info("tttid" +  sc.getAttribute("trainid"));
+
+        int srcstopno =  Integer.valueOf(sc.getAttribute("srcstopno").toString());
+        int dststopno =  Integer.valueOf(sc.getAttribute("dststopno").toString());
+
+        int stops = Math.abs(srcstopno-dststopno);
+
+        String trainid = (String) sc.getAttribute("trainid");
+
+        System.out.println("Trainnnn id "+trainid +" s " + srcstopno +" d " + dststopno +" diff "+stops);
+
+        request.setAttribute("seattype",seattype);
+        request.setAttribute("trainid",trainid);
+        request.setAttribute("seatcount",seats);
+        request.setAttribute("stops",stops);
 
         try{
             request.getRequestDispatcher("payment.jsp").forward(request,response);
