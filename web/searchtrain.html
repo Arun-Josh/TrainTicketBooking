@@ -4,16 +4,30 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <form class="box" action="search" method="POST">
+
+        <div>
+            <form action="bookedtickets" method="post">
+                <input type="submit" id="bhistory" class="submit-button" value="BOOKED TICKETS">
+            </form>
+        </div>
+
+
+<form id ="searchform" class="box" action="search" method="POST">
         <h1>Search Train</h1>
         <input id = "from" name="from" type="text" placeholder="From" REQUIRED>
         <input type="button" onclick="swap()" value="<>">
         <input id = "to" name="to"  type="text" placeholder="To" REQUIRED>
-        <input name="date"  type="date" value="Date" required >
-        <input type="submit" value="Seach Trains">
+        <input id= "date" name="date"  type="date" value="Date" required >
+        <p id="datewarn"> Enter a valid date within 2 months from now </p>
+        <input id ="subbutton" type="button" value="Seach Trains" onclick="dateValidation()">
     </form>
 </body>
 <script>
+
+    // document.getElementById("bhistory").onclick = function () {
+    //     location.href = "BookedTickets.jsp";
+    // }
+
     function swap() {
         var from = document.getElementById("from");
         var to = document.getElementById("to");
@@ -21,5 +35,28 @@
         from.value = to.value;
         to.value   = temp;
     }
+
+    function  dateValidation() {
+        var form = document.getElementById("searchform");
+        var from = document.getElementById("from").value;
+        var to   = document.getElementById("to").value;
+        var inputdate = document.getElementById("date").value;
+        var idate = new Date(inputdate);
+        var today = new Date();
+        var limitdate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        var ldate = new Date(limitdate);
+        today = new Date();
+
+        console.log("tt"+ idate +" ldate \n" + ldate);
+
+        if(idate>=today){
+            document.getElementById("datewarn").style.display = "none";
+            form.submit();
+        }
+        else{
+            document.getElementById("datewarn").style.display = "block";
+        }
+    }
+
 </script>
 </html>

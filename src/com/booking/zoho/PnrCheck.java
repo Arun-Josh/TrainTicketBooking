@@ -51,6 +51,7 @@ public class PnrCheck extends HttpServlet {
             String destid = rs.getString("dest");
             String ticketstatus = rs.getString("TICKETSTATUS");
             String fare = rs.getString("fare");
+            String dateoftravel = rs.getString("dateoftravel");
 
             ps = con.prepareStatement("SELECT  * FROM TRAINNAMES WHERE TRAINID = ?");
             ps.setString(1,trainid);
@@ -88,11 +89,12 @@ public class PnrCheck extends HttpServlet {
             int seatcount = 0;
             while(rs.next()){
                 seatcount++;
+
                 passengers += rs.getString("passengername") + ",";
                 ages += rs.getString("age") + ",";
                 genders += rs.getString("gender")+",";
 //                seatnos += rs.getString("seatno");
-                seatnos += new Random().nextInt(100) + ",";
+                seatnos += rs.getString("seatno") + ",";
             }
 
             LOG.info("SEAT NOOO "+seatnos    +  ticketstatus  );
@@ -114,6 +116,7 @@ public class PnrCheck extends HttpServlet {
             request.setAttribute("seatnos",seatnos);
             request.setAttribute("seatcount", seatcount );
             request.setAttribute("fare", fare );
+            request.setAttribute("dateoftravel", dateoftravel );
 //            LOG.info("ALLL NOO "+seatnos
 //                    + trainid
 //                    + sourceid

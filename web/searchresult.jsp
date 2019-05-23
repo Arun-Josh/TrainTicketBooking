@@ -15,6 +15,9 @@
 </head>
 <body>
 
+
+
+
 <form class="box" action="booking" method="POST">
     <h1>Search Results</h1>
     <hr>
@@ -22,7 +25,7 @@
 
     if(data.size()==0){ %>
         <%= "<h3 id=\"op\"> NO TRAINS FOUND !</h3>" %>
-        <script>disableBook()</script>
+        <script>        window.onload = function (ev) { document.getElementById("book").style.display = "none"; }  </script>
     <%}
     else
     for(Train train : data){%>
@@ -50,9 +53,9 @@
     <input id="book" type="submit" value="Book">
 </form>
 <script>
-    function  disableBook() {
-        document.getElementById("book").style.display = "none";
-    }
+    // function  disableBook() {
+    //     document.getElementById("book").style.display = "none";
+    // }
 </script>
 <%--        <h1> com.booking.zoho.Train <%= request.getAttribute("trains") %> </h1>--%>
 </body>

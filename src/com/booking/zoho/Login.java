@@ -4,10 +4,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
@@ -17,8 +14,6 @@ import java.util.logging.Logger;
 public class Login extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(Login.class.getName());
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(true);
-
         response.setContentType("text/html");
         String mail = request.getParameter("mail");
         String pass = request.getParameter("pass");
@@ -51,6 +46,8 @@ public class Login extends HttpServlet {
                 if(rs.getInt("privilege")==1){
                     RequestDispatcher rd = request.getRequestDispatcher("searchtrain.html");
                     rd.include(request,response);
+                    Cookie ck = new Cookie("mailid",mail);
+                    response.addCookie(ck);
                 }
                 else if(rs.getInt("privilege")==10){
                     out.println("<CENTER>ADMIN DASHBOARD UNDER CONSTRUCTION </CENTER>" );

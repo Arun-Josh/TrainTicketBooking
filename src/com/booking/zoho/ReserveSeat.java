@@ -176,6 +176,12 @@ public class ReserveSeat extends HttpServlet {
 
                 int t3 = (t1>t2)?t2:t1;
 
+                if(t1<1 || t2 <1){
+                    PreparedStatement psbook = con.prepareStatement("    UPDATE BOOKINGS SET TICKETSTATUS = \"WAITING\" WHERE PNR = ?");
+                    psbook.setString(1,pnr);
+                    psbook.executeUpdate();
+                }
+
                 for(int i=0;i<seats;i++){
                     if(i!=0){
                         seatnumbers+=",";
@@ -228,11 +234,13 @@ public class ReserveSeat extends HttpServlet {
                 sc.setAttribute("stime",stime);
                 sc.setAttribute("passengers",sc.getAttribute("passengers"));
                 sc.setAttribute("ages",sc.getAttribute("ages"));
-                sc.setAttribute("genders",(String) sc.getAttribute("genders"));
+                sc.setAttribute("genders",sc.getAttribute("genders"));
                 request.setAttribute("ticketstatus",ticketstatus);
                 request.setAttribute("seatnos",seatnumbers);
                 request.setAttribute("seatcount", seats );
                 request.setAttribute("fare", fare );
+                request.setAttribute("dateoftravel", dateoftravel );
+
             }
             catch (Exception E){
                 E.printStackTrace();
