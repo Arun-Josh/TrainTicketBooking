@@ -15,9 +15,6 @@
 </head>
 <body>
 
-
-
-
 <form class="box" action="booking" method="POST">
     <h1>Search Results</h1>
     <hr>
@@ -41,8 +38,13 @@
 
         "<a id=\"seat\">Seats Available  &emsp; </a><br><br>"
         %>
-        <% for(int i=0;i<train.getSeats().size();i++) {%>
-            <%= " <a id=\"OP\"> "+ train.getSeats().get(i).getSeattype() + ":"+"</a>" + "  " + "<a id=\"side\">"+ train.getSeats().get(i).getSeatcount() + "</a>&emsp;" %>
+        <% for(int i=0;i<train.getSeats().size();i++) {
+        String seatsavailable = String.valueOf(train.getSeats().get(i).getSeatcount());
+        if(Integer.valueOf(seatsavailable)<0){
+            seatsavailable = "WL "+(Math.abs(Integer.valueOf(seatsavailable)) + 1);
+        }
+        %>
+            <%= " <a id=\"OP\"> "+ train.getSeats().get(i).getSeattype() + ":"+"</a>" + "  " + "<a id=\"side\">"+ seatsavailable + "</a>&emsp;" %>
 <%--</a>--%>
         <%}%>
         <br><br>
@@ -53,9 +55,10 @@
     <input id="book" type="submit" value="Book">
 </form>
 <script>
-    // function  disableBook() {
-    //     document.getElementById("book").style.display = "none";
-    // }
+    var a = document.cookie;
+    if(a==""){
+        window.location.href="index.jsp";
+    }
 </script>
 <%--        <h1> com.booking.zoho.Train <%= request.getAttribute("trains") %> </h1>--%>
 </body>

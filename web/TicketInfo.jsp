@@ -12,7 +12,15 @@
   <link rel="stylesheet" href="css/resultpage.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
-    h1{
+
+      h2{
+          color: #2ecc71;
+          text-transform: uppercase;
+          font-weight: 500;
+          text-align: left !important;
+      }
+
+      h1{
       color: #2ecc71 !important;
     }
     p{
@@ -50,6 +58,7 @@
   <% ServletContext sc = getServletConfig().getServletContext(); %>
 
   <h1 >TICKET INFO <i class="fa fa-ticket" aria-hidden="true"></i> </h1>
+    <h2 >TRAIN INFO : <i class="fa fa-subway" aria-hidden="true"></i> </h2>
   <table id="t01">
     <tr>
       <th>PNR NUMBER</th>
@@ -79,7 +88,7 @@
 
   </table>
 
-  <h1 >PASSENGERS INFO <i class="fa fa-users" area-hidden="true"></i> </h1>
+  <h2 >PASSENGERS INFO : <i class="fa fa-users" area-hidden="true"></i> </h2>
 
   <table id="t01">
       <tr>

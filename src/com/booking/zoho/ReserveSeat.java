@@ -177,9 +177,11 @@ public class ReserveSeat extends HttpServlet {
                 int t3 = (t1>t2)?t2:t1;
 
                 if(t1<1 || t2 <1){
-                    PreparedStatement psbook = con.prepareStatement("    UPDATE BOOKINGS SET TICKETSTATUS = \"WAITING\" WHERE PNR = ?");
+                    PreparedStatement psbook = con.prepareStatement("    UPDATE BOOKINGS SET TICKETSTATUS = \"WAITING LIST\" WHERE PNR = ?");
+//                    psbook.setString(1,String.valueOf(t3));
                     psbook.setString(1,pnr);
                     psbook.executeUpdate();
+                    ticketstatus = "WAITING LIST";
                 }
 
                 for(int i=0;i<seats;i++){

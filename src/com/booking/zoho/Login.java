@@ -12,12 +12,15 @@ import java.util.logging.Logger;
 
 @WebServlet("/login")
 public class Login extends HttpServlet {
-    private static final Logger LOGGER = Logger.getLogger(Login.class.getName());
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         String mail = request.getParameter("mail");
         String pass = request.getParameter("pass");
         PrintWriter out = response.getWriter();
+
+        HttpSession session = request.getSession();
+
         try {
             //loading drivers for mysql
             Class.forName("com.mysql.jdbc.Driver");
@@ -32,13 +35,16 @@ public class Login extends HttpServlet {
             ResultSet rs = ps.executeQuery();
             status = rs.next();
 
-//            LOGGER.info("this i s a test msg"+ status);
             if(status){
                 String uname = rs.getString("name");
                 String userid = rs.getString("userid");
                 String mailid = rs.getString("mailid");
-//                session.setAttribute("username",uname);
-//                session.setAttribute("mail",mail);
+
+                //Sessions
+
+                session.setAttribute("username",uname);
+                session.setAttribute("mail",mail);
+
                 ServletContext sc = getServletContext();
                 sc.setAttribute("userid", userid);
                 sc.setAttribute("mailid", mailid);
