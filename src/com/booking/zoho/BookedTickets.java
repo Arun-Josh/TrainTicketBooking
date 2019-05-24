@@ -28,7 +28,7 @@ public class BookedTickets extends HttpServlet {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation", "root", "root");
             PreparedStatement ps = con.prepareStatement("SELECT BOOKINGS.PNR, BOOKINGS.USERID, BOOKINGS.TRAINID,\n" +
                     "                    BOOKINGS.TICKETSTATUS, BOOKINGS.DATEOFTRAVEL, BOOKINGS.SOURCE, BOOKINGS.DEST, BOOKINGS.FARE, \n" +
-                    "                    PASSENGERINFO.PASSENGERNAME, PASSENGERINFO.SEATNO, PASSENGERINFO.AGE, PASSENGERINFO.GENDER\n" +
+                    "                    PASSENGERINFO.PASSENGERID, PASSENGERINFO.PASSENGERNAME, PASSENGERINFO.SEATNO, PASSENGERINFO.AGE, PASSENGERINFO.GENDER, PASSENGERINFO.STATUS\n" +
                     "                    FROM BOOKINGS,PASSENGERINFO  WHERE BOOKINGS.USERID = ? AND PASSENGERINFO.PNR = BOOKINGS.PNR;");
             ps.setString(1, userid);
             ResultSet rs = ps.executeQuery();
@@ -72,18 +72,18 @@ public class BookedTickets extends HttpServlet {
                     dtime = rsstations.getString("stationarrtime");
                 }
 
-                String ticketstatus = rs.getString("ticketstatus");
+                String ticketstatus = rs.getString("status");
                 String dateoftravel = rs.getString("dateoftravel");
                 String ticketfare = rs.getString("fare");
                 String passengername = rs.getString("passengername");
                 String seatno = rs.getString("seatno");
                 String age = rs.getString("age");
                 String gender = rs.getString("gender");
-
-                System.out.println(pnr + " + " +from + " + " +to + " + " +trainnumber + " + " +trainname + " + " +ticketstatus + " + " +dateoftravel + " + " +ticketfare + " + " +passengername + " + " + age + " + " + seatno + " + " + gender + " + " +stime+ " + "+ dtime);
+                String passengerid = rs.getString("passengerid");
+                System.out.println(passengerid +" "+pnr + " + " +from + " + " +to + " + " +trainnumber + " + " +trainname + " + " +ticketstatus + " + " +dateoftravel + " + " +ticketfare + " + " +passengername + " + " + age + " + " + seatno + " + " + gender + " + " +stime+ " + "+ dtime);
 
 //    public Tickets(String pnr, String from, String to, String trainnumber, String trainname, String ticketstatus, String dateoftravel, String ticketfare, String passenger, String age, String seatno, String gender) {
-                tickets.add(new Tickets(pnr,from,to,trainnumber,trainname,ticketstatus,dateoftravel,ticketfare,passengername, age, seatno, gender, stime, dtime));
+                tickets.add(new Tickets(passengerid, pnr,from,to,trainnumber,trainname,ticketstatus,dateoftravel,ticketfare,passengername, age, seatno, gender, stime, dtime));
             }
 
                 request.setAttribute("tickets",tickets);

@@ -69,7 +69,7 @@
       <th>DESTINATION</th>
       <th>SOURCE TIME</th>
       <th>DESTINATION TIME</th>
-      <th>TICKET STATUS</th>
+<%--      <th>TICKET STATUS</th>--%>
       <th>TICKET FARE</th>
     </tr>
 
@@ -82,7 +82,7 @@
       <td> <%= sc.getAttribute("dest")  %> </td>
       <td> <%= sc.getAttribute("stime") %> </td>
       <td> <%= sc.getAttribute("dtime") %> </td>
-      <td><%= (String) request.getAttribute("ticketstatus") %>  </td>
+<%--      <td><%= (String) request.getAttribute("ticketstatus") %>  </td>--%>
       <td> Rs. <%= (String) request.getAttribute("fare") %></td>
     </tr>
 
@@ -95,8 +95,9 @@
         <th>S.NO</th>
         <th>PASSENGER NAME</th>
         <th>AGE</th>
-        <th>SEAT NUMBER</th>
         <th>GENDER</th>
+        <th>SEAT NUMBER</th>
+        <th>TICKET STATUS</th>
       </tr>
 
       <%
@@ -104,6 +105,7 @@
           String age[] =    ((String)sc.getAttribute("ages")).split(",");
           String gender[] =    ((String)sc.getAttribute("genders")).split(",");
           String seat[] =  ((String) request.getAttribute("seatnos")).split(",");
+          String status[] = ((String) request.getAttribute("status")).split(",");
           int seatcount = (Integer) request.getAttribute("seatcount");
         for(int i=0;i<seatcount;i++) {
 
@@ -116,8 +118,9 @@
         <td> <%= (i+1) %> </td>
         <td> <%= passenger[i] %> </td>
         <td> <%= age[i] %> </td>
-        <td> <%= seat[i] %> </td>
         <td> <%= gender[i] %></td>
+        <td> <%= seat[i] %> </td>
+        <td> <%= status[i] %></td>
       </tr>
 
       <%}

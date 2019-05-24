@@ -191,19 +191,37 @@ public class ReserveSeat extends HttpServlet {
                     seatnumbers+= t3 ;
                     t3++;
                 }
+
                 log.info("seaat nos " +seatnumbers);
                 String seatno[] = seatnumbers.split(",");
                 log.info("snn" + seatnumbers);
+                String status = ticketstatus;
                 for(int i=0;i<seats;i++){
-                    ps = con.prepareStatement("INSERT INTO PASSENGERINFO(PNR, PASSENGERNAME, SEATNO, AGE, GENDER) VALUES(?,?,?,?,?)");
+                    if(i!=0 && ticketstatus.equals("WAITING LIST")){
+                        status+=",WAITING LIST";
+                    }
+                    else if(i!=0 && ticketstatus.equals("CONFIRMED")){
+                        status+=",CONFIRMED";
+                    }
+                    if(ticketstatus.equals("WAITING LIST")){
+                        status+=" "+(Math.abs(t3)+(i+1));
+                    }
+                    String tstatus ="CONFIRMED";
+
+                    if (ticketstatus.equals("WAITING LIST")){
+                        tstatus = "WAITING LIST "+(Math.abs(t3)+(i+1));
+                    }
+
+                    ps = con.prepareStatement("INSERT INTO PASSENGERINFO(PNR, PASSENGERNAME, SEATNO, AGE, GENDER,STATUS) VALUES(?,?,?,?,?,?)");
                     ps.setString(1,pnr);
                     ps.setString(2,passenger[i]);
                     ps.setInt(3,Integer.valueOf(seatno[i]));
                     ps.setString(4,age[i]);
                     ps.setString(5,gender[i]);
+                    ps.setString(6,tstatus);
                     ps.executeUpdate();
                 }
-
+                log.info("passenger status "+status);
                 ps = con.prepareStatement("SELECT  * FROM TRAINNAMES WHERE TRAINID = ?");
                 ps.setString(1,trainid);
                 rs = ps.executeQuery();
@@ -242,7 +260,7 @@ public class ReserveSeat extends HttpServlet {
                 request.setAttribute("seatcount", seats );
                 request.setAttribute("fare", fare );
                 request.setAttribute("dateoftravel", dateoftravel );
-
+                request.setAttribute("status",status);
             }
             catch (Exception E){
                 E.printStackTrace();

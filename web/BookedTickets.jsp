@@ -49,7 +49,13 @@
 
 </head>
 <body>
-<%--<% HttpSession ses = request.getSession(true); %>--%>
+<%
+    System.out.println("mail is " + session.getAttribute("mailid")+" in booked  tickets");
+    if(session.getAttribute("mailid")==null){
+//        response.sendRedirect("index.jsp");
+//        return;
+    }
+%>
 <form class="box" >
 
     <%
@@ -92,7 +98,7 @@
             <th>DESTINATION</th>
             <th>SOURCE TIME</th>
             <th>DESTINATION TIME</th>
-            <th>TICKET STATUS</th>
+<%--            <th>TICKET STATUS</th>--%>
             <th>TICKET FARE</th>
         </tr>
 
@@ -105,7 +111,7 @@
             <td> <%= dest  %> </td>
             <td> <%= stime %> </td>
             <td> <%= dtime %> </td>
-            <td><%= ticketstatus %>  </td>
+<%--            <td><%= ticketstatus %>  </td>--%>
             <td> Rs. <%= fare %></td>
         </tr>
 
@@ -123,6 +129,7 @@
             <th>GENDER</th>
             <th>AGE</th>
             <th>SEAT NUMBER</th>
+            <th>STATUS</th>
         </tr>
 
     <%
@@ -133,6 +140,7 @@
         String age = ticket.getAge();
         String seatno = ticket.getSeatno();
         String gender = ticket.getGender();
+//        String status = ticket.getTicketstatus();
         t++;
         if (  tickets.size() <= t  ){
             break;
@@ -150,7 +158,7 @@
             <td> <%= gender %> </td>
             <td> <%= age %> </td>
             <td> <%= seatno %> </td>
-
+            <td> <%= ticketstatus %> </td>
         </tr>
 
         <%

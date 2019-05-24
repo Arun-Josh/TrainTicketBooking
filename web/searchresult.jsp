@@ -14,6 +14,12 @@
     <link rel="stylesheet" href="css/resultpage.css">
 </head>
 <body>
+<div>
+    <form action="logout" method="post">
+        <input type="submit" id="blogout" class="submit-button" value="LOG OUT">
+    </form>
+</div>
+
 
 <form class="box" action="booking" method="POST">
     <h1>Search Results</h1>

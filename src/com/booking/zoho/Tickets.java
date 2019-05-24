@@ -3,6 +3,7 @@ package com.booking.zoho;
 import java.util.LinkedList;
 
 public class Tickets {
+    String passengerid;
     String pnr;
     String from;
     String to;
@@ -18,7 +19,9 @@ public class Tickets {
     String stime;
     String dtime;
 
-    public Tickets(String pnr, String from, String to, String trainnumber, String trainname, String ticketstatus, String dateoftravel, String ticketfare, String passenger, String age, String seatno, String gender, String stime, String dtime) {
+
+    public Tickets(String passengerid, String pnr, String from, String to, String trainnumber, String trainname, String ticketstatus, String dateoftravel, String ticketfare, String passenger, String age, String seatno, String gender, String stime, String dtime) {
+        this.passengerid = passengerid;
         this.pnr = pnr;
         this.from = from;
         this.to = to;
@@ -33,6 +36,10 @@ public class Tickets {
         this.gender = gender;
         this.stime = stime;
         this.dtime = dtime;
+    }
+
+    public String getPassengerid() {
+        return passengerid;
     }
 
     public String getStime() {

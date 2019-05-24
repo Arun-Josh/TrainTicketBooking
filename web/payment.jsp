@@ -15,6 +15,13 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+<div>
+    <form action="bookedtickets" method="post">
+        <input type="submit" id="bhistory" class="submit-button" value="BOOKED TICKETS">
+    </form>
+</div>
+
 <%
     System.out.println("paymment " + request.getAttribute("trainid") +" "+ request.getAttribute("seatcount") + " " +request.getAttribute("seattype"));
     String trainid = (String) request.getAttribute("trainid");

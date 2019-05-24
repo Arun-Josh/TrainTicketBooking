@@ -17,6 +17,13 @@
   
 </head>
 <body>
+
+<div>
+    <form action="logout" method="post">
+        <input type="submit" id="blogout" class="submit-button" value="LOG OUT">
+    </form>
+</div>
+
 <%  ServletContext sc = getServletConfig().getServletContext();%>
 
 <form class="box" action="passengerinfo" method="post">

@@ -49,7 +49,7 @@ public class PnrCheck extends HttpServlet {
             String userid = rs.getString("userid");
             String sourceid = rs.getString("source");
             String destid = rs.getString("dest");
-            String ticketstatus = rs.getString("TICKETSTATUS");
+//            String ticketstatus = rs.getString("TICKETSTATUS");
             String fare = rs.getString("fare");
             String dateoftravel = rs.getString("dateoftravel");
 
@@ -87,9 +87,11 @@ public class PnrCheck extends HttpServlet {
             String genders = "";
             String seatnos = "";
             int seatcount = 0;
+
+            String ticketstatus = "";
             while(rs.next()){
                 seatcount++;
-
+                ticketstatus+=rs.getString("status")+",";
                 passengers += rs.getString("passengername") + ",";
                 ages += rs.getString("age") + ",";
                 genders += rs.getString("gender")+",";
@@ -112,7 +114,8 @@ public class PnrCheck extends HttpServlet {
             servletcontext.setAttribute("passengers",passengers);
             servletcontext.setAttribute("ages",ages);
             servletcontext.setAttribute("genders",genders);
-            request.setAttribute("ticketstatus",ticketstatus);
+//            request.setAttribute("ticketstatus",ticketstatus);
+            request.setAttribute("status",ticketstatus);
             request.setAttribute("seatnos",seatnos);
             request.setAttribute("seatcount", seatcount );
             request.setAttribute("fare", fare );

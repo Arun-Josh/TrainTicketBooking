@@ -22,6 +22,12 @@ import java.util.logging.Logger;
 public class Booking extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Logger logger = Logger.getLogger(Booking.class.getName());
+
+        HttpSession session = request.getSession();
+
+//        if(session.getAttribute("mailid")==null){
+//            response.sendRedirect("index.jsp");
+//        }
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
@@ -31,7 +37,7 @@ public class Booking extends HttpServlet {
         String srcstopno = traininfo[7];
         String dststopno = traininfo[8];
 
-        HttpSession session = request.getSession(true);
+//        HttpSession session = request.getSession(true);
         session.setAttribute("traininfo",traininfo);
         String uname = (String)session.getAttribute("username");
 
