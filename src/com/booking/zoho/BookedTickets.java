@@ -81,13 +81,13 @@ public class BookedTickets extends HttpServlet {
                 String gender = rs.getString("gender");
                 String passengerid = rs.getString("passengerid");
                 System.out.println(passengerid +" "+pnr + " + " +from + " + " +to + " + " +trainnumber + " + " +trainname + " + " +ticketstatus + " + " +dateoftravel + " + " +ticketfare + " + " +passengername + " + " + age + " + " + seatno + " + " + gender + " + " +stime+ " + "+ dtime);
-
+                System.out.println("passss id +"+passengerid);
 //    public Tickets(String pnr, String from, String to, String trainnumber, String trainname, String ticketstatus, String dateoftravel, String ticketfare, String passenger, String age, String seatno, String gender) {
                 tickets.add(new Tickets(passengerid, pnr,from,to,trainnumber,trainname,ticketstatus,dateoftravel,ticketfare,passengername, age, seatno, gender, stime, dtime));
             }
 
                 request.setAttribute("tickets",tickets);
-                request.getRequestDispatcher("BookedTickets.jsp").forward(request,response);
+                request.getRequestDispatcher("BookedTickets.jsp").include(request,response);
 
         }
         catch (Exception E){

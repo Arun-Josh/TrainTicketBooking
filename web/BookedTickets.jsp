@@ -56,7 +56,7 @@
 //        return;
     }
 %>
-<form class="box" >
+<form id="tickform" action="cancelseat" class="box" method="post" >
 
     <%
         ArrayList<Tickets> tickets = (ArrayList<Tickets>) request.getAttribute("tickets");
@@ -130,27 +130,29 @@
             <th>AGE</th>
             <th>SEAT NUMBER</th>
             <th>STATUS</th>
+            <th>CANCELLATION</th>
         </tr>
 
     <%
         int p = 1 ;
         do{
-            System.out.println("ttt + "+ t);
-        String passengername = ticket.getPassenger();
-        String age = ticket.getAge();
-        String seatno = ticket.getSeatno();
-        String gender = ticket.getGender();
-//        String status = ticket.getTicketstatus();
-        t++;
-        if (  tickets.size() <= t  ){
-            break;
-        }
 
-        if(Integer.valueOf(seatno) <= 0 ){
-            seatno = "NOT ASSIGNED";
-        }
+            System.out.println("ttt + "+ t + " ts size "+tickets.size() );
+            ticket = tickets.get(t);
+            if(!ticket.getPnr().equals(tpnr)){
+                break;
+            }
+            String passengername = ticket.getPassenger();
+            String passid = ticket.getPassengerid();
+            String age = ticket.getAge();
+            String seatno = ticket.getSeatno();
+            String gender = ticket.getGender();
+            String status = ticket.getTicketstatus();
+            t++;
+            if(Integer.valueOf(seatno) <= 0 ){
+                seatno = "NOT ASSIGNED";
+            }
 
-        ticket = tickets.get(t);
     %>
         <tr>
             <td> <%= p++ %> </td>
@@ -158,10 +160,17 @@
             <td> <%= gender %> </td>
             <td> <%= age %> </td>
             <td> <%= seatno %> </td>
-            <td> <%= ticketstatus %> </td>
+            <td> <%= status %> </td>
+            <td>
+                <input id="passid" name="passengerid" type="hidden" value="">
+                <button id="canbtn" onclick="refresh(this)" type="button" value="<%=passid%>">CANCEL THIS TICKET</button>
+            </td>
         </tr>
 
         <%
+                if (  tickets.size() <= t ){
+                    break;
+                 }
 //            p++;
             }while(ticket.getPnr().equals(tpnr) );%>
     </table>
@@ -175,7 +184,21 @@
 
 
 </form>
+<script>
+    function refresh(el) {
+        document.getElementById("passid").value = el.value;
+        // alert(el.value);
+        var form = document.getElementById("tickform");
+        form.submit();
 
+        // console.log("Testing");
+        // console.log(document.getElementById("canbtn").value);
+        // var id = document.getElementById("canbtn").value;
+        // document.getElementById("passid").value =  id;
+        // // document.location.reload();
+        // console.log("pass id "+ document.getElementById("passid").value + "id = "+id);
+    }
+</script>
 </body>
 
 </html>
