@@ -53,6 +53,19 @@
 </head>
 <body>
 
+<div>
+    <form action="searchtrain.html" method="post">
+        <input type="submit" id="home" class="submit-button" value="HOME">
+    </form>
+</div>
+
+<div>
+    <form action="logout" method="post">
+        <input type="submit" id="blogout" class="submit-button" value="LOG OUT">
+    </form>
+</div>
+
+
 <form class="box">
 
   <% ServletContext sc = getServletConfig().getServletContext(); %>

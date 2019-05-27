@@ -16,11 +16,24 @@
 </head>
 <body>
 
+<%--<div>--%>
+<%--    <form action="search" method="post">--%>
+<%--        <input type="submit" id="bhistory" class="submit-button" value="HOME">--%>
+<%--    </form>--%>
+<%--</div>--%>
+
 <div>
-    <form action="bookedtickets" method="post">
-        <input type="submit" id="bhistory" class="submit-button" value="BOOKED TICKETS">
+    <form action="searchtrain.html" method="post">
+        <input type="submit" id="home" class="submit-button" value="HOME">
     </form>
 </div>
+
+<div>
+    <form action="logout" method="post">
+        <input type="submit" id="blogout" class="submit-button" value="LOG OUT">
+    </form>
+</div>
+
 
 <%
     System.out.println("paymment " + request.getAttribute("trainid") +" "+ request.getAttribute("seatcount") + " " +request.getAttribute("seattype"));

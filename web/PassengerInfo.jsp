@@ -11,19 +11,24 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-  <title>Ticket Booked Successfully</title>
+  <title>Passenger Info</title>
   <link rel="stylesheet" href="css/pinfopage.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   
 </head>
 <body>
 
-<div>
-    <form action="logout" method="post">
-        <input type="submit" id="blogout" class="submit-button" value="LOG OUT">
-    </form>
-</div>
+            <div>
+                <form action="searchtrain.html" method="post">
+                    <input type="submit" id="home" class="submit-button" value="HOME">
+                </form>
+            </div>
 
+            <div>
+                <form action="logout" method="post">
+                    <input type="submit" id="blogout" class="submit-button" value="LOG OUT">
+                </form>
+            </div>
 <%  ServletContext sc = getServletConfig().getServletContext();%>
 
 <form class="box" action="passengerinfo" method="post">

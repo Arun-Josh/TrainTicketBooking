@@ -8,12 +8,12 @@ body{
     background-size: cover;
 }
 .box{
-    width: 300px;
-    padding :40px;
-    position: absolute;
-    top :50%;
-    left:50%;
-    transform: translate(-50%,-50%);
+    width: 90%;
+    padding :80px;
+    /*position: absolute;*/
+    /*top :50%;*/
+    /*left:50%;*/
+    /*transform: translate(-50%,-50%);*/
     background: #191919;
     text-align: center;
 }
@@ -81,7 +81,7 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0; 
 }
 
-#bpnr, #bhistory, #blogout, #home{
+#bpnr, #bhistory{
     border:0;
     display: block;
     text-align: center;
@@ -116,14 +116,16 @@ input[type=number]::-webkit-outer-spin-button {
     color: #e74c3c !important;
     display: none;
 }
+
 #blogout{
-    position: fixed;
-    top: 0px !important;
-    right: 10px;
-    float: right !important;
-}
-#home{
-    position: fixed;
-    top: 0px !important;
-    left: 0px;
+    border:0;
+    display: block;
+    text-align: center;
+    background: black;
+    margin: 20px auto;
+    border: 2px solid #2ecc71;
+    padding: 14px 40px;
+    outline: none;
+    color: white;
+    border-radius: 25px;
 }

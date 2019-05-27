@@ -14,11 +14,30 @@
     <link rel="stylesheet" href="css/resultpage.css">
 </head>
 <body>
-<div>
-    <form action="logout" method="post">
-        <input type="submit" id="blogout" class="submit-button" value="LOG OUT">
-    </form>
-</div>
+    <%
+        if(session.getAttribute("mailid")==null){
+            response.sendRedirect("index.jsp");
+        }
+
+    %>
+        <div>
+            <form action="searchtrain.html" method="post">
+                <input type="submit" id="home" class="submit-button" value="HOME">
+            </form>
+        </div>
+
+<%--        <div>--%>
+<%--            <form action="bookedtickets" method="post">--%>
+<%--                <input type="submit" id="bhistory" class="submit-button" value="BOOKED TICKETS">--%>
+<%--            </form>--%>
+<%--        </div>--%>
+
+        <div>
+            <form action="logout" method="post">
+                <input type="submit" id="blogout" class="submit-button" value="LOG OUT">
+            </form>
+        </div>
+
 
 
 <form class="box" action="booking" method="POST">

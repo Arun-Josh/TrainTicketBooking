@@ -175,7 +175,7 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0; 
 }
 
-s#blogout{
+s#blogout, #home{
     border:0;
     display: block;
     text-align: center;
@@ -186,4 +186,16 @@ s#blogout{
     outline: none;
     color: white;
     border-radius: 25px;
+}
+
+#blogout{
+    position: fixed;
+    top: 0px !important;
+    right: 10px;
+    float: right !important;
+}
+#home{
+    position: fixed;
+    top: 0px !important;
+    left: 0px;
 }

@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 <head>
     <title>Train Ticket Reservation </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+        <div>
+            <form action="searchtrain.html" method="post">
+                <input type="submit" id="home" class="submit-button" value="HOME">
+            </form>
+        </div>
+
         <div>
             <form action="bookedtickets" method="post">
                 <input type="submit" id="bhistory" class="submit-button" value="BOOKED TICKETS">
@@ -20,12 +28,20 @@
 <form id ="searchform" class="box" action="search" method="POST">
         <h1>Search Train</h1>
         <input id = "from" name="from" type="text" placeholder="From" REQUIRED>
-        <input type="button" onclick="swap()" value="<>">
+<!--        <button onclick="swap()"><i class="fa fa-exchange-alt"></i>SWAP</button>-->
+<!--        <input type="button" onclick="swap()" value="<>">-->
+
+        <input id="swap" class="fa fa-exchange" type="button" value="&#8645;">
+
+        </input>
+
         <input id = "to" name="to"  type="text" placeholder="To" REQUIRED>
         <input id= "date" name="date"  type="date" value="Date" required >
         <p id="datewarn"> Enter a valid date within 2 months from now </p>
+
         <input id ="subbutton" type="button" value="Seach Trains" onclick="dateValidation()">
-    </form>
+
+</form>
 </body>
 <script>
 
@@ -33,7 +49,7 @@
     //     location.href = "BookedTickets.jsp";
     // }
 
-    function swap() {
+    document.getElementById("swap").onclick  = function()    {
         var from = document.getElementById("from");
         var to = document.getElementById("to");
         var temp = from.value;

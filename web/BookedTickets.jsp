@@ -45,6 +45,16 @@
             background-color: black;
             color: white;
         }
+        button{
+            background-color: #f44336;
+            color: white;
+            padding: 14px 25px;
+            text-align: center;
+
+        }
+        button:hover{
+            background-color: red;
+        }
     </style>
 
 </head>
@@ -148,6 +158,10 @@
             String seatno = ticket.getSeatno();
             String gender = ticket.getGender();
             String status = ticket.getTicketstatus();
+            String cancelbtn = "CANCEL THIS TICKET";
+            if(status.equals("CANCELLED")){
+                cancelbtn = "CANCELLED SUCCESSFULLY";
+            }
             t++;
             if(Integer.valueOf(seatno) <= 0 ){
                 seatno = "NOT ASSIGNED";
@@ -163,7 +177,7 @@
             <td> <%= status %> </td>
             <td>
                 <input id="passid" name="passengerid" type="hidden" value="">
-                <button id="canbtn" onclick="refresh(this)" type="button" value="<%=passid%>">CANCEL THIS TICKET</button>
+                <button id="canbtn" onclick="refresh(this)" type="button" <% if(status.equals("CANCELLED")) {%> <%= "disabled" %>  <%}  %> value="<%=passid%>"><%=cancelbtn%></button>
             </td>
         </tr>
 
