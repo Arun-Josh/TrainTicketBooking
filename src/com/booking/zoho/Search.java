@@ -15,13 +15,6 @@ import java.util.logging.Logger;
 public class Search extends HttpServlet {
     Logger log = Logger.getLogger(Search.class.getName());
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Cookie ck[] = request.getCookies();
-        for (Cookie c : ck){
-            if(c.getValue()==""){
-                response.sendRedirect("index.jsp");
-            }
-        }
-
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         try{
@@ -120,7 +113,8 @@ public class Search extends HttpServlet {
             }
 
             request.setAttribute("trains",trains);
-            HttpSession session = request.getSession(true);
+//            HttpSession session = request.getSession(true);
+            log.info("FORWARDED TO searchresults");
             request.getRequestDispatcher("searchresult.jsp").forward(request,response);
 
 
@@ -182,7 +176,7 @@ public class Search extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         if(session.getAttribute("mail")==null){
-            response.sendRedirect("index.jsp");
+            response.sendRedirect("index.html");
         }
         else{
             doPost(request, response);

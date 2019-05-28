@@ -18,6 +18,12 @@ import java.util.ArrayList;
 public class BookedTickets extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        Boolean login = new SessionValidation().validate(request,response);
+        if(!login){
+            response.sendRedirect("index.html");
+            return;
+        }
+
         ServletContext sc = getServletContext();
         String userid = (String) sc.getAttribute("userid");
         System.out.println("buserid" + userid);
@@ -98,12 +104,12 @@ public class BookedTickets extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        HttpSession session = request.getSession();
-        if(session.getAttribute("mail")==null){
-            response.sendRedirect("index.jsp");
+        Boolean login = new SessionValidation().validate(request,response);
+        if(login){
+            doPost(request,response);
         }
         else{
-            doPost(request, response);
+            response.sendRedirect("index.html");
         }
     }
 }

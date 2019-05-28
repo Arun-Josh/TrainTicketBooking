@@ -39,12 +39,12 @@ public class CancelSeat extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        if(session.getAttribute("mail")==null){
-            response.sendRedirect("index.jsp");
+        Boolean login = new SessionValidation().validate(request,response);
+        if(login){
+            doPost(request,response);
         }
-        else{
-            doPost(request, response);
+        else {
+            response.sendRedirect("index.html");
         }
     }
 }

@@ -44,9 +44,9 @@
 </form>
 </body>
 <script>
-    // preCheck();
-    // function preCheck() {
-    //     console.log("Check Passed");
+
+    // document.getElementById("bhistory").onclick = function () {
+    //     location.href = "BookedTickets.jsp";
     // }
 
     document.getElementById("swap").onclick  = function()    {
@@ -59,8 +59,8 @@
 
     function  dateValidation() {
         var form = document.getElementById("searchform");
-        var from = document.getElementById("from").value;
-        var to   = document.getElementById("to").value;
+        // var from = document.getElementById("from").value;
+        // var to   = document.getElementById("to").value;
         var inputdate = document.getElementById("date").value;
         var idate = new Date(inputdate);
         var today = new Date();

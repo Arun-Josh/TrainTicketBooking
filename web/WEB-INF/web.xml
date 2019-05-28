@@ -11,10 +11,10 @@
             com.booking.zoho.Booking
         </servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>CancelSeat</servlet-name>
-        <servlet-class>com.booking.zoho.CancelSeat</servlet-class>
-    </servlet>
+<!--    <servlet>-->
+<!--        <servlet-name>CancelSeat</servlet-name>-->
+<!--        <servlet-class>com.booking.zoho.CancelSeat</servlet-class>-->
+<!--    </servlet>-->
     <servlet-mapping>
         <servlet-name>Booking</servlet-name>
         <url-pattern>/booking</url-pattern>

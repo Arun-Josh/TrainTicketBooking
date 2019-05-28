@@ -15,8 +15,8 @@
 </head>
 <body>
     <%
-        if(session.getAttribute("mailid")==null){
-            response.sendRedirect("index.jsp");
+        if(session.getAttribute("mail")==null){
+            response.sendRedirect("index.html");
         }
 
     %>
@@ -82,7 +82,7 @@
 <script>
     var a = document.cookie;
     if(a==""){
-        window.location.href="index.jsp";
+        window.location.href="index.html";
     }
 </script>
 <%--        <h1> com.booking.zoho.Train <%= request.getAttribute("trains") %> </h1>--%>

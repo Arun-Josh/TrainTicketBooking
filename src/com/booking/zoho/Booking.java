@@ -26,7 +26,7 @@ public class Booking extends HttpServlet {
         HttpSession session = request.getSession();
 
 //        if(session.getAttribute("mailid")==null){
-//            response.sendRedirect("index.jsp");
+//            response.sendRedirect("index.html");
 //        }
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
@@ -43,7 +43,7 @@ public class Booking extends HttpServlet {
 
         if (uname==null) {
             out.print("<body><script>alert(\"Please Login Again !\")</script></body>");
-            RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher("index.html");
             rd.include(request,response);
         }
 //        String mail  = (String) session.getAttribute("mail");
@@ -68,12 +68,12 @@ public class Booking extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        if(session.getAttribute("mail")==null){
-            response.sendRedirect("index.jsp");
+        Boolean login = new SessionValidation().validate(request,response);
+        if(login){
+            doPost(request,response);
         }
-        else{
-            doPost(request, response);
+        else {
+            response.sendRedirect("index.html");
         }
     }
 }

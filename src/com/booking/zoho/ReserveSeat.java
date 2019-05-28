@@ -43,7 +43,7 @@ public class ReserveSeat extends HttpServlet {
                 log.info("seeet" + seattype);
 
                 if(userid == null ){
-                    request.getRequestDispatcher("index.jsp").forward(request,response);
+                    request.getRequestDispatcher("index.html").forward(request,response);
                     return;
                 }
 
@@ -274,7 +274,7 @@ public class ReserveSeat extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         if(session.getAttribute("mail")==null){
-            response.sendRedirect("index.jsp");
+            response.sendRedirect("index.html");
         }
         else{
             doPost(request, response);
