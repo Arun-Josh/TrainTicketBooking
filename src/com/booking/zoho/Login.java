@@ -50,8 +50,9 @@ public class Login extends HttpServlet {
                 sc.setAttribute("mailid", mailid);
 
                 if(rs.getInt("privilege")==1){
-                    RequestDispatcher rd = request.getRequestDispatcher("searchtrain.html");
-                    rd.include(request,response);
+//                    RequestDispatcher rd = request.getRequestDispatcher("searchtrain.html");
+//                    rd.forward(request,response);
+                    response.sendRedirect("searchtrain.html");
                     Cookie ck = new Cookie("mailid",mail);
                     response.addCookie(ck);
                 }

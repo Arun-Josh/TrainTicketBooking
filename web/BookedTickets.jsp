@@ -4,8 +4,10 @@
 <html>
 <head>
     <title>Booked Tickets</title>
+
     <link rel="stylesheet" href="css/ticketpage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
     <style>
 
         
@@ -59,13 +61,7 @@
 
 </head>
 <body>
-<%
-    System.out.println("mail is " + session.getAttribute("mailid")+" in booked  tickets");
-    if(session.getAttribute("mailid")==null){
-//        response.sendRedirect("index.jsp");
-//        return;
-    }
-%>
+
 <form id="tickform" action="cancelseat" class="box" method="post" >
 
     <%
@@ -174,10 +170,10 @@
             <td> <%= gender %> </td>
             <td> <%= age %> </td>
             <td> <%= seatno %> </td>
-            <td> <%= status %> </td>
+            <td id="<%=passid%>" > <%= status %> </td>
             <td>
                 <input id="passid" name="passengerid" type="hidden" value="">
-                <button id="canbtn" onclick="refresh(this)" type="button" <% if(status.equals("CANCELLED")) {%> <%= "disabled" %>  <%}  %> value="<%=passid%>"><%=cancelbtn%></button>
+                <button id="canbtn" name="<%=passid%>" onclick="refresh(this)" type="button" <% if(status.equals("CANCELLED")) {%> <%= "disabled" %>  <%}  %> value="<%=passid%>"><%=cancelbtn%></button>
             </td>
         </tr>
 
@@ -198,21 +194,69 @@
 
 
 </form>
+<script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 <script>
-    function refresh(el) {
-        document.getElementById("passid").value = el.value;
-        // alert(el.value);
-        var form = document.getElementById("tickform");
-        form.submit();
 
-        // console.log("Testing");
-        // console.log(document.getElementById("canbtn").value);
-        // var id = document.getElementById("canbtn").value;
-        // document.getElementById("passid").value =  id;
-        // // document.location.reload();
-        // console.log("pass id "+ document.getElementById("passid").value + "id = "+id);
+    function ajaxCall(passid) {
+        console.log("INSIDE AJAX CALL "+passid);
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if(xhr.status == 200 && xhr.readyState==4){
+                // alert(xhr.responseText);
+                if(xhr.responseText=="CANCELLED"){
+                    document.getElementById(passid).innerHTML = "CANCELLED";
+                    document.getElementsByName(passid)[0].innerHTML = "CANCELLED SUCCESSFULLY";
+                    document.getElementsByName(passid)[0].disabled = true;
+                }
+            }
+        }
+        xhr.open("POST","cancelseat",true);
+        xhr.setRequestHeader("content-type","application/x-www-form-urlencoded");
+        xhr.send("passengerid="+passid);
+    }
+
+    function refresh(el) {
+        var passid = document.getElementById("passid").value = el.value;
+        console.log("CLICK MADE TO CANCEL " + passid);
+        // var form = document.getElementById("tickform");
+
+
+        $.confirm({
+            theme:'supervan',
+            useBootstrap : false,
+            closeIcon: true,
+            icon: 'glyphicon glyphicon-heart',
+            columnClass: 'small',
+            title: 'Do you sure want to cancel the Ticket ?',
+            content: '',
+            autoClose: 'NO|10000',
+            buttons: {
+                YES: {
+                    text: 'YES',
+                    action: function () {
+                        ajaxCall(passid);
+                        $.alert('Ticket Successfully Cancelled');
+                    }
+                },
+                NO:{
+                    text:'NO',
+                    action : function () {
+                        $.alert('Ticket Not Cancelled');
+                }
+                }
+            }
+        });
+
+        // form.submit();
+
+
     }
 </script>
+
 </body>
 
 </html>
