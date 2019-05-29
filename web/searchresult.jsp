@@ -80,6 +80,7 @@
     <input id="book" type="submit" value="Book">
 </form>
 <script>
+
     var a = document.cookie;
     if(a==""){
         window.location.href="index.html";

@@ -1,6 +1,6 @@
 package com.booking.zoho;
 
-import javax.servlet.ServletContext;
+import com.google.gson.Gson;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -21,9 +21,9 @@ public class Search extends HttpServlet {
             String source = request.getParameter("from");
             String dest   = request.getParameter("to");
             String date = request.getParameter("date");
-
-            ServletContext sc = getServletContext();
-            sc.setAttribute("date",date);
+            System.out.println("FROM "+source+" TO "+dest +" date "+date);
+//            ServletContext sc = getServletContext();
+//            sc.setAttribute("date",date);
 
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation","root","root");
@@ -99,7 +99,10 @@ public class Search extends HttpServlet {
                         }
 
                         if(t1stopno > t2stopno && seatvail){
-                            trains.add(new Train(trainid, trainnumber,trainname,source, dest, sourcetime, desttime, seat, t1stopno,t2stopno));
+                            Train train = new Train(trainid, trainnumber,trainname,source, dest, sourcetime, desttime, seat, t1stopno,t2stopno);
+//                            JSONObject trainJSON = new JSON
+                            trains.add(train);
+
                             log.info("tstime = "+sourcetime +" tdtime = " +desttime+ " train no  = "+ trainnumber +" trainn name = " + trainname + " source "+source + "dest "+ dest + "\n");
                         for(int i=0;i < seat.size();i++){
                             log.info("SEAT TYPE "+ seat.get(i).seattype);
@@ -111,11 +114,16 @@ public class Search extends HttpServlet {
                     }
                 }
             }
+            String trainsJSON = new Gson().toJson(trains);
+//            request.setAttribute("trains",trains);
+//            JSONArray jsontrains = new JSONArray(trains);
+            request.setAttribute("trainsJSON",trainsJSON );
 
-            request.setAttribute("trains",trains);
+            System.out.println("trains json" + trainsJSON);
+            out.print(trainsJSON);
 //            HttpSession session = request.getSession(true);
-            log.info("FORWARDED TO searchresults");
-            request.getRequestDispatcher("searchresult.jsp").forward(request,response);
+            log.info("FORWARDED TO Reserve Trains");
+//            request.getRequestDispatcher("searchresult.jsp").forward(request,response);
 
 
 //            ResultSet rs = ps.executeQuery();

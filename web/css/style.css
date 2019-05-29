@@ -18,6 +18,17 @@ body{
     text-align: center;
 }
 
+.resultbox{
+    width: 90%;
+    padding :40px;
+    position: absolute;
+    /* top :50%;
+    left:50%;
+    transform: translate(-50%,-50%); */
+    background: #191919;
+    text-align: center;
+}
+
 .box h1{
     color: white;
     text-transform: uppercase;
@@ -72,7 +83,7 @@ body{
 .box a{
     color:whitesmoke; 
     padding-bottom: 10px; 
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 input[type=number]::-webkit-inner-spin-button, 
@@ -126,4 +137,10 @@ input[type=number]::-webkit-outer-spin-button {
     position: fixed;
     top: 0px !important;
     left: 0px;
+}
+label{
+    color: #2ecc71;
+}
+#hidden{
+    display: none;
 }
