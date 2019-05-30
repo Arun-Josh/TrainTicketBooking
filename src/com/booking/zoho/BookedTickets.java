@@ -1,6 +1,7 @@
 package com.booking.zoho;
 
-import javax.servlet.ServletContext;
+import com.google.gson.Gson;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,10 +24,10 @@ public class BookedTickets extends HttpServlet {
             response.sendRedirect("index.html");
             return;
         }
-
-        ServletContext sc = getServletContext();
-        String userid = (String) sc.getAttribute("userid");
-        System.out.println("buserid" + userid);
+        HttpSession session = request.getSession();
+//        ServletContext sc = getServletContext();
+        String userid = (String) session.getAttribute("userid");
+        System.out.println("booking userid" + userid);
 
         try {
 //            Class.forName("java.mysql.jdbc.Driver");
@@ -93,8 +94,11 @@ public class BookedTickets extends HttpServlet {
                 tickets.add(new Tickets(passengerid, pnr,from,to,trainnumber,trainname,ticketstatus,dateoftravel,ticketfare,passengername, age, seatno, gender, stime, dtime));
             }
 
-                request.setAttribute("tickets",tickets);
-                request.getRequestDispatcher("BookedTickets.jsp").include(request,response);
+            String ticketsJSON = new Gson().toJson(tickets);
+            System.out.println("Tickets Json "+ticketsJSON);
+            response.getWriter().print(ticketsJSON);
+//                request.setAttribute("tickets",tickets);
+//                request.getRequestDispatcher("BookedTickets.jsp").forward(request,response);
 
         }
         catch (Exception E){

@@ -72,7 +72,6 @@ body{
 .box a{
     color:whitesmoke; 
     padding-bottom: 10px; 
-    text-decoration: underline;
 }
 
 input[type=number]::-webkit-inner-spin-button, 
@@ -81,7 +80,7 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0; 
 }
 
-#bpnr, #bhistory{
+#bpnr, #bhistory, #home{
     border:0;
     display: block;
     text-align: center;
@@ -117,7 +116,7 @@ input[type=number]::-webkit-outer-spin-button {
     display: none;
 }
 
-#blogout{
+#blogout,#addbtn{
     border:0;
     display: block;
     text-align: center;
@@ -128,4 +127,74 @@ input[type=number]::-webkit-outer-spin-button {
     outline: none;
     color: white;
     border-radius: 25px;
+}
+
+#blogout{
+    position: fixed;
+    top: 0px !important;
+    right: 10px;
+    float: right !important;
+}
+label{
+    color: #2ecc71;
+    text-transform: uppercase;
+}
+        
+h2{
+    color: #2ecc71;
+    text-transform: uppercase;
+    font-weight: 500;
+    text-align: left !important;
+}
+
+  h1{
+      color: #2ecc71 !important;
+  }
+  p{
+      float:right;
+      color: #2ecc71 !important;
+  }
+
+  table {
+      width:100%;
+  }
+  table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+  }
+  th, td {
+      padding: 15px;
+      text-align: left;
+  }
+  table#t01 tr:nth-child(even) {
+      background-color: #eee;
+  }
+  table#t01 tr:nth-child(odd) {
+      background-color: #fff;
+  }
+  table#t01 th {
+      background-color: black;
+      color: white;
+  }
+  button{
+      background-color: #f44336;
+      color: white;
+      padding: 14px 25px;
+      text-align: center;
+
+  }
+  button:hover{
+      background-color: red;
+  }
+
+  #home{
+    position: fixed;
+    top: 0px !important;
+    left: 0px;
+}
+#hidden{
+    display: none;
+}
+.hidden{
+    display: none;
 }

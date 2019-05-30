@@ -126,54 +126,6 @@ public class Search extends HttpServlet {
 //            request.getRequestDispatcher("searchresult.jsp").forward(request,response);
 
 
-//            ResultSet rs = ps.executeQuery();
-//
-//            Boolean status = false;
-//
-//
-//            ArrayList<Train> trains = new ArrayList<Train>();
-//            while(rs.next()){
-//                status = true;
-//                boolean routestatus = false;
-//
-//                String route[] =  rs.getString("route").split(",");
-//
-//                int tstime = 0;
-//                int tdtime = 0;
-//
-//                for(int i=0;i<route.length;i++){
-//                    if(route[i].equals(source)){
-//                        tstime = i;
-//                        for(int j=i+1;j<route.length;j++){
-//                            if( route[j].equals(dest)){
-//                                tdtime = j;
-//                                routestatus = true;
-//                                break;
-//                            }
-//                        }
-//                        if(routestatus) break;
-//                    }
-//                }
-//
-//
-//                if(routestatus){
-//                    ps = con.prepareStatement("SELECT * from trains WHERE trainnumber = ? and date = ?");
-//                    ps.setString(1,rs.getString("trainnumber"));
-//                    ps.setString(2,date);
-//
-//                    ResultSet trs = ps.executeQuery();
-//                    trs.next();
-//
-//                    String[] time = rs.getString("stationtime").split(",");
-//                    log.info("tstime = "+tstime +" tdtime = " +tdtime+ " time[tstime] = "+ time[tstime]+" time[tdtime] = " + time[tdtime] + "\n");
-//                    trains.add(new Train(rs.getString("trainnumber"),rs.getString("trainname"),source,dest,time[tstime],time[tdtime],rs.getInt("totalseats"),trs.getInt("remseats")));
-//                }
-//            }
-//            request.setAttribute("trains",trains);
-//            request.getRequestDispatcher("searchresult.jsp").forward(request,response);
-//           if(!status){
-//                out.print("Train Not Found !!");
-//            }
 
         }
         catch (Exception e){

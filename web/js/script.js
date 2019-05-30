@@ -96,22 +96,24 @@ function passengerInfo() {
     for(train in trainsJSON){
         if(trainsJSON[train]["trainid"]==trainchosen){
             for(seat in trainsJSON[train]["seats"]){
-                seats+='<label>'+trainsJSON[train]["seats"][seat]["seattype"]+'</label><input name="seattype" type="radio" value="'+ trainsJSON[train]["seats"][seat]["seattype"] +'"/></label>'
+                seats+='<input name="seattype" type="radio" value="'+ trainsJSON[train]["seats"][seat]["seattype"] +'"/><label>'+trainsJSON[train]["seats"][seat]["seattype"]+'</label>&emsp;';
             }
         }
     }
 
     // passcount = 0;
     var passinfopage = ' <div id="passform" style="width: 90%" class="box" >\n' +
-        seats +
+        '   <h3 style="color: WHITE">SELECT SEAT TYPE</h3>' +
+        seats
+        +
         '<br>' +
-        '<input id="addbtn" type="button" onclick="addpassenger()" value="Add Passenger"/>' +
-        '<br>' +
+        '   <h1 style="color: white" >Enter Passenger Details</h1>' +
         '<center><a id ="hidden" style="color: orange">ONLY SIX PASSENGERS CAN TRAVEL PER TICKET</a></center>' +
         '<center><a id="missingdetails" style="color: orange;display: none;">Enter the necessary details</a></center>' +
+        '<input id="addbtn" type="button" onclick="addpassenger()" value="Add Passenger"/>' +
         '                        <div id="addpassenger"></div>\n' +
         '<br>' +
-        '<button onclick="paymentPage()">SUBMIT</button>' +
+        '<button id="subbutton" onclick="paymentPage()">SUBMIT</button>' +
         '            </div>\n';
     // document.getElementById("form").style.width = "90%";
     document.getElementById("searchresult").innerHTML = passinfopage;
@@ -121,6 +123,7 @@ function passengerInfo() {
     var passcount = 0;
 
     function addpassenger() {
+        changeCSS("css/ticketpage.css",0);
         passcount++;
         if(passcount>6){
             document.getElementById("hidden").style.display = "block";
@@ -128,16 +131,18 @@ function passengerInfo() {
         }
         var passenger = document.createElement("div");
         passenger.innerHTML = '<label>Traveller - '+passcount+'</label>' +
-            '<table align="center"><tr>' +
+            '<br>' +
+            '<table align="center" ><tr>' +
             '<td><input type="text" name="pname" placeholder="Name of Traveller ' + passcount +' " maxlength="25" /></td> &emsp;' +
             '<td><input type="text" name="page" placeholder="Age of Traveller '+ passcount+'" maxlength="2" pattern="[0-9]{1,2}"/></td>' +
             '</tr></table>' +
+            '<br>' +
             '';
         document.getElementById("addpassenger").appendChild(passenger);
     }
 
     function paymentPage() {
-
+        changeCSS("css/style.css",0);
         var seattypes = document.getElementsByName("seattype");
         var seatchosen;
 
@@ -409,7 +414,13 @@ function pnrCheck() {
             console.log(xhr.responseText);
             var ticket = xhr.responseText;
             sessionStorage.setItem("ticket",ticket);
-            console.log("in pnr check "+JSON.parse(ticket))
+            try{
+                console.log("in pnr check "+JSON.parse(ticket))
+            }catch (e) {
+                console.log("pnr not found");
+                document.getElementById("nopnr").style.display = "block";
+            }
+
             ticketInfo();
         }
     }
@@ -420,4 +431,211 @@ function pnrCheck() {
 
 function printTicket() {
     window.print();
+}
+
+function bookedTickets() {
+    var xhr = new XMLHttpRequest();
+    var url = "bookedtickets";
+    xhr.onreadystatechange = function () {
+        if(xhr.status=200 && xhr.readyState==4){
+            var tickets = xhr.responseText;
+            sessionStorage.setItem("tickets",tickets);
+            console.log("tickets json pared = "+JSON.parse(tickets));
+            console.log("tickets json no parse = "+tickets);
+            bookedTicketsPage();
+        }
+    }
+    console.log("inside booked Tickets "+url)
+    xhr.open("GET",url,true);
+    xhr.send();
+}
+
+function bookedTicketsPage() {
+    document.getElementById("searchform").style.display = "none";
+    document.getElementById("bhistory").style.display = "none";
+    changeCSS('css/ticketpage.css', 0);
+    var tickets = sessionStorage.getItem("tickets");
+
+    var page = '<div id="tickform" class="box" >';
+
+    if (Object.keys(tickets).length==0) {
+        console.log("JSON IS empty");
+        page += '    <h1> NO TICKETS BOOKED !</h1>';
+        page += '</div>'
+        document.getElementById("bookedtickets").innerHTML = page;
+    }
+
+    tickets = JSON.parse(tickets);
+
+
+    for(ticket in tickets){
+        console.log("Ticket "+ticket);
+        console.log(tickets[ticket]["passengerid"]);
+        page += '    <h1 >TICKET INFO <i class="fa fa-ticket" aria-hidden="true"></i> </h1>\n' +
+            '    <h2 >TRAIN INFO  <i class="fa fa-subway" aria-hidden="true"></i>  : </h2>';
+        page += '\n' +
+            '<div>\n' +
+            '<table id="t01">\n' +
+            '        <tr>\n' +
+            '            <th>PNR NUMBER</th>\n' +
+            '            <th>DATE OF TRAVEL</th>\n' +
+            '            <th>TRAIN NAME</th>\n' +
+            '            <th>TRAIN NUMBER</th>\n' +
+            '            <th>SOURCE</th>\n' +
+            '            <th>DESTINATION</th>\n' +
+            '            <th>SOURCE TIME</th>\n' +
+            '            <th>DESTINATION TIME</th>\n' +
+            '            <th>TICKET FARE</th>\n' +
+            '        </tr>\n' +
+            '\n' +
+            '        <tr>\n' +
+            '            <td>  '+tickets[ticket]["pnr"]+' </td>\n' +
+            '            <TD>'+tickets[ticket]["dateoftravel"]+'</TD>\n' +
+            '            <td> '+tickets[ticket]["trainname"]+' </td>\n' +
+            '            <td>  '+tickets[ticket]["trainnumber"]+' </td>\n' +
+            '            <td> '+tickets[ticket]["from"]+' </td>\n' +
+            '            <td> '+tickets[ticket]["to"]+' </td>\n' +
+            '            <td> '+tickets[ticket]["stime"]+' </td>\n' +
+            '            <td> '+tickets[ticket]["dtime"]+' </td>\n' +
+            '            <td> Rs. '+tickets[ticket]["ticketfare"]+'</td>\n' +
+            '        </tr>\n' +
+            '\n' +
+            '    </table>\n' +
+            '</div>' +
+            '    <br>\n' +
+            '    <br>\n' +
+            '\n' +
+            '    <h2 >PASSENGERS INFO <i class="fa fa-users" area-hidden="true"></i>  :</h2>\n' +
+            '\n' +
+            '    <table id="t01">\n' +
+            '        <tr>\n' +
+            '            <th>S.NO</th>\n' +
+            '            <th>PASSENGER NAME</th>\n' +
+            '            <th>GENDER</th>\n' +
+            '            <th>AGE</th>\n' +
+            '            <th>SEAT NUMBER</th>\n' +
+            '            <th>STATUS</th>\n' +
+            '            <th>CANCELLATION</th>\n' +
+            '        </tr>';
+            var p = 1;
+            var tpnr = tickets[ticket]["pnr"];
+            do{
+
+                if(tickets[ticket]["pnr"]!=tpnr){
+                    break;
+                }
+                console.log(ticket);
+                var pname = tickets[ticket]["passenger"];
+                var gender = tickets[ticket]["gender"];
+                var age = tickets[ticket]["gender"];
+                var seatno = tickets[ticket]["seatno"];
+                var passid = tickets[ticket]["passengerid"];
+                var status = tickets[ticket]["ticketstatus"];
+                var cancelbtn = "CANCEL THIS TICKET";
+                if(status=="CANCELLED"){
+                    cancelbtn = "CANCELLED SUCCESSFULLY";
+                }
+                var btnstatus = "";
+
+                if(status=="CANCELLED") {
+                    btnstatus = '"disabled"';
+                }
+
+                if(seatno<=0){
+                    seatno = "NOT ASSIGNED";
+                }
+
+                ticket++;
+
+                page+='        <tr>\n' +
+                    '            <td> '+(p++)+' </td>\n' +
+                    '            <td> '+pname+' </td>\n' +
+                    '            <td> '+gender+' </td>\n' +
+                    '            <td> '+age+' </td>\n' +
+                    '            <td> '+seatno+' </td>\n' +
+                    '            <td id="'+passid+'" > '+status+' </td>\n' +
+                    '            <td>\n' +
+                    '                <input id="passid" name="passengerid" type="hidden" value="">\n' +
+                    '                <button id="canbtn" name="<%=passid%>" onclick="refresh(this)" type="button" '+ btnstatus +'value="'+passid+'">'+cancelbtn+'</button>\n' +
+                    '            </td>\n' +
+                    '        </tr>'    ;
+
+                if(ticket>=Object.keys(tickets).length){
+                    break;
+                }
+                var newpnr = tickets[ticket]["pnr"];
+            }while (newpnr===tpnr);
+        page+='</table>\n' +
+            '\n' +
+            '    <br><br>\n' +
+            '    <hr color="#2ecc71">\n' +
+            '    <br><br>';
+        ticket--;
+    }
+    page += '</div>'
+    document.getElementById("bookedtickets").innerHTML = page;
+}
+
+function ajaxCall(passid) {
+    console.log("INSIDE AJAX CALL "+passid);
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if(xhr.status == 200 && xhr.readyState==4){
+            // alert(xhr.responseText);
+            if(xhr.responseText=="CANCELLED"){
+                document.getElementById(passid).innerHTML = "CANCELLED";
+                document.getElementsByName(passid)[0].innerHTML = "CANCELLED SUCCESSFULLY";
+                document.getElementsByName(passid)[0].disabled = true;
+            }
+        }
+    }
+    xhr.open("POST","cancelseat",true);
+    xhr.setRequestHeader("content-type","application/x-www-form-urlencoded");
+    xhr.send("passengerid="+passid);
+}
+
+function refresh(el) {
+    var passid = document.getElementById("passid").value = el.value;
+    console.log("CLICK MADE TO CANCEL " + passid);
+    // var form = document.getElementById("tickform");
+
+
+    // $.confirm({
+    //     // theme:'supervan',
+    //     useBootstrap : false,
+    //     closeIcon: true,
+    //     icon: 'glyphicon glyphicon-heart',
+    //     columnClass: 'small',
+    //     title: 'Do you sure want to cancel the Ticket ?',
+    //     content: '',
+    //     autoClose: 'NO|10000',
+    //     buttons: {
+    //         YES: {
+    //             text: 'YES',
+    //             action: function () {
+                    ajaxCall(passid);
+    //                 $.alert('Ticket Successfully Cancelled');
+    //             }
+    //         },
+    //         NO:{
+    //             text:'NO',
+    //             action : function () {
+    //                 $.alert('Ticket Not Cancelled');
+    //             }
+    //         }
+    //     }
+    // });
+    // form.submit();
+}
+
+function changeCSS(cssFile, cssLinkIndex) {
+
+    var oldlink = document.getElementsByTagName("link").item(cssLinkIndex);
+
+    var newlink = document.createElement("link");
+    newlink.setAttribute("rel", "stylesheet");
+    newlink.setAttribute("type", "text/css");
+    newlink.setAttribute("href", cssFile);
+
+    document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
 }

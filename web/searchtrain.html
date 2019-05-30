@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <head>
     <title>Train Ticket Reservation </title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="js/script.js"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 </head>
 <body>
-
         <div>
-            <form action="searchtrain.html" method="post">
-                <input type="submit" id="home" class="submit-button" value="HOME">
+            <form action="pnrstatus.html" method="post">
+                <input type="submit" id="home" class="submit-button" value="PNR STATUS">
             </form>
         </div>
 
         <div>
-            <form action="bookedtickets" method="post">
-                <input type="submit" id="bhistory" class="submit-button" value="BOOKED TICKETS">
-            </form>
+            <div>
+                <input type="submit" onclick="bookedTickets()" id="bhistory" class="submit-button" value="BOOKED TICKETS">
+            </div>
         </div>
 
         <div>
@@ -25,7 +33,7 @@
             </form>
         </div>
 
-<!--    <div id="searchresult"></div>-->
+    <div id="bookedtickets"></div>
 
     <form id ="searchform" class="box" action="ReserveTrain.html" method="GET">
             <h1>Search Train</h1>
