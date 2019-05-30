@@ -110,6 +110,7 @@ function passengerInfo() {
         '   <h1 style="color: white" >Enter Passenger Details</h1>' +
         '<center><a id ="hidden" style="color: orange">ONLY SIX PASSENGERS CAN TRAVEL PER TICKET</a></center>' +
         '<center><a id="missingdetails" style="color: orange;display: none;">Enter the necessary details</a></center>' +
+
         '<input id="addbtn" type="button" onclick="addpassenger()" value="Add Passenger"/>' +
         '                        <div id="addpassenger"></div>\n' +
         '<br>' +
@@ -132,10 +133,18 @@ function passengerInfo() {
         var passenger = document.createElement("div");
         passenger.innerHTML = '<label>Traveller - '+passcount+'</label>' +
             '<br>' +
-            '<table align="center" ><tr>' +
-            '<td><input type="text" name="pname" placeholder="Name of Traveller ' + passcount +' " maxlength="25" /></td> &emsp;' +
-            '<td><input type="text" name="page" placeholder="Age of Traveller '+ passcount+'" maxlength="2" pattern="[0-9]{1,2}"/></td>' +
-            '</tr></table>' +
+            '<table id="t01">\n' +
+            '      <tr>\n' +
+            '          <th>Name</th>\n' +
+            '          <th>Age</th>\n' +
+            // '          <th>Gender</th>\n' +
+            '      </tr>' +
+            // '<table align="center" >
+                    '<tr>' +
+                        '<td><input style="color: #191919" type="text" name="pname" placeholder="Name of Traveller ' + passcount +' " maxlength="25" /></td> &emsp;' +
+                        '<td><input style="color: #191919" type="text" name="page" placeholder="Age of Traveller '+ passcount+'" maxlength="2" pattern="[0-9]{1,2}"/></td>' +
+                    '</tr>' +
+            '</table>' +
             '<br>' +
             '';
         document.getElementById("addpassenger").appendChild(passenger);
