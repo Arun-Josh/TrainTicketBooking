@@ -38,16 +38,16 @@ public class Login extends HttpServlet {
             if(status){
                 String uname = rs.getString("name");
                 String userid = rs.getString("userid");
-                String mailid = rs.getString("mailid");
+//                String mailid = rs.getString("mailid");
 
                 //Sessions
 
                 session.setAttribute("username",uname);
                 session.setAttribute("mail",mail);
-
-                ServletContext sc = getServletContext();
-                sc.setAttribute("userid", userid);
-                sc.setAttribute("mailid", mailid);
+                session.setAttribute("userid",userid);
+//                ServletContext sc = getServletContext();
+//                sc.setAttribute("userid", userid);
+//                sc.setAttribute("mailid", mailid);
 
                 if(rs.getInt("privilege")==1){
                     Cookie ck = new Cookie("mail",mail);

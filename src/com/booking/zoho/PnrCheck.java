@@ -1,6 +1,7 @@
 package com.booking.zoho;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -102,50 +103,63 @@ public class PnrCheck extends HttpServlet {
 
             LOG.info("SEAT NOOO "+seatnos    +  ticketstatus  );
 
-            ServletContext servletcontext = getServletContext();
+            JSONObject ticket = new JSONObject();
 
-            request.setAttribute("pnr",pnr);
-            servletcontext.setAttribute("trainno",trainid);
-            servletcontext.setAttribute("trainnumber",trainnumber);
-            servletcontext.setAttribute("trainname",trainname);
-            servletcontext.setAttribute("source",sourceid);
-            servletcontext.setAttribute("dest",destid);
-            servletcontext.setAttribute("dtime",dtime);
-            servletcontext.setAttribute("stime",stime);
-            servletcontext.setAttribute("passengers",passengers);
-            servletcontext.setAttribute("ages",ages);
-            servletcontext.setAttribute("genders",genders);
-//            request.setAttribute("ticketstatus",ticketstatus);
-            request.setAttribute("status",ticketstatus);
-            request.setAttribute("seatnos",seatnos);
-            request.setAttribute("seatcount", seatcount );
-            request.setAttribute("fare", fare );
-            request.setAttribute("dateoftravel", dateoftravel );
-//            LOG.info("ALLL NOO "+seatnos
-//                    + trainid
-//                    + sourceid
-//                    + destid
-//                    + dtime
-//                    + stime
-//                    + passengers
-//                    + ages
-//                    + genders
-//                    +seatnos
-//            );
+            ticket.put("pnr",pnr);
+            ticket.put("trainid",trainid);
+            ticket.put("trainnumber",trainnumber);
+            ticket.put("trainname",trainname);
+            ticket.put("source",sourceid);
+            ticket.put("dest",destid);
+            ticket.put("dtime",dtime);
+            ticket.put("stime",stime);
+            ticket.put("passengers",passengers);
+            ticket.put("ages",ages);
+            ticket.put("genders",genders);
+            ticket.put("ticketstatus",ticketstatus);
+            ticket.put("seatnos",seatnos);
+            ticket.put("seatcount", seatcount );
+            ticket.put("fare", fare );
+            ticket.put("dateoftravel", dateoftravel );
+            ticket.put("status",ticketstatus);
+
+            System.out.println("In pnr check JSON Passneger s "+ticket.getString("passengers"));
+            response.getWriter().print(ticket);
+
+//            ServletContext servletcontext = getServletContext();
+//
+//            request.setAttribute("pnr",pnr);
+//            servletcontext.setAttribute("trainno",trainid);
+//            servletcontext.setAttribute("trainnumber",trainnumber);
+//            servletcontext.setAttribute("trainname",trainname);
+//            servletcontext.setAttribute("source",sourceid);
+//            servletcontext.setAttribute("dest",destid);
+//            servletcontext.setAttribute("dtime",dtime);
+//            servletcontext.setAttribute("stime",stime);
+//            servletcontext.setAttribute("passengers",passengers);
+//            servletcontext.setAttribute("ages",ages);
+//            servletcontext.setAttribute("genders",genders);
+////            request.setAttribute("ticketstatus",ticketstatus);
+//            request.setAttribute("status",ticketstatus);
+//            request.setAttribute("seatnos",seatnos);
+//            request.setAttribute("seatcount", seatcount );
+//            request.setAttribute("fare", fare );
+//            request.setAttribute("dateoftravel", dateoftravel );
+
         }
         catch (Exception E){
             E.printStackTrace();
         }
-        request.getRequestDispatcher("TicketInfo.jsp").forward(request,response);
+//        request.getRequestDispatcher("TicketInfo.jsp").forward(request,response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        if(session.getAttribute("mail")==null){
-            response.sendRedirect("index.html");
-        }
-        else{
+//        HttpSession session = request.getSession();
+//        if(session.getAttribute("mail")==null){
+//            response.sendRedirect("index.html");
+//        }
+//        else{
             doPost(request, response);
-        }
+//        }
     }
 }

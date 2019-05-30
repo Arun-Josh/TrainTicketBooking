@@ -63,7 +63,7 @@ body{
     border-color: #2ecc71;
 }
 
-.box input[type="submit"], #subbutton{
+.box input[type="submit"],.box input[type="button"], #subbutton{
     border:0;
     display: block;
     text-align: center;
@@ -143,4 +143,37 @@ label{
 }
 #hidden{
     display: none;
+}
+.hidden{
+    display: none;
+}
+
+/* Table Props */
+
+table {
+    width:100%;
+  }
+  table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 15px;
+    text-align: left;
+  }
+  table#t01 tr:nth-child(even) {
+    background-color: #eee;
+  }
+  table#t01 tr:nth-child(odd) {
+    background-color: #fff;
+  }
+  table#t01 th {
+    background-color: black;
+    color: white;
+  }
+
+@media print {
+    #cbtn {
+        display: none !important;
+    }
 }

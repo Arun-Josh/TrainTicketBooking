@@ -1,6 +1,7 @@
 package com.booking.zoho;
 
-import javax.servlet.ServletContext;
+import org.json.JSONObject;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,22 +24,23 @@ public class ReserveSeat extends HttpServlet {
             response.setContentType("text/html");
         PrintWriter out = response.getWriter();
             try{
-                ServletContext sc = getServletContext();
-                String userid = (String) sc.getAttribute("userid");
-                String trainid = (String) sc.getAttribute("trainid");
-                String mailid = (String) sc.getAttribute("mailid");
-                String modeofpayment = (String) sc.getAttribute("modeofpayment");
+
+                HttpSession session = request.getSession();
+                String userid = (String) request.getAttribute("userid");
+                String trainid = (String) request.getAttribute("trainid");
+                String mailid = (String) request.getAttribute("mailid");
+                String modeofpayment = (String) request.getAttribute("modeofpayment");
                 String paymentstatus = "SUCCESS";
-                String accountnumber = (String) sc.getAttribute("accountnumber");
-                String ifsccode = (String) sc.getAttribute("ifsccode");
-                String cardnumber = (String) sc.getAttribute("cardnumber");
+                String accountnumber = (String) request.getAttribute("accountnumber");
+                String ifsccode = (String) request.getAttribute("ifsccode");
+                String cardnumber = (String) request.getAttribute("cardnumber");
                 String ticketstatus = "CONFIRMED";
 
-                String dateoftravel = (String) sc.getAttribute("date");
-                String source = (String) sc.getAttribute("from");
-                String dest = (String) sc.getAttribute("to");
-                String seattype = (String) sc.getAttribute("seattype");
-                String fare = (String) sc.getAttribute("fare");
+                String dateoftravel = (String) request.getAttribute("date");
+                String source = (String) request.getAttribute("from");
+                String dest = (String) request.getAttribute("to");
+                String seattype = (String) request.getAttribute("seattype");
+                String fare = (String) request.getAttribute("fare");
 
                 log.info("seeet" + seattype);
 
@@ -89,21 +91,21 @@ public class ReserveSeat extends HttpServlet {
                 rs.previous();
                 String pnr = rs.getString("pnr");
 
-                sc.setAttribute("pnr",pnr);
+//                sc.setAttribute("pnr",pnr);
 
-                int seats = (Integer) sc.getAttribute("seatcount");
-
+//                int seats = (Integer) sc.getAttribute("seatcount");
+                int seats = Integer.valueOf((String)request.getAttribute("seatcount"));
                 log.info("seaats : "+ seats);
-
-                String passenger[] = ((String) sc.getAttribute("passengers")).split(",");
-                String age[] = ((String) sc.getAttribute("ages")).split(",");
-                String gender[] = ((String) sc.getAttribute("genders")).split(",");
+                System.out.println("passenegers in reserve "+session.getAttribute("passengers"));
+                String passenger[] = ((String) session.getAttribute("passengers")).split(",");
+                String age[] = ((String) session.getAttribute("ages")).split(",");
+                String gender[] = ((String) session.getAttribute("gender")).split(",");
 
 //                String seatno[] = new String[seats];
 
                 String seatnumbers = "";
-                String srcstopno = (String) sc.getAttribute("srcstopno");
-                String dststopno = (String) sc.getAttribute("dststopno");
+                String srcstopno = (String) request.getAttribute("srcstopno");
+                String dststopno = (String) request.getAttribute("dststopno");
 
                 log.info("src dst iinfo " + srcstopno + dststopno );
 
@@ -244,30 +246,52 @@ public class ReserveSeat extends HttpServlet {
                 String dtime = rs.getString("stationarrtime");
 
 
-
                 request.setAttribute("pnr",pnr);
-                sc.setAttribute("trainid",trainid);
-                sc.setAttribute("trainnumber",trainnumber);
-                sc.setAttribute("trainname",trainname);
-                sc.setAttribute("source",sourceid);
-                sc.setAttribute("dest",destid);
-                sc.setAttribute("dtime",dtime);
-                sc.setAttribute("stime",stime);
-                sc.setAttribute("passengers",sc.getAttribute("passengers"));
-                sc.setAttribute("ages",sc.getAttribute("ages"));
-                sc.setAttribute("genders",sc.getAttribute("genders"));
+                request.setAttribute("trainid",trainid);
+                request.setAttribute("trainnumber",trainnumber);
+                request.setAttribute("trainname",trainname);
+                request.setAttribute("source",sourceid);
+                request.setAttribute("dest",destid);
+                request.setAttribute("dtime",dtime);
+                request.setAttribute("stime",stime);
+                request.setAttribute("passengers",session.getAttribute("passengers"));
+                request.setAttribute("ages",session.getAttribute("ages"));
+                request.setAttribute("genders",session.getAttribute("gender"));
                 request.setAttribute("ticketstatus",ticketstatus);
                 request.setAttribute("seatnos",seatnumbers);
                 request.setAttribute("seatcount", seats );
                 request.setAttribute("fare", fare );
                 request.setAttribute("dateoftravel", dateoftravel );
                 request.setAttribute("status",status);
+
+                JSONObject ticket = new JSONObject();
+
+                ticket.put("pnr",pnr);
+                ticket.put("trainid",trainid);
+                ticket.put("trainnumber",trainnumber);
+                ticket.put("trainname",trainname);
+                ticket.put("source",sourceid);
+                ticket.put("dest",destid);
+                ticket.put("dtime",dtime);
+                ticket.put("stime",stime);
+                ticket.put("passengers",session.getAttribute("passengers"));
+                ticket.put("ages",session.getAttribute("ages"));
+                ticket.put("genders",session.getAttribute("gender"));
+                ticket.put("ticketstatus",ticketstatus);
+                ticket.put("seatnos",seatnumbers);
+                ticket.put("seatcount", seats );
+                ticket.put("fare", fare );
+                ticket.put("dateoftravel", dateoftravel );
+                ticket.put("status",status);
+
+                System.out.println("Passneger s "+ticket.getString("passengers"));
+                out.print(ticket);
             }
             catch (Exception E){
                 E.printStackTrace();
             }
 
-        request.getRequestDispatcher("TicketInfo.jsp").forward(request,response);
+//        request.getRequestDispatcher("TicketInfo.jsp").forward(request,response);
 
     }
 

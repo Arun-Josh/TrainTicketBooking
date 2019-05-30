@@ -22,7 +22,7 @@
 
       h1{
       color: #2ecc71 !important;
-    }
+        }
     p{
       float:right;
       color: #2ecc71 !important;
@@ -47,7 +47,7 @@
     }
     table#t01 th {
       background-color: black;
-      color: white;
+      color: #2ecc71;
     }
   </style>
 </head>
@@ -68,7 +68,6 @@
 
 <form class="box">
 
-  <% ServletContext sc = getServletConfig().getServletContext(); %>
 
   <h1 >TICKET INFO <i class="fa fa-ticket" aria-hidden="true"></i> </h1>
     <h2 >TRAIN INFO : <i class="fa fa-subway" aria-hidden="true"></i> </h2>
@@ -89,14 +88,14 @@
     <tr>
       <td>  <%= request.getAttribute("pnr") %> </td>
       <td>  <%= request.getAttribute("dateoftravel") %> </td>
-      <td> <%= sc.getAttribute("trainname") %></td>
-      <td>  <%= sc.getAttribute("trainnumber") %> </td>
-      <td> <%= sc.getAttribute("source")  %> </td>
-      <td> <%= sc.getAttribute("dest")  %> </td>
-      <td> <%= sc.getAttribute("stime") %> </td>
-      <td> <%= sc.getAttribute("dtime") %> </td>
+      <td> <%= request.getAttribute("trainname") %></td>
+      <td>  <%= request.getAttribute("trainnumber") %> </td>
+      <td> <%= request.getAttribute("source")  %> </td>
+      <td> <%= request.getAttribute("dest")  %> </td>
+      <td> <%= request.getAttribute("stime") %> </td>
+      <td> <%= request.getAttribute("dtime") %> </td>
 <%--      <td><%= (String) request.getAttribute("ticketstatus") %>  </td>--%>
-      <td> Rs. <%= (String) request.getAttribute("fare") %></td>
+      <td> Rs. <%= request.getAttribute("fare") %></td>
     </tr>
 
   </table>
@@ -113,13 +112,16 @@
         <th>TICKET STATUS</th>
       </tr>
 
-      <%
-          String passenger[] =  ((String)sc.getAttribute("passengers")).split(",");
-          String age[] =    ((String)sc.getAttribute("ages")).split(",");
-          String gender[] =    ((String)sc.getAttribute("genders")).split(",");
+      <% System.out.println("Inside Ticket.JSP now");
+          String passenger[] =  ((String)request.getAttribute("passengers")).split(",");
+          String age[] =    ((String)request.getAttribute("ages")).split(",");
+          String gender[] =    ((String)request.getAttribute("genders")).split(",");
           String seat[] =  ((String) request.getAttribute("seatnos")).split(",");
           String status[] = ((String) request.getAttribute("status")).split(",");
           int seatcount = (Integer) request.getAttribute("seatcount");
+          System.out.println(seatcount);
+          System.out.println(passenger[seatcount-1]+age[seatcount-1]+gender[seatcount-1]);
+          System.out.println(status[seatcount-1]);
         for(int i=0;i<seatcount;i++) {
 
           if(Integer.valueOf(seat[i]) <= 0 ){
@@ -141,7 +143,7 @@
     </table>
   <input type="button" id="cbtn" onclick="printTicket()" value="PRINT TICKET">
 
-  <P>*Please note the PNR number for future reference</P>
+  <label>*Please note the PNR number for future reference</label>
 </form>
 <script>
   function printTicket() {

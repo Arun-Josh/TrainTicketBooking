@@ -2,11 +2,15 @@
 <head>
     <title> Train Ticket Reservation </title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js"></script>
 </head>
 <body>
-    <form class="box" action="pnrcheck" method="POST">
+
+    <div id="searchresult"></div>
+
+    <div class="box" id="paymentform">
         <h1>PNR STATUS</h1>
-        <input name="pnr" type="text" placeholder="PNR Number" required>
-        <input type="submit" value="Check Status">
-    </form>
+        <input id="pnr" type="text" placeholder="PNR Number" required>
+        <input type="button" onclick="pnrCheck()" value="Check Status">
+    </div>
 </body>
