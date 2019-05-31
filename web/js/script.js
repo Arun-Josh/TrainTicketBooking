@@ -64,7 +64,7 @@ function checkCookie() {
         }
     } else {
         console.log("user already logged in : " + user);
-        if(dir!='searchtrain.html'){
+        if(dir == "" ){
             window.location.href = "searchtrain.html";
         }
     }
