@@ -226,7 +226,7 @@ function passengerInfo() {
                 infoflag = true;
                 break;
             }
-            if(pages[i].value=="" || isNaN(pages[i].value)){
+            if(pages[i].value=="" || isNaN(pages[i].value) || pages[i].value<1 || (pages[i].value % 1 !== 0) ){
                 infoflag = true;
                 break;
             }

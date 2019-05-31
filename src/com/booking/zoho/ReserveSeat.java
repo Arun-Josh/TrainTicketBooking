@@ -109,7 +109,7 @@ public class ReserveSeat extends HttpServlet {
 
                 log.info("src dst iinfo " + srcstopno + dststopno );
 
-                PreparedStatement psstations = con.prepareStatement("SELECT  * FROM STATIONS WHERE TRAINID = ? AND STOPNO >= ? AND STOPNO <= ? ");
+                PreparedStatement psstations = con.prepareStatement("SELECT  * FROM STATIONS WHERE TRAINID = ? AND STOPNO >= ? AND STOPNO < ? ");
                 psstations.setString(1,trainid);
                 psstations.setString(2,dststopno);
                 psstations.setString(3,srcstopno);
