@@ -1,3 +1,32 @@
+function login(){
+    document.getElementById("admin").style.display="none";
+    document.getElementById("hidden").style.display="none";
+
+    var xhr = new XMLHttpRequest();
+    var url = "login";
+    xhr.onreadystatechange = function () {
+        if(xhr.status==200 && xhr.readyState==4){
+            var reply = xhr.responseText;
+            console.log("reply "+reply);
+            if(reply=="OK"){
+                window.location.href="searchtrain.html";
+            }
+            else if(reply=="admin"){
+                console.log("ADMIN DASHBOARD NOT DESIGNED");
+                document.getElementById("admin").style.color = "orange";
+                document.getElementById("admin").style.display = "block";
+            }
+            else{
+                document.getElementById("hidden").style.color = "orange";
+                document.getElementById("hidden").style.display = "block";
+            }
+        }
+    }
+    xhr.open("POST",url,true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send("mail="+document.getElementsByName("mail")[0].value+"&pass="+document.getElementsByName("pass")[0].value);
+}
+
 function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
@@ -11,6 +40,15 @@ function getCookie(cname) {
         }
     }
     return "";
+}
+
+function logOut() {
+    window.location.href="logout";
+}
+
+function setMail() {
+    var mail = getCookie("mail");
+    document.getElementById("blogout").innerHTML+="<br>"+mail;
 }
 
 function checkCookie() {
@@ -187,7 +225,7 @@ function passengerInfo() {
                 infoflag = true;
                 break;
             }
-            if(pages[i].value==""){
+            if(pages[i].value=="" || isNaN(pages[i].value)){
                 infoflag = true;
                 break;
             }

@@ -13,17 +13,14 @@
     checkCookie();
 </script>
 
-    <div>
-        <form action="logout" method="post">
-            <input type="submit" id="blogout" class="submit-button" value="LOG OUT">
-        </form>
-    </div>
+<button type="submit" id="blogout" onclick="logOut()" class="submit-button" >LOG OUT</button>
 
 
     <div id="searchresult"></div>
 
     <script>
             listTrains();
+            setMail();
     </script>
 
 </body>

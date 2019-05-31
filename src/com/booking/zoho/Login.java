@@ -25,6 +25,7 @@ public class Login extends HttpServlet {
             //loading drivers for mysql
             Class.forName("com.mysql.jdbc.Driver");
 
+            System.out.println("checking mail pwd "+mail + pass);
             //creating connection with the database
             Connection con= DriverManager.getConnection
                     ("jdbc:mysql://localhost/trainreservation","root","root");
@@ -52,11 +53,13 @@ public class Login extends HttpServlet {
                 if(rs.getInt("privilege")==1){
                     Cookie ck = new Cookie("mail",mail);
                     response.addCookie(ck);
-                    RequestDispatcher rd = request.getRequestDispatcher("searchtrain.html");
-                    rd.forward(request,response);
+                    out.print("OK");
+//                    RequestDispatcher rd = request.getRequestDispatcher("searchtrain.html");
+//                    rd.forward(request,response);
                 }
                 else if(rs.getInt("privilege")==10){
-                    out.println("<CENTER>ADMIN DASHBOARD UNDER CONSTRUCTION </CENTER>" );
+//                    out.println("<CENTER>ADMIN DASHBOARD UNDER CONSTRUCTION </CENTER>" );
+                    out.print("admin");
                 }
             }
             else{
@@ -71,11 +74,12 @@ public class Login extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
        Boolean login = new SessionValidation().validate(request,response);
-       if(login){
-            request.getRequestDispatcher("searchtrain.html").forward(request,response);
-       }
-       else{
-           request.getRequestDispatcher("index.html").forward(request,response);
-       }
+//       if(login){
+//            request.getRequestDispatcher("searchtrain.html").forward(request,response);
+//       }
+//       else{
+//           request.getRequestDispatcher("index.html").forward(request,response);
+//       }
+      doPost(request,response);
     }
 }

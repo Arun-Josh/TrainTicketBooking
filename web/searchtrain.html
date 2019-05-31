@@ -36,9 +36,7 @@
         </div>
 
         <div>
-            <form action="logout" method="post">
-                <input type="submit" id="blogout" class="submit-button" value="LOG OUT">
-            </form>
+                <button type="submit" id="blogout" onclick="logOut()" class="submit-button" >LOG OUT</button>
         </div>
 
     <div id="bookedtickets"></div>
@@ -57,7 +55,9 @@
             <input id ="subbutton" type="button" value="Search Trains" onclick="searchInputValidation()"/>
 
     </form>
-
+<script>
+    setMail();
+</script>
 </body>
 
 </html>
