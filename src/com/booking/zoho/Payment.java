@@ -54,6 +54,7 @@ public class Payment extends HttpServlet {
         String deststopno =  request.getParameter("deststopno");
 
 
+
         request.setAttribute("fare",fare);
         request.setAttribute("userid",userid);
         request.setAttribute("trainid",trainid);

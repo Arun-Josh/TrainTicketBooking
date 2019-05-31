@@ -15,6 +15,9 @@ import java.util.logging.Logger;
 public class Search extends HttpServlet {
     Logger log = Logger.getLogger(Search.class.getName());
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+
+
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         try{
@@ -22,6 +25,12 @@ public class Search extends HttpServlet {
             String dest   = request.getParameter("to");
             String date = request.getParameter("date");
             System.out.println("FROM "+source+" TO "+dest +" date "+date);
+
+            if(source.length()>30 || dest.length()>30 || (source.equals(dest))){
+                out.print("");
+                return;
+            }
+
 //            ServletContext sc = getServletContext();
 //            sc.setAttribute("date",date);
 
@@ -35,7 +44,8 @@ public class Search extends HttpServlet {
                 sourceid = rs.getString("stationid");
             }
             else{
-                out.print(" SOURCE STATION NOT AVAILABLE");
+//                out.print(" SOURCE STATION NOT AVAILABLE");
+                out.print("");
                 return;
             }
 
@@ -47,7 +57,8 @@ public class Search extends HttpServlet {
                 destid = rs.getString("stationid");
             }
             else{
-                out.print("DESTINATION STATION NOT AVAILABLE");
+//                out.print("DESTINATION STATION NOT AVAILABLE");
+                out.print("");
                 return;
             }
 

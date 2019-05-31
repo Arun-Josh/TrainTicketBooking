@@ -15,19 +15,34 @@ function getCookie(cname) {
 
 function checkCookie() {
     var user = getCookie("mail");
+    var url = window.location.href;
+    var dir = url.split('/').pop();
     console.log("checking cookie "+user);
-    if (user == "" || user=='""') {
+    if (user == "" || user=='""' ) {
         console.log("user not logged in : ");
+        if(dir!='index.html'){
+            window.location.href = "index.html";
+        }
     } else {
         console.log("user already logged in : " + user);
-        window.location.href = "searchtrain.html";
+        if(dir=='index.html'){
+            window.location.href = "searchtrain.html";
+        }
     }
 }
 
 function resultpage(traindetails) {
-    var trains = JSON.parse(traindetails);
-    sessionStorage.setItem("traindetails",traindetails);
-    var page ='<form id="form"class="box">'+
+    var trains ;
+    var emptyFlag=false;
+    if(traindetails==""){
+        console.log("No trains");
+        emptyFlag = true;
+    }else {
+        trains = JSON.parse(traindetails);
+        sessionStorage.setItem("traindetails",traindetails);
+    }
+
+    var page ='<div id="form"class="box">'+
         '<h1>SEARCH RESULTS</h1>'+
         '<hr> ' +
         '        <center><a id="hidden" style="color: #e67e22">CHOOSE A TRAIN TO CONTINUE !</a></center>';
@@ -55,10 +70,14 @@ function resultpage(traindetails) {
         page+="<br><br>";
         page+="<hr>";
     }
-    page+='<input type="button" value="BOOK TICKET" onclick="passengerInfo()"/>';
-    page+="</form>";
-    // document.getElementById("searchform").innerHTML = "";
-    // document.getElementById("searchform").style.display="none";
+    if(emptyFlag){
+        page+="<h1 style='color:#2ecc71;'>NO TRAINS FOUND IN THE SELECTED ROUTE</h1>"
+    }
+    if(traindetails!=""){
+        page+='<input id="bookbtn" type="button" value="BOOK TICKET" onclick="passengerInfo()"/>';
+    }
+    page+="</div>";
+
     document.getElementById("searchresult").innerHTML += page;
     document.getElementById("form").style.width = "90%";
 }
@@ -85,13 +104,6 @@ function passengerInfo() {
     var trainsJSON = JSON.parse(sessionStorage.getItem("traindetails"));
     var seats= "";
 
-    // for(seat in trains[train]["seats"]){
-    //     var seatcount = trains[train]["seats"][seat]["seatcount"];
-    //     if(seatcount<=0){
-    //         seatcount = "WL "+(Math.abs(seatcount)+1);
-    //     }
-    //     page+= ' &nbsp; ' +'<label>'+trains[train]["seats"][seat]["seattype"] +'</label>'+ ' &nbsp; ' + '<a> '+ seatcount +'</a>';
-    // }
 
     for(train in trainsJSON){
         if(trainsJSON[train]["trainid"]==trainchosen){
@@ -104,17 +116,17 @@ function passengerInfo() {
     // passcount = 0;
     var passinfopage = ' <div id="passform" style="width: 90%" class="box" >\n' +
         '   <h3 style="color: WHITE">SELECT SEAT TYPE</h3>' +
-        seats
-        +
+        seats +
+        '<h3 id="fillseat" style="display: none; color: orange">SELECT THE SEAT TYPE</h3>' +
         '<br>' +
         '   <h1 style="color: white" >Enter Passenger Details</h1>' +
         '<center><a id ="hidden" style="color: orange">ONLY SIX PASSENGERS CAN TRAVEL PER TICKET</a></center>' +
+        '<h3 id="fillinfo" style="display: none; color: orange">PLEASE FILL ALL THE NECESSARY INFO</h3>' +
         '<center><a id="missingdetails" style="color: orange;display: none;">Enter the necessary details</a></center>' +
-
         '<input id="addbtn" type="button" onclick="addpassenger()" value="Add Passenger"/>' +
         '                        <div id="addpassenger"></div>\n' +
         '<br>' +
-        '<button id="subbutton" onclick="paymentPage()">SUBMIT</button>' +
+        '<button id="subbutton" onclick="validatePassengerInfo()">SUBMIT</button>' +
         '            </div>\n';
     // document.getElementById("form").style.width = "90%";
     document.getElementById("searchresult").innerHTML = passinfopage;
@@ -127,6 +139,7 @@ function passengerInfo() {
         changeCSS("css/ticketpage.css",0);
         passcount++;
         if(passcount>6){
+            passcount--;
             document.getElementById("hidden").style.display = "block";
             return true;
         }
@@ -137,12 +150,15 @@ function passengerInfo() {
             '      <tr>\n' +
             '          <th>Name</th>\n' +
             '          <th>Age</th>\n' +
-            // '          <th>Gender</th>\n' +
+            '          <th>Gender</th>\n' +
             '      </tr>' +
             // '<table align="center" >
                     '<tr>' +
                         '<td><input style="color: #191919" type="text" name="pname" placeholder="Name of Traveller ' + passcount +' " maxlength="25" /></td> &emsp;' +
                         '<td><input style="color: #191919" type="text" name="page" placeholder="Age of Traveller '+ passcount+'" maxlength="2" pattern="[0-9]{1,2}"/></td>' +
+                        '<td> <input  name="gender'+passcount+'" type="radio" Value="Male" required><a style="color: #191919">MALE</a>'
+                    +   '<input name="gender'+passcount+'" type="radio" Value="Female" required><a style="color: #191919">FEMALE</a>'
+                    +   '<input name="gender'+passcount+'" type="radio" Value="Others" required> <a style="color: #191919">OTHERS</a> </td> ' +
                     '</tr>' +
             '</table>' +
             '<br>' +
@@ -150,7 +166,57 @@ function passengerInfo() {
         document.getElementById("addpassenger").appendChild(passenger);
     }
 
+    function validatePassengerInfo() {
+        document.getElementById("fillseat").style.display="none";
+        document.getElementById("fillinfo").style.display="none";
+        var seattype = document.getElementsByName("seattype");
+        var seatflag = true; //TRUE indicates issue
+        for(var i=0;i<seattype.length;i++){
+            if(seattype[i].checked==true){
+                seatflag = false;
+            }
+        }
+        if(seatflag){
+            document.getElementById("fillseat").style.display = "block";
+        }
+        var infoflag = false;
+        var pnames = document.getElementsByName("pname");
+        var pages = document.getElementsByName("page");
+        for(var i =0;i<pnames.length;i++){
+            if(pnames[i].value ==""){
+                infoflag = true;
+                break;
+            }
+            if(pages[i].value==""){
+                infoflag = true;
+                break;
+            }
+        }
+        var genderflag = true;
+        for(var j=1;j<=passcount;j++){
+            genderflag = true;
+            var genders = document.getElementsByName("gender"+j);
+            for(var i=0;i<genders.length;i++){
+                if(genders[i].checked){
+                    genderflag=false;
+                    break;
+                }
+            }
+            if(genderflag){
+                break;
+            }
+        }
+        if (genderflag || infoflag){
+            document.getElementById("fillinfo").style.display = "block";
+        }
+        if(seatflag==false && infoflag==false && genderflag==false){
+            paymentPage();
+        }
+
+    }
+
     function paymentPage() {
+
         changeCSS("css/style.css",0);
         var seattypes = document.getElementsByName("seattype");
         var seatchosen;
@@ -162,6 +228,20 @@ function passengerInfo() {
                 console.log("seatchosen "+seatchosen)
             }
         }
+        console.log("passcount" + passcount);
+        var index = 1;
+        for(var j=1;j<=passcount;j++){
+            var genders = document.getElementsByName("gender"+j);
+            // var genders = "";
+            for(var i=0;i<genders.length;i++){
+                if(genders[i].checked){
+                    sessionStorage.setItem("gender"+index,genders[i].value);
+                    index++;
+                    break;
+                }
+            }
+        }
+
 
         sessionStorage.setItem("passcount",passcount);
         var pnames = document.getElementsByName("pname");
@@ -224,7 +304,7 @@ function passengerInfo() {
         url+="&srcstopno="+srcstopno+"&deststopno="+deststopno+"&";
         for(var i=1;i<=pnames.length;i++){
             url+= "pass"+i+"="+pnames[i-1].value+"&";
-            url+= "gender"+i+"="+"NOT SPECIFIED"+"&";
+            url+= "gender"+i+"="+sessionStorage.getItem("gender"+i)+"&";
             url+= "page"+i+"="+pages[i-1].value;
             if(i!=pnames.length){
                 url+="&";
@@ -255,6 +335,10 @@ function passengerInfo() {
             xhr.onreadystatechange = function () {
                 if(xhr.status==200 && xhr.readyState==4){
                     var ticket= xhr.responseText;
+                    if(ticket==""){
+                        window.location.href="logout";
+                        return;
+                    }
                     console.log(ticket);
                     sessionStorage.setItem("ticket",ticket);
                     console.log(JSON.parse(ticket));
@@ -266,7 +350,7 @@ function passengerInfo() {
             url+="&to="+sessionStorage.getItem("to")+"&seattype="+sessionStorage.getItem("seatchosen");
             url+="&fare="+sessionStorage.getItem("totalfare")+"&seatcount="+sessionStorage.getItem("passcount");
             url+="&srcstopno="+sessionStorage.getItem("srcstopno");
-            url+="&=deststopno"+sessionStorage.getItem("dststopno");
+            url+="&deststopno="+sessionStorage.getItem("dststopno");
 
         console.log("url :"+url);
             xhr.open("GET",url,true);
@@ -375,6 +459,9 @@ function listTrains() {
         if(xhr.status==200 && xhr.readyState==4){
             console.log(xhr.responseText);
             var traindetails = xhr.responseText;
+            if(traindetails==""){
+                console.log("No trains");
+            }
             resultpage(traindetails);
         }
     }
@@ -391,10 +478,17 @@ function swapText(){
 }
 
 
-function  dateValidation() {
+function  searchInputValidation() {
     var form = document.getElementById("searchform");
-    // var from = document.getElementById("from").value;
-    // var to   = document.getElementById("to").value;
+    var from = document.getElementById("from").value;
+    var to   = document.getElementById("to").value;
+
+    if(from=="" || to==""){
+        document.getElementById("hidden").style.color="orange";
+        document.getElementById("hidden").style.display="block";
+        return;
+    }
+    document.getElementById("hidden").style.display="none";
     var inputdate = document.getElementById("date").value;
     var idate = new Date(inputdate);
     var today = new Date();
@@ -448,6 +542,10 @@ function bookedTickets() {
     xhr.onreadystatechange = function () {
         if(xhr.status=200 && xhr.readyState==4){
             var tickets = xhr.responseText;
+            if(tickets==""){
+                window.location.href="logout";
+                return;
+            }
             sessionStorage.setItem("tickets",tickets);
             console.log("tickets json pared = "+JSON.parse(tickets));
             console.log("tickets json no parse = "+tickets);
@@ -477,9 +575,9 @@ function bookedTicketsPage() {
     tickets = JSON.parse(tickets);
 
 
-    for(ticket in tickets){
+    for(var ticket = 0;ticket<tickets.length;ticket++){
         console.log("Ticket "+ticket);
-        console.log(tickets[ticket]["passengerid"]);
+        console.log("passid"+tickets[ticket]["passengerid"]);
         page += '    <h1 >TICKET INFO <i class="fa fa-ticket" aria-hidden="true"></i> </h1>\n' +
             '    <h2 >TRAIN INFO  <i class="fa fa-subway" aria-hidden="true"></i>  : </h2>';
         page += '\n' +
@@ -544,11 +642,6 @@ function bookedTicketsPage() {
                 if(status=="CANCELLED"){
                     cancelbtn = "CANCELLED SUCCESSFULLY";
                 }
-                var btnstatus = "";
-
-                if(status=="CANCELLED") {
-                    btnstatus = '"disabled"';
-                }
 
                 if(seatno<=0){
                     seatno = "NOT ASSIGNED";
@@ -565,7 +658,11 @@ function bookedTicketsPage() {
                     '            <td id="'+passid+'" > '+status+' </td>\n' +
                     '            <td>\n' +
                     '                <input id="passid" name="passengerid" type="hidden" value="">\n' +
-                    '                <button id="canbtn" name="<%=passid%>" onclick="refresh(this)" type="button" '+ btnstatus +'value="'+passid+'">'+cancelbtn+'</button>\n' +
+                    '                <button id="canbtn" name="'+passid+'" onclick="cancelSeat(this)" type="button" ';
+                if(status=="CANCELLED") {
+                    page += ' disabled ';
+                }
+                page += ' value="'+passid+'">'+cancelbtn+'</button>\n' +
                     '            </td>\n' +
                     '        </tr>'    ;
 
@@ -585,16 +682,20 @@ function bookedTicketsPage() {
     document.getElementById("bookedtickets").innerHTML = page;
 }
 
-function ajaxCall(passid) {
+function CancelServletCall(passid) {
     console.log("INSIDE AJAX CALL "+passid);
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if(xhr.status == 200 && xhr.readyState==4){
             // alert(xhr.responseText);
             if(xhr.responseText=="CANCELLED"){
+                console.log("Cancelled");
                 document.getElementById(passid).innerHTML = "CANCELLED";
                 document.getElementsByName(passid)[0].innerHTML = "CANCELLED SUCCESSFULLY";
                 document.getElementsByName(passid)[0].disabled = true;
+            }
+            else{
+                console.log(xhr.responseText);
             }
         }
     }
@@ -603,38 +704,10 @@ function ajaxCall(passid) {
     xhr.send("passengerid="+passid);
 }
 
-function refresh(el) {
+function cancelSeat(el) {
     var passid = document.getElementById("passid").value = el.value;
     console.log("CLICK MADE TO CANCEL " + passid);
-    // var form = document.getElementById("tickform");
-
-
-    // $.confirm({
-    //     // theme:'supervan',
-    //     useBootstrap : false,
-    //     closeIcon: true,
-    //     icon: 'glyphicon glyphicon-heart',
-    //     columnClass: 'small',
-    //     title: 'Do you sure want to cancel the Ticket ?',
-    //     content: '',
-    //     autoClose: 'NO|10000',
-    //     buttons: {
-    //         YES: {
-    //             text: 'YES',
-    //             action: function () {
-                    ajaxCall(passid);
-    //                 $.alert('Ticket Successfully Cancelled');
-    //             }
-    //         },
-    //         NO:{
-    //             text:'NO',
-    //             action : function () {
-    //                 $.alert('Ticket Not Cancelled');
-    //             }
-    //         }
-    //     }
-    // });
-    // form.submit();
+    CancelServletCall(passid);
 }
 
 function changeCSS(cssFile, cssLinkIndex) {

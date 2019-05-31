@@ -45,7 +45,8 @@ public class ReserveSeat extends HttpServlet {
                 log.info("seeet" + seattype);
 
                 if(userid == null ){
-                    request.getRequestDispatcher("index.html").forward(request,response);
+//                    request.getRequestDispatcher("index.html").forward(request,response);
+                    out.print("");
                     return;
                 }
 
@@ -244,25 +245,6 @@ public class ReserveSeat extends HttpServlet {
                 rs = ps.executeQuery();
                 rs.next();
                 String dtime = rs.getString("stationarrtime");
-
-
-                request.setAttribute("pnr",pnr);
-                request.setAttribute("trainid",trainid);
-                request.setAttribute("trainnumber",trainnumber);
-                request.setAttribute("trainname",trainname);
-                request.setAttribute("source",sourceid);
-                request.setAttribute("dest",destid);
-                request.setAttribute("dtime",dtime);
-                request.setAttribute("stime",stime);
-                request.setAttribute("passengers",session.getAttribute("passengers"));
-                request.setAttribute("ages",session.getAttribute("ages"));
-                request.setAttribute("genders",session.getAttribute("gender"));
-                request.setAttribute("ticketstatus",ticketstatus);
-                request.setAttribute("seatnos",seatnumbers);
-                request.setAttribute("seatcount", seats );
-                request.setAttribute("fare", fare );
-                request.setAttribute("dateoftravel", dateoftravel );
-                request.setAttribute("status",status);
 
                 JSONObject ticket = new JSONObject();
 

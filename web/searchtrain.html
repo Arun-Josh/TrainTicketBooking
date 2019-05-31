@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <head>
     <title>Train Ticket Reservation </title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="js/script.js"></script>
@@ -15,8 +18,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 </head>
 <body>
+
+<script>
+    checkCookie();
+</script>
+
         <div>
-            <form action="pnrstatus.html" method="post">
+            <form action="pnrstatus.html" method="get">
                 <input type="submit" id="home" class="submit-button" value="PNR STATUS">
             </form>
         </div>
@@ -37,15 +45,16 @@
 
     <form id ="searchform" class="box" action="ReserveTrain.html" method="GET">
             <h1>Search Train</h1>
-            <input id = "from" name="from" type="text" placeholder="From" REQUIRED>
+            <h3 id="hidden" >ENTER ALL THE NECESSARY DETAILS</h3>
+            <input id = "from" name="from" type="text" placeholder="From" REQUIRED maxlength="30">
 
-            <input id="swap" class="fa fa-exchange" type="button" value="&#8645;"onclick="swapText()"/>
+            <input id="swap" class="fa fa-exchange" type="button" value="&#8645;"onclick="swapText() "/>
 
-            <input id = "to" name="to"  type="text" placeholder="To" REQUIRED>
+            <input id = "to" name="to"  type="text" placeholder="To" REQUIRED maxlength="30">
             <input id= "date" name="date"  type="date" value="Date" required >
             <p id="datewarn"> Enter a valid date within 2 months from Tomorrow </p>
 
-            <input id ="subbutton" type="button" value="Search Trains" onclick="dateValidation()"/>
+            <input id ="subbutton" type="button" value="Search Trains" onclick="searchInputValidation()"/>
 
     </form>
 
