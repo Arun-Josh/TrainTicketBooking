@@ -49,7 +49,7 @@
             <input id="swap" class="fa fa-exchange" type="button" value="&#8645;"onclick="swapText() "/>
 
             <input id = "to" name="to"  type="text" placeholder="To" REQUIRED maxlength="30">
-            <input id= "date" name="date"  type="date" value="Date" required >
+            <input id= "date" name="date" onclick="setDateMinMax()" type="date" value="Date" required >
             <p id="datewarn"> Enter a valid date within 2 months from Tomorrow </p>
 
             <input id ="subbutton" type="button" value="Search Trains" onclick="searchInputValidation()"/>
@@ -57,6 +57,28 @@
     </form>
 <script>
     setMail();
+    function setDateMinMax() {
+        var today = new Date();
+        today.setDate(today.getDate()+1);
+        var dd = today.getDate();
+        if(dd==1){
+            today.setMonth(today.getMonth()+1);
+        }
+        var mm = today.getMonth();
+        var yyyy = today.getFullYear();
+        if(mm<10){
+            console.log(yyyy+"-0"+mm+"-0"+dd);
+            document.getElementById("date").setAttribute("min",yyyy+"-0"+mm+"-0"+dd);
+            mm = mm+2;
+            document.getElementById("date").setAttribute("max",yyyy+"-0"+mm+"-0"+dd);
+        }
+        else{
+            document.getElementById("date").setAttribute("min",yyyy+"-"+mm+"-"+dd);
+            mm++;
+            document.getElementById("date").setAttribute("max",yyyy+"-"+mm+"-"+dd);
+        }
+
+    }
 </script>
 </body>
 

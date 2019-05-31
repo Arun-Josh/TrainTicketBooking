@@ -45,7 +45,6 @@ public class ReserveSeat extends HttpServlet {
                 log.info("seeet" + seattype);
 
                 if(userid == null ){
-//                    request.getRequestDispatcher("index.html").forward(request,response);
                     out.print("");
                     return;
                 }
@@ -120,13 +119,6 @@ public class ReserveSeat extends HttpServlet {
 
                     String stationid = rsstations.getString("STATIONID");
                     log.info("st id " + stationid);
-//                    PreparedStatement psseatype = con.prepareStatement("SELECT * FROM SEATSINFO WHERE TRAINID = ?");
-//                    psseatype.setString(1,trainid);
-//                    ResultSet rsseattype = psseatype.executeQuery();
-//
-//                    while(rsseattype.next()){
-//                        int t = 0;
-//                        String seattype = rsseattype.getString("seattype");
                         log.info("seattype "+ seattype);
                         PreparedStatement psavail = con.prepareStatement("SELECT * FROM SEATSAVAILABLE WHERE TRAINID = ? AND STATIONID = ? AND SEATTYPE = ? AND DAy = ?");
                         psavail.setString(1,trainid);
@@ -141,14 +133,9 @@ public class ReserveSeat extends HttpServlet {
                             seatsavailable = rsavail.getString("seatsavailable");
                             log.info("should come once " + stationid + "   "+seatsavailable);
                         }
-//                        else {
-//                            out.print("Seat not available");
-//                        }
-
                         seatsavailable = String.valueOf(Integer.valueOf(seatsavailable) - seats) ;
 
                             log.info("seatsavailable after modification "+ seatsavailable + " station " + stationid);
-
 
                     PreparedStatement psseatsavail = con.prepareStatement("    UPDATE SEATSAVAILABLE SET SEATSAVAILABLE = ? WHERE TRAINID = ? AND DAY = ? AND STATIONID = ?  AND SEATTYPE = ?");
                         psseatsavail.setString(1,seatsavailable);
@@ -157,7 +144,6 @@ public class ReserveSeat extends HttpServlet {
                         psseatsavail.setString(4,stationid);
                         psseatsavail.setString(5,seattype);
                         psseatsavail.executeUpdate();
-//                    }
                 }
 
                 PreparedStatement psseatavail = con.prepareStatement("SELECT  * FROM SEATSAVAILABLE WHERE TRAINID = ? AND STATIONID = ? AND SEATTYPE = ? AND DAY = ?");
@@ -167,22 +153,18 @@ public class ReserveSeat extends HttpServlet {
                 psseatavail.setString(4,dateoftravel);
                 ResultSet rsseatavail = psseatavail.executeQuery();
                 rsseatavail.next();
-                int t1 = rsseatavail.getInt("seatsavailable") + 1 ;
+                int srcstationseats = rsseatavail.getInt("seatsavailable") + 1 ;
 
                 psseatavail.setString(2,destid);
                 rsseatavail = psseatavail.executeQuery();
                 rsseatavail.next();
-                int t2 = rsseatavail.getInt("seatsavailable") + 1 ;
+                int deststationseats = rsseatavail.getInt("seatsavailable") + 1 ;
 
-//                if(t1<1 || t2< 1){
-//                    PreparedStatement psbook = con.prepareStatement("UPDATE ")
-//                }
 
-                int t3 = (t1>t2)?t2:t1;
+                int minseatcount = (srcstationseats>deststationseats)?deststationseats:srcstationseats;
 
-                if(t1<1 || t2 <1){
+                if(srcstationseats<1 || deststationseats <1){
                     PreparedStatement psbook = con.prepareStatement("    UPDATE BOOKINGS SET TICKETSTATUS = \"WAITING LIST\" WHERE PNR = ?");
-//                    psbook.setString(1,String.valueOf(t3));
                     psbook.setString(1,pnr);
                     psbook.executeUpdate();
                     ticketstatus = "WAITING LIST";
@@ -192,8 +174,8 @@ public class ReserveSeat extends HttpServlet {
                     if(i!=0){
                         seatnumbers+=",";
                     }
-                    seatnumbers+= t3 ;
-                    t3++;
+                    seatnumbers+= minseatcount ;
+                    minseatcount++;
                 }
 
                 log.info("seaat nos " +seatnumbers);
@@ -208,12 +190,12 @@ public class ReserveSeat extends HttpServlet {
                         status+=",CONFIRMED";
                     }
                     if(ticketstatus.equals("WAITING LIST")){
-                        status+=" "+(Math.abs(t3)+(i+1));
+                        status+=" "+(Math.abs(minseatcount)+(i+1));
                     }
                     String tstatus ="CONFIRMED";
 
                     if (ticketstatus.equals("WAITING LIST")){
-                        tstatus = "WAITING LIST "+(Math.abs(t3)+(i+1));
+                        tstatus = "WAITING LIST "+(Math.abs(minseatcount)+(i+1));
                     }
 
                     ps = con.prepareStatement("INSERT INTO PASSENGERINFO(PNR, PASSENGERNAME, SEATNO, AGE, GENDER,STATUS) VALUES(?,?,?,?,?,?)");

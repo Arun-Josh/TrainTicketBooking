@@ -56,14 +56,15 @@ function checkCookie() {
     var url = window.location.href;
     var dir = url.split('/').pop();
     console.log("checking cookie "+user);
+    console.log("this url "+dir);
     if (user == "" || user=='""' ) {
         console.log("user not logged in : ");
-        if(dir!='index.html'){
+        if(dir!='index.html' && dir!='""'){
             window.location.href = "index.html";
         }
     } else {
         console.log("user already logged in : " + user);
-        if(dir=='index.html'){
+        if(dir!='searchtrain.html'){
             window.location.href = "searchtrain.html";
         }
     }
@@ -530,13 +531,20 @@ function  searchInputValidation() {
     var inputdate = document.getElementById("date").value;
     var idate = new Date(inputdate);
     var today = new Date();
+
+    var mm = today.setMonth(today.getMonth()+2);
+    var yyyy = today.getFullYear();
+
     var limitdate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
     var ldate = new Date(limitdate);
     today = new Date();
 
+    var imm = idate.getMonth();
+    var iyyyy = idate.getFullYear();
+
     console.log("tt"+ idate +" ldate \n" + ldate);
 
-    if(idate>=today){
+    if(idate>=today || (imm<=mm) && iyyyy==yyyy){
         document.getElementById("datewarn").style.display = "none";
 
         form.submit();
@@ -602,12 +610,13 @@ function bookedTicketsPage() {
     var tickets = sessionStorage.getItem("tickets");
 
     var page = '<div id="tickform" class="box" >';
-
-    if (Object.keys(tickets).length==0) {
+    console.log("in booked"+tickets);
+    if (tickets=="[]") {
         console.log("JSON IS empty");
         page += '    <h1> NO TICKETS BOOKED !</h1>';
         page += '</div>'
         document.getElementById("bookedtickets").innerHTML = page;
+        return;
     }
 
     tickets = JSON.parse(tickets);
