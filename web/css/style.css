@@ -76,7 +76,20 @@ body{
     border-radius: 25px;
 }
 
-.box input[type="submit"]:hover , #subbutton:hover{
+#subbtn{
+    /* border:0; */
+    /* display: block; */
+    text-align: center;
+    background: none;
+    /* margin: 20px auto; */
+    border: 2px solid #2ecc71;
+    padding: 14px 40px;
+    outline: none;
+    color: white;
+    border-radius: 25px;
+}
+
+.box input[type="submit"]:hover , #subbutton:hover, #subbtn:hover{
     background: #2ecc71;
 }
 
@@ -153,6 +166,7 @@ label{
 .hidden{
     display: none;
 }
+
 
 /* Table Props */
 

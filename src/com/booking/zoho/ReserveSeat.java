@@ -66,7 +66,7 @@ public class ReserveSeat extends HttpServlet {
                 rs.next();
                 String destid   = rs.getString("stationid");
                 log.info("ffare " +fare);
-                ps = con.prepareStatement("INSERT INTO BOOKINGS(USERID, TRAINID, MAILID, MODEOFPAYMENT, PAYMENTSTATUS, ACCOUNTNUMBER, IFSCCODE, CARDNUMBER, TICKETSTATUS, DATEOFTRAVEL, SOURCE, DEST, FARE ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) ");
+                ps = con.prepareStatement("INSERT INTO BOOKINGS(USERID, TRAINID, MAILID, MODEOFPAYMENT, PAYMENTSTATUS, ACCOUNTNUMBER, IFSCCODE, CARDNUMBER, TICKETSTATUS, DATEOFTRAVEL, SOURCE, DEST, FARE, SEATTYPE ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
                 ps.setString(1,userid);
                 ps.setString(2,trainid);
                 ps.setString(3,mailid);
@@ -80,6 +80,7 @@ public class ReserveSeat extends HttpServlet {
                 ps.setString(11,sourceid);
                 ps.setString(12,destid);
                 ps.setString(13,fare);
+                ps.setString(14,seattype);
                 ps.executeUpdate();
 
                 ps = con.prepareStatement("SELECT * FROM BOOKINGS WHERE MAILID = ? AND TRAINID = ?");
@@ -244,6 +245,7 @@ public class ReserveSeat extends HttpServlet {
                 ticket.put("ticketstatus",ticketstatus);
                 ticket.put("seatnos",seatnumbers);
                 ticket.put("seatcount", seats );
+                ticket.put("seattype",seattype);
                 ticket.put("fare", fare );
                 ticket.put("dateoftravel", dateoftravel );
                 ticket.put("status",status);

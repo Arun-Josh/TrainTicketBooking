@@ -35,7 +35,7 @@ public class BookedTickets extends HttpServlet {
 
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation", "root", "root");
             PreparedStatement ps = con.prepareStatement("SELECT BOOKINGS.PNR, BOOKINGS.USERID, BOOKINGS.TRAINID,\n" +
-                    "                    BOOKINGS.TICKETSTATUS, BOOKINGS.DATEOFTRAVEL, BOOKINGS.SOURCE, BOOKINGS.DEST, BOOKINGS.FARE, \n" +
+                    "                    BOOKINGS.TICKETSTATUS, BOOKINGS.DATEOFTRAVEL, BOOKINGS.SOURCE, BOOKINGS.DEST, BOOKINGS.FARE, BOOKINGS.SEATTYPE, \n" +
                     "                    PASSENGERINFO.PASSENGERID, PASSENGERINFO.PASSENGERNAME, PASSENGERINFO.SEATNO, PASSENGERINFO.AGE, PASSENGERINFO.GENDER, PASSENGERINFO.STATUS\n" +
                     "                    FROM BOOKINGS,PASSENGERINFO  WHERE BOOKINGS.USERID = ? AND PASSENGERINFO.PNR = BOOKINGS.PNR;");
             ps.setString(1, userid);
@@ -50,6 +50,7 @@ public class BookedTickets extends HttpServlet {
                 String from = rs.getString("source");
                 String to = rs.getString("dest");
                 String trainid = rs.getString("trainid");
+                String seattype = rs.getString("seattype");
 
                 PreparedStatement pstrain = con.prepareStatement("SELECT * FROM TRAINNAMES WHERE TRAINID = ?");
                 pstrain.setString(1,trainid);
@@ -91,7 +92,7 @@ public class BookedTickets extends HttpServlet {
                 System.out.println(passengerid +" "+pnr + " + " +from + " + " +to + " + " +trainnumber + " + " +trainname + " + " +ticketstatus + " + " +dateoftravel + " + " +ticketfare + " + " +passengername + " + " + age + " + " + seatno + " + " + gender + " + " +stime+ " + "+ dtime);
                 System.out.println("passss id +"+passengerid);
 //    public Tickets(String pnr, String from, String to, String trainnumber, String trainname, String ticketstatus, String dateoftravel, String ticketfare, String passenger, String age, String seatno, String gender) {
-                tickets.add(new Tickets(passengerid, pnr,from,to,trainnumber,trainname,ticketstatus,dateoftravel,ticketfare,passengername, age, seatno, gender, stime, dtime));
+                tickets.add(new Tickets(passengerid, pnr,from,to,trainnumber,trainname,ticketstatus,dateoftravel,ticketfare,passengername, age, seatno, gender, stime, dtime, seattype));
             }
 
             String ticketsJSON = new Gson().toJson(tickets);

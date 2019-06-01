@@ -18,9 +18,10 @@ public class Tickets {
     String gender;
     String stime;
     String dtime;
+    String seattype;
 
 
-    public Tickets(String passengerid, String pnr, String from, String to, String trainnumber, String trainname, String ticketstatus, String dateoftravel, String ticketfare, String passenger, String age, String seatno, String gender, String stime, String dtime) {
+    public Tickets(String passengerid, String pnr, String from, String to, String trainnumber, String trainname, String ticketstatus, String dateoftravel, String ticketfare, String passenger, String age, String seatno, String gender, String stime, String dtime, String seattype) {
         this.passengerid = passengerid;
         this.pnr = pnr;
         this.from = from;
@@ -36,7 +37,10 @@ public class Tickets {
         this.gender = gender;
         this.stime = stime;
         this.dtime = dtime;
+        this.seattype = seattype;
     }
+
+
 
     public String getPassengerid() {
         return passengerid;

@@ -52,7 +52,7 @@ public class Registration extends HttpServlet {
 //            if(n==0){
 //                out.print("<body><script>alert(\"Mail ID already registered \")</script></body>");
 //            }else{
-                out.print("<body><script>alert(\"Account Creation Success\")</script></body>");
+                out.print("<body><center>\"Account Creation Success\"<center></body>");
 //            }
             RequestDispatcher rd = request.getRequestDispatcher("index.html");
             rd.include(request,response);

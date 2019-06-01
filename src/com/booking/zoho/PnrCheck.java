@@ -54,6 +54,7 @@ public class PnrCheck extends HttpServlet {
 //            String ticketstatus = rs.getString("TICKETSTATUS");
             String fare = rs.getString("fare");
             String dateoftravel = rs.getString("dateoftravel");
+            String seattype = rs.getString("seattype");
 
             ps = con.prepareStatement("SELECT  * FROM TRAINNAMES WHERE TRAINID = ?");
             ps.setString(1,trainid);
@@ -119,32 +120,13 @@ public class PnrCheck extends HttpServlet {
             ticket.put("ticketstatus",ticketstatus);
             ticket.put("seatnos",seatnos);
             ticket.put("seatcount", seatcount );
+            ticket.put("seattype",seattype);
             ticket.put("fare", fare );
             ticket.put("dateoftravel", dateoftravel );
             ticket.put("status",ticketstatus);
 
             System.out.println("In pnr check JSON Passneger s "+ticket.getString("passengers"));
             response.getWriter().print(ticket);
-
-//            ServletContext servletcontext = getServletContext();
-//
-//            request.setAttribute("pnr",pnr);
-//            servletcontext.setAttribute("trainno",trainid);
-//            servletcontext.setAttribute("trainnumber",trainnumber);
-//            servletcontext.setAttribute("trainname",trainname);
-//            servletcontext.setAttribute("source",sourceid);
-//            servletcontext.setAttribute("dest",destid);
-//            servletcontext.setAttribute("dtime",dtime);
-//            servletcontext.setAttribute("stime",stime);
-//            servletcontext.setAttribute("passengers",passengers);
-//            servletcontext.setAttribute("ages",ages);
-//            servletcontext.setAttribute("genders",genders);
-////            request.setAttribute("ticketstatus",ticketstatus);
-//            request.setAttribute("status",ticketstatus);
-//            request.setAttribute("seatnos",seatnos);
-//            request.setAttribute("seatcount", seatcount );
-//            request.setAttribute("fare", fare );
-//            request.setAttribute("dateoftravel", dateoftravel );
 
         }
         catch (Exception E){
@@ -154,12 +136,6 @@ public class PnrCheck extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        HttpSession session = request.getSession();
-//        if(session.getAttribute("mail")==null){
-//            response.sendRedirect("index.html");
-//        }
-//        else{
             doPost(request, response);
-//        }
     }
 }
