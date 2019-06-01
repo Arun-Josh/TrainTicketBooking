@@ -49,60 +49,32 @@ public class ReserveSeat extends HttpServlet {
                     return;
                 }
 
-
                 log.info(userid + trainid + mailid + modeofpayment + paymentstatus + accountnumber + ifsccode + cardnumber + ticketstatus);
 
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation","root","root");
 
-                PreparedStatement ps = con.prepareStatement("SELECT * FROM STATIONNAMES WHERE STATIONNAME = ?");
-                ps.setString(1,source);
-                ResultSet rs = ps.executeQuery();
+                ResultSet rs = new MysqlConnectionUtil().getStation(source);
                 rs.next();
                 String sourceid = rs.getString("stationid");
 
-                ps.setString(1,dest);
-                rs = ps.executeQuery();
+                rs = new MysqlConnectionUtil().getStation(dest);
                 rs.next();
                 String destid   = rs.getString("stationid");
                 log.info("ffare " +fare);
-                ps = con.prepareStatement("INSERT INTO BOOKINGS(USERID, TRAINID, MAILID, MODEOFPAYMENT, PAYMENTSTATUS, ACCOUNTNUMBER, IFSCCODE, CARDNUMBER, TICKETSTATUS, DATEOFTRAVEL, SOURCE, DEST, FARE, SEATTYPE ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
-                ps.setString(1,userid);
-                ps.setString(2,trainid);
-                ps.setString(3,mailid);
-                ps.setString(4,modeofpayment);
-                ps.setString(5,paymentstatus);
-                ps.setString(6,accountnumber);
-                ps.setString(7,ifsccode);
-                ps.setString(8,cardnumber);
-                ps.setString(9,ticketstatus);
-                ps.setString(10,dateoftravel);
-                ps.setString(11,sourceid);
-                ps.setString(12,destid);
-                ps.setString(13,fare);
-                ps.setString(14,seattype);
-                ps.executeUpdate();
+                new MysqlConnectionUtil().bookTicket(userid,trainid,mailid,modeofpayment,paymentstatus,accountnumber,ifsccode,cardnumber,ticketstatus,dateoftravel,sourceid,destid,fare,seattype);
 
-                ps = con.prepareStatement("SELECT * FROM BOOKINGS WHERE MAILID = ? AND TRAINID = ?");
-                ps.setString(1,mailid);
-                ps.setString(2,trainid);
-                rs = ps.executeQuery();
-
+                rs = new MysqlConnectionUtil().getPnr(mailid,trainid);
                 while(rs.next()){}
                 rs.previous();
                 String pnr = rs.getString("pnr");
 
-//                sc.setAttribute("pnr",pnr);
-
-//                int seats = (Integer) sc.getAttribute("seatcount");
                 int seats = Integer.valueOf((String)request.getAttribute("seatcount"));
                 log.info("seaats : "+ seats);
                 System.out.println("passenegers in reserve "+session.getAttribute("passengers"));
                 String passenger[] = ((String) session.getAttribute("passengers")).split(",");
                 String age[] = ((String) session.getAttribute("ages")).split(",");
                 String gender[] = ((String) session.getAttribute("gender")).split(",");
-
-//                String seatno[] = new String[seats];
 
                 String seatnumbers = "";
                 String srcstopno = (String) request.getAttribute("srcstopno");
@@ -121,12 +93,8 @@ public class ReserveSeat extends HttpServlet {
                     String stationid = rsstations.getString("STATIONID");
                     log.info("st id " + stationid);
                         log.info("seattype "+ seattype);
-                        PreparedStatement psavail = con.prepareStatement("SELECT * FROM SEATSAVAILABLE WHERE TRAINID = ? AND STATIONID = ? AND SEATTYPE = ? AND DAy = ?");
-                        psavail.setString(1,trainid);
-                        psavail.setString(2,stationid);
-                        psavail.setString(3,seattype);
-                        psavail.setString(4,dateoftravel);
-                        ResultSet rsavail = psavail.executeQuery();
+
+                        ResultSet rsavail = new MysqlConnectionUtil().getAvailableSeats(trainid, stationid, seattype, dateoftravel);
 
                         String seatsavailable ="";
 
@@ -165,9 +133,7 @@ public class ReserveSeat extends HttpServlet {
                 int minseatcount = (srcstationseats>deststationseats)?deststationseats:srcstationseats;
 
                 if(srcstationseats<1 || deststationseats <1){
-                    PreparedStatement psbook = con.prepareStatement("    UPDATE BOOKINGS SET TICKETSTATUS = \"WAITING LIST\" WHERE PNR = ?");
-                    psbook.setString(1,pnr);
-                    psbook.executeUpdate();
+                    new MysqlConnectionUtil().updateStatus(pnr);
                     ticketstatus = "WAITING LIST";
                 }
 
@@ -199,33 +165,17 @@ public class ReserveSeat extends HttpServlet {
                         tstatus = "WAITING LIST "+(Math.abs(minseatcount)+(i+1));
                     }
 
-                    ps = con.prepareStatement("INSERT INTO PASSENGERINFO(PNR, PASSENGERNAME, SEATNO, AGE, GENDER,STATUS) VALUES(?,?,?,?,?,?)");
-                    ps.setString(1,pnr);
-                    ps.setString(2,passenger[i]);
-                    ps.setInt(3,Integer.valueOf(seatno[i]));
-                    ps.setString(4,age[i]);
-                    ps.setString(5,gender[i]);
-                    ps.setString(6,tstatus);
-                    ps.executeUpdate();
+                    new MysqlConnectionUtil().insertPassengers(pnr,passenger[i],Integer.valueOf(seatno[i]),age[i],gender[i],tstatus);
                 }
                 log.info("passenger status "+status);
-                ps = con.prepareStatement("SELECT  * FROM TRAINNAMES WHERE TRAINID = ?");
-                ps.setString(1,trainid);
-                rs = ps.executeQuery();
+                rs = new MysqlConnectionUtil().getTrainName(trainid);
                 rs.next();
                 String trainname = rs.getString("trainname");
                 String trainnumber = rs.getString("trainnumber");
-
-                ps = con.prepareStatement("SELECT  * FROM STATIONS WHERE TRAINID = ? AND STATIONID = ?");
-                ps.setString(1,trainid);
-                ps.setString(2,sourceid);
-                rs = ps.executeQuery();
+                rs = new MysqlConnectionUtil().getStation(trainid,sourceid);
                 rs.next();
                 String stime = rs.getString("stationarrtime");
-
-
-                ps.setString(2,destid);
-                rs = ps.executeQuery();
+                rs = new MysqlConnectionUtil().getStation(trainid,destid);
                 rs.next();
                 String dtime = rs.getString("stationarrtime");
 
@@ -256,9 +206,6 @@ public class ReserveSeat extends HttpServlet {
             catch (Exception E){
                 E.printStackTrace();
             }
-
-//        request.getRequestDispatcher("TicketInfo.jsp").forward(request,response);
-
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
