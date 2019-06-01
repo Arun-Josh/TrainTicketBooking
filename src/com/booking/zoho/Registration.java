@@ -19,13 +19,13 @@ public class Registration extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-//        out.print("Reg servlet");
+
         String uname = request.getParameter("user");
         String email = request.getParameter("email");
         String gender = request.getParameter("gender");
         String pass  = request.getParameter("pass1");
         String phno  = request.getParameter("phno");
-//        out.print(uname+email+gender+pass);
+
         try{
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation","root","root");
@@ -48,13 +48,7 @@ public class Registration extends HttpServlet {
             int n = ps.executeUpdate();
             Logger log = Logger.getLogger(Registration.class.getName());
             log.info("ps returns "+n);
-//            if(n==0){
-//                out.print("<body><script>alert(\"Mail ID already registered \")</script></body>");
-//            }else{
                 out.print("SUCCESS");
-//            }
-//            RequestDispatcher rd = request.getRequestDispatcher("index.html");
-//            rd.include(request,response);
         }
         catch (Exception E){
             E.printStackTrace();
@@ -62,12 +56,8 @@ public class Registration extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//      HttpSession session = request.getSession();
-//        if(session.getAttribute("mail")==null){
-//            response.sendRedirect("index.html");
-//        }
-//        else{
+
             doPost(request, response);
-//        }
+
     }
 }

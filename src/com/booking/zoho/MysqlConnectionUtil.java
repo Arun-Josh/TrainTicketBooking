@@ -133,4 +133,13 @@ public class MysqlConnectionUtil {
         ps.executeUpdate();
         return true;
     }
+
+    final ResultSet getBookingInfo(String userid)throws Exception{
+        ps = con.prepareStatement("SELECT BOOKINGS.PNR, BOOKINGS.USERID, BOOKINGS.TRAINID,\n" +
+                "                    BOOKINGS.TICKETSTATUS, BOOKINGS.DATEOFTRAVEL, BOOKINGS.SOURCE, BOOKINGS.DEST, BOOKINGS.FARE, BOOKINGS.SEATTYPE, \n" +
+                "                    PASSENGERINFO.PASSENGERID, PASSENGERINFO.PASSENGERNAME, PASSENGERINFO.SEATNO, PASSENGERINFO.AGE, PASSENGERINFO.GENDER, PASSENGERINFO.STATUS\n" +
+                "                    FROM BOOKINGS,PASSENGERINFO  WHERE BOOKINGS.USERID = ? AND PASSENGERINFO.PNR = BOOKINGS.PNR;");
+        ps.setString(1, userid);
+        return ps.executeQuery();
+    }
 }

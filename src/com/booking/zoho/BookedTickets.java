@@ -9,9 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
@@ -20,26 +17,18 @@ public class BookedTickets extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Boolean login = new SessionValidation().validate(request,response);
+        MysqlConnectionUtil mysqlDB = new MysqlConnectionUtil();
         if(!login){
             response.sendRedirect("index.html");
             return;
         }
         HttpSession session = request.getSession();
-//        ServletContext sc = getServletContext();
+
         String userid = (String) session.getAttribute("userid");
         System.out.println("booking userid" + userid);
 
         try {
-//            Class.forName("java.mysql.jdbc.Driver");
-            Class.forName("com.mysql.jdbc.Driver");
-
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation", "root", "root");
-            PreparedStatement ps = con.prepareStatement("SELECT BOOKINGS.PNR, BOOKINGS.USERID, BOOKINGS.TRAINID,\n" +
-                    "                    BOOKINGS.TICKETSTATUS, BOOKINGS.DATEOFTRAVEL, BOOKINGS.SOURCE, BOOKINGS.DEST, BOOKINGS.FARE, BOOKINGS.SEATTYPE, \n" +
-                    "                    PASSENGERINFO.PASSENGERID, PASSENGERINFO.PASSENGERNAME, PASSENGERINFO.SEATNO, PASSENGERINFO.AGE, PASSENGERINFO.GENDER, PASSENGERINFO.STATUS\n" +
-                    "                    FROM BOOKINGS,PASSENGERINFO  WHERE BOOKINGS.USERID = ? AND PASSENGERINFO.PNR = BOOKINGS.PNR;");
-            ps.setString(1, userid);
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = mysqlDB.getBookingInfo(userid);
 
             ArrayList<Tickets> tickets = new ArrayList<>();
 
@@ -52,9 +41,7 @@ public class BookedTickets extends HttpServlet {
                 String trainid = rs.getString("trainid");
                 String seattype = rs.getString("seattype");
 
-                PreparedStatement pstrain = con.prepareStatement("SELECT * FROM TRAINNAMES WHERE TRAINID = ?");
-                pstrain.setString(1,trainid);
-                ResultSet rstrain = pstrain.executeQuery();
+                ResultSet rstrain = mysqlDB.getTrainName(trainid);
                 String trainname = "";
                 String trainnumber = "";
 
@@ -63,18 +50,14 @@ public class BookedTickets extends HttpServlet {
                     trainnumber = rstrain.getString("trainnumber");
                 }
 
-                PreparedStatement psstations = con.prepareStatement("SELECT * FROM STATIONS WHERE TRAINID = ? AND STATIONID = ?");
-                psstations.setString(1,trainid);
-                psstations.setString(2,from);
-                ResultSet rsstations = psstations.executeQuery();
+                ResultSet rsstations = mysqlDB.getStation(trainid,from);
 
                 String stime = "";
                 if (rsstations.next()){
                     stime = rsstations.getString("stationarrtime");
                 }
 
-                psstations.setString(2,to);
-                rsstations = psstations.executeQuery();
+                rsstations = mysqlDB.getStation(trainid,from);
 
                 String dtime = "";
                 if (rsstations.next()){
@@ -91,16 +74,12 @@ public class BookedTickets extends HttpServlet {
                 String passengerid = rs.getString("passengerid");
                 System.out.println(passengerid +" "+pnr + " + " +from + " + " +to + " + " +trainnumber + " + " +trainname + " + " +ticketstatus + " + " +dateoftravel + " + " +ticketfare + " + " +passengername + " + " + age + " + " + seatno + " + " + gender + " + " +stime+ " + "+ dtime);
                 System.out.println("passss id +"+passengerid);
-//    public Tickets(String pnr, String from, String to, String trainnumber, String trainname, String ticketstatus, String dateoftravel, String ticketfare, String passenger, String age, String seatno, String gender) {
                 tickets.add(new Tickets(passengerid, pnr,from,to,trainnumber,trainname,ticketstatus,dateoftravel,ticketfare,passengername, age, seatno, gender, stime, dtime, seattype));
             }
 
             String ticketsJSON = new Gson().toJson(tickets);
             System.out.println("Tickets Json "+ticketsJSON);
             response.getWriter().print(ticketsJSON);
-//                request.setAttribute("tickets",tickets);
-//                request.getRequestDispatcher("BookedTickets.jsp").forward(request,response);
-
         }
         catch (Exception E){
             E.printStackTrace();

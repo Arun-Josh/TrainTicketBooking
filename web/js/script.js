@@ -504,9 +504,6 @@ function getURLParameter(name,url) {
 }
 
 function listTrains() {
-    // var from = document.getElementById("from").value;
-    // var to   = document.getElementById("to").value;
-    // var date = document.getElementById("date").value;
     var url = location.href;
     var from = getURLParameter("from",url);
     var to = getURLParameter("to",url);

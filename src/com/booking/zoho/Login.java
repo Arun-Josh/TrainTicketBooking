@@ -19,13 +19,7 @@ public class Login extends HttpServlet {
         HttpSession session = request.getSession();
 
         try {
-            //loading drivers for mysql
-            Class.forName("com.mysql.jdbc.Driver");
-
             System.out.println("checking mail pwd "+mail + pass);
-            //creating connection with the database
-            Connection con= DriverManager.getConnection
-                    ("jdbc:mysql://localhost/trainreservation","root","root");
 
             ResultSet rs = new MysqlConnectionUtil().authLogin(mail,pass);
             Boolean status = rs.next();

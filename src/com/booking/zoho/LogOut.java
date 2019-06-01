@@ -12,8 +12,6 @@ public class LogOut extends HttpServlet {
 
             System.out.println("inSIDE LOGOUT ");
 
-//            if(ck.length==0) response.sendRedirect("index.html");
-
             for(Cookie c : ck){
                 c.setValue(null);
                 c.setMaxAge(1);
@@ -25,7 +23,6 @@ public class LogOut extends HttpServlet {
             session.setAttribute("mail",null);
             System.out.println("Nullified  mail is "+ session.getAttribute("mail"));
             session.invalidate();
-//            System.out.println("After invalidation  "+ session.getAttribute("mail"));
             System.out.println("---------LOGGED OUT---------");
             response.sendRedirect("index.html");
     }
