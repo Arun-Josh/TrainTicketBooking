@@ -1,12 +1,11 @@
 package com.booking.zoho;
 
-import javax.servlet.RequestDispatcher;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -36,7 +35,7 @@ public class Registration extends HttpServlet {
             ResultSet rscheck = pscheck.executeQuery();
 
             if(rscheck.next()){
-                out.print("<body><center>\"Mail ID already registered \"<center></body>");
+                out.print("Mail ID already registered");
                 return;
             }
 
@@ -52,10 +51,10 @@ public class Registration extends HttpServlet {
 //            if(n==0){
 //                out.print("<body><script>alert(\"Mail ID already registered \")</script></body>");
 //            }else{
-                out.print("<body><center>\"Account Creation Success\"<center></body>");
+                out.print("SUCCESS");
 //            }
-            RequestDispatcher rd = request.getRequestDispatcher("index.html");
-            rd.include(request,response);
+//            RequestDispatcher rd = request.getRequestDispatcher("index.html");
+//            rd.include(request,response);
         }
         catch (Exception E){
             E.printStackTrace();
@@ -63,12 +62,12 @@ public class Registration extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      HttpSession session = request.getSession();
-        if(session.getAttribute("mail")==null){
-            response.sendRedirect("index.html");
-        }
-        else{
+//      HttpSession session = request.getSession();
+//        if(session.getAttribute("mail")==null){
+//            response.sendRedirect("index.html");
+//        }
+//        else{
             doPost(request, response);
-        }
+//        }
     }
 }

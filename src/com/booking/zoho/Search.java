@@ -110,7 +110,7 @@ public class Search extends HttpServlet {
                         }
 
                         if(t1stopno > t2stopno && seatvail){
-                            Train train = new Train(trainid, trainnumber,trainname,source, dest, sourcetime, desttime, seat, t1stopno,t2stopno);
+                            Train train = new Train(trainid, trainnumber,trainname,source, dest, sourcetime, desttime, seat, t1stopno,t2stopno, new MysqlConnectionUtil().getRoute(trainid));
 //                            JSONObject trainJSON = new JSON
                             trains.add(train);
 

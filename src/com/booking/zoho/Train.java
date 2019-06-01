@@ -11,10 +11,11 @@ public class Train {
     String sourcetime;
     String desttime;
     LinkedList<Seats> seats;
+    LinkedList<String> route;
     int srcstop ;
     int dststop ;
 
-    public Train(String trainid, String trainnumber, String trainname, String source, String dest, String sourcetime, String desttime, LinkedList<Seats> seat, int srcstop, int dststop) {
+    public Train(String trainid, String trainnumber, String trainname, String source, String dest, String sourcetime, String desttime, LinkedList<Seats> seat, int srcstop, int dststop, LinkedList<String> route) {
         this.trainnumber = trainnumber;
         this.trainname = trainname;
         this.source = source;
@@ -25,6 +26,7 @@ public class Train {
         this.srcstop = srcstop;
         this.dststop = dststop;
         this.trainid = trainid;
+        this.route = route;
     }
 
     public String getTrainid() {

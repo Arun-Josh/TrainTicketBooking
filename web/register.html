@@ -4,29 +4,78 @@
     <title> Train Ticket Reservation </title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>
+    <script src="js/script.js"></script>
+
 </head>
 <body>
 
-<script>
-    checkCookie();
-</script>
+<div id="msg"></div>
 
-<form class="box" action="Registration" method="POST">
+<form id="regform" class="box" onsubmit="validateRegistration(); return false;">
         <h1>Registration</h1>
         <input name="user" type="text" placeholder="Username" maxlength="25" required>
         <input name="email" type="email" placeholder="Email ID" required>
+        <h4 id="hidden">MAIL ID ALREADY REGISTERED</h4>
         <input name="phno" type="text" placeholder="Phone number" required pattern="[6-9]{1}[0-9]{9}" title="Enter a valid mobile number">
         <input name="gender" type="radio" Value="Male" required><a id="ch">MALE</a> 
         <input name="gender" type="radio" Value="Female" required><a id="ch">FEMALE</a> 
         <input name="gender" type="radio" Value="Others" required> <a id="ch">OTHERS</a>
         <input name="pass1"  id="psw" type="password" placeholder="Password" required>
-        <div>
-                <p id="length" class="invalid">Password must contain Minimum 8 characters</p>
+        <div>   <p id="length" class="invalid">Password must contain Minimum 8 characters</p>
                 <i id="check"  class="fa fa-check" aria-hidden="true"></i>
         </div>
         <input type="submit" value="Done">
     </form>
     <script>
+
+        function validateRegistration() {
+            var pass1 = $("input[name=pass1]").val();
+            // alert(pass1);
+            if(pass1.length<8){
+                return;
+            }
+            else{
+                register();
+            }
+        }
+
+        function register() {
+            document.getElementById("hidden").style.display="none";
+            var uname = document.getElementsByName("user")[0].value;
+            var email = document.getElementsByName("email")[0].value;
+            var phno  = document.getElementsByName("phno")[0].value;
+            var gender = $("input[name=gender]:checked").val();
+            var pass1 = $("input[name=pass1]").val();
+            console.log("INPUTS RIGHT");
+            var url = "Registration";
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function (ev) {
+                if(xhr.readyState==4 && xhr.status==200){
+                    var reply = xhr.responseText;
+                    if(reply=="SUCCESS"){
+                        document.getElementById("regform").style.display="none";
+                        var page = '<div id="success" class="box">' +
+                            '<h1>ACCOUNT CREATED SUCCESSFULLY</h1>' +
+                            '<br>' +
+                            '<h1><i class="fa fa-thumbs-up"></h1></i>' +
+                            '</div>';
+                        document.getElementById("msg").innerHTML = page;
+                        document.getElementById("success").style.width="60%";
+                    }
+                    else if(reply=="Mail ID already registered"){
+                        document.getElementById("hidden").style.color="orange";
+                        document.getElementById("hidden").style.display="block";
+                    }
+                }
+            }
+            xhr.open("POST",url,true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send("user="+uname+"&email="+email+"&phno="+phno+"&gender="+gender+"&pass1="+pass1);
+        }
               var myInput = document.getElementById("psw");
 
               myInput.onfocus = function() {

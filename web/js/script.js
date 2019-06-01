@@ -110,6 +110,15 @@ function resultpage(traindetails) {
             }
             page+= ' &nbsp; ' +'<button id="subbtn" onclick="passengerInfo(this)" value="'+trains[train]["trainid"]+'/'+trains[train]["seats"][seat]["seattype"] +'">'+trains[train]["seats"][seat]["seattype"] + ' &nbsp; ' + '<a> '+ seatcount +'</a>' + '</button>';
         }
+        page+= '<br><br>';
+        page+= '<label>ROUTE</label>'
+        for(var routeno = 0 ;routeno<trains[train]["route"].length;routeno++){
+            var location = trains[train]["route"][routeno];
+            page+= ' &nbsp; ' + '<a> '+ location +'</a>' ;
+            if(routeno!=trains[train]["route"].length-1){
+                page+= '<a>  &rarrtl;  </a>';
+            }
+        }
         page+="<br><br>";
         page+="<hr>";
     }
@@ -152,7 +161,6 @@ function passengerInfo(selection) {
 
     // var trainsJSON = JSON.parse(sessionStorage.getItem("traindetails"));
     // var seats= "";
-
 
     // for(train in trainsJSON){
     //     if(trainsJSON[train]["trainid"]==trainchosen){
@@ -368,7 +376,7 @@ function passengerInfo(selection) {
     
     function modeOfPayment() {
         document.getElementById("passform").style.display="none";
-        var mode = '<div id="paymentform" class="box" action="PaymentGateWay" method="POST">\n' +
+        var mode = '<div id="paymentform" class="box" action="PaymentGateWay">\n' +
             '    <h1>TICKET FARE </h1>\n' +
             '    <h1>' + sessionStorage.getItem("passcount") + ' X ' + sessionStorage.getItem("singlefare") + ' = &#8377;' +sessionStorage.getItem("totalfare") +'</h1>' +
             // '    <h3 id="green"> TOTAL AMOUNT</h3> <h2 id="white"> </h2>\n' +
