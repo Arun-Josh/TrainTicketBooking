@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.logging.Logger;
 
@@ -51,9 +50,6 @@ public class ReserveSeat extends HttpServlet {
 
                 log.info(userid + trainid + mailid + modeofpayment + paymentstatus + accountnumber + ifsccode + cardnumber + ticketstatus);
 
-                Class.forName("com.mysql.jdbc.Driver");
-                Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation","root","root");
-
                 ResultSet rs = new MysqlConnectionUtil().getStation(source);
                 rs.next();
                 String sourceid = rs.getString("stationid");
@@ -82,11 +78,7 @@ public class ReserveSeat extends HttpServlet {
 
                 log.info("src dst iinfo " + srcstopno + dststopno );
 
-                PreparedStatement psstations = con.prepareStatement("SELECT  * FROM STATIONS WHERE TRAINID = ? AND STOPNO >= ? AND STOPNO < ? ");
-                psstations.setString(1,trainid);
-                psstations.setString(2,dststopno);
-                psstations.setString(3,srcstopno);
-                ResultSet rsstations = psstations.executeQuery();
+                ResultSet rsstations = new MysqlConnectionUtil().getTravellingStations(trainid,dststopno,srcstopno);
 
                 while(rsstations.next()){
 
@@ -106,26 +98,14 @@ public class ReserveSeat extends HttpServlet {
 
                             log.info("seatsavailable after modification "+ seatsavailable + " station " + stationid);
 
-                    PreparedStatement psseatsavail = con.prepareStatement("    UPDATE SEATSAVAILABLE SET SEATSAVAILABLE = ? WHERE TRAINID = ? AND DAY = ? AND STATIONID = ?  AND SEATTYPE = ?");
-                        psseatsavail.setString(1,seatsavailable);
-                        psseatsavail.setString(2,trainid);
-                        psseatsavail.setString(3,dateoftravel);
-                        psseatsavail.setString(4,stationid);
-                        psseatsavail.setString(5,seattype);
-                        psseatsavail.executeUpdate();
+                        new MysqlConnectionUtil().updateAvailableSeats(seatsavailable,trainid,dateoftravel,stationid,seattype);
                 }
 
-                PreparedStatement psseatavail = con.prepareStatement("SELECT  * FROM SEATSAVAILABLE WHERE TRAINID = ? AND STATIONID = ? AND SEATTYPE = ? AND DAY = ?");
-                psseatavail.setString(1,trainid);
-                psseatavail.setString(2,sourceid);
-                psseatavail.setString(3,seattype);
-                psseatavail.setString(4,dateoftravel);
-                ResultSet rsseatavail = psseatavail.executeQuery();
+                ResultSet rsseatavail = new MysqlConnectionUtil().getAvailableSeats(trainid,sourceid,seattype,dateoftravel);
                 rsseatavail.next();
                 int srcstationseats = rsseatavail.getInt("seatsavailable") + 1 ;
 
-                psseatavail.setString(2,destid);
-                rsseatavail = psseatavail.executeQuery();
+                rsseatavail =  new MysqlConnectionUtil().getAvailableSeats(trainid,destid,seattype,dateoftravel);
                 rsseatavail.next();
                 int deststationseats = rsseatavail.getInt("seatsavailable") + 1 ;
 

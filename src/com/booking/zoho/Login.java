@@ -1,6 +1,5 @@
 package com.booking.zoho;
 
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -27,36 +26,25 @@ public class Login extends HttpServlet {
             //creating connection with the database
             Connection con= DriverManager.getConnection
                     ("jdbc:mysql://localhost/trainreservation","root","root");
-            Boolean status = false;
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM USERS WHERE mailid=? AND password=?");
-            ps.setString(1,mail);
-            ps.setString(2,pass);
-            ResultSet rs = ps.executeQuery();
-            status = rs.next();
+
+            ResultSet rs = new MysqlConnectionUtil().authLogin(mail,pass);
+            Boolean status = rs.next();
 
             if(status){
                 String uname = rs.getString("name");
                 String userid = rs.getString("userid");
-//                String mailid = rs.getString("mailid");
 
                 //Sessions
-
                 session.setAttribute("username",uname);
                 session.setAttribute("mail",mail);
                 session.setAttribute("userid",userid);
-//                ServletContext sc = getServletContext();
-//                sc.setAttribute("userid", userid);
-//                sc.setAttribute("mailid", mailid);
 
                 if(rs.getInt("privilege")==1){
                     Cookie ck = new Cookie("mail",mail);
                     response.addCookie(ck);
                     out.print("OK");
-//                    RequestDispatcher rd = request.getRequestDispatcher("searchtrain.html");
-//                    rd.forward(request,response);
                 }
                 else if(rs.getInt("privilege")==10){
-//                    out.println("<CENTER>ADMIN DASHBOARD UNDER CONSTRUCTION </CENTER>" );
                     out.print("admin");
                 }
             }
@@ -71,13 +59,6 @@ public class Login extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-       Boolean login = new SessionValidation().validate(request,response);
-//       if(login){
-//            request.getRequestDispatcher("searchtrain.html").forward(request,response);
-//       }
-//       else{
-//           request.getRequestDispatcher("index.html").forward(request,response);
-//       }
       doPost(request,response);
     }
 }

@@ -19,6 +19,13 @@ public class MysqlConnectionUtil {
         }
     }
 
+    final ResultSet authLogin(String mail, String pass)throws Exception{
+        ps = con.prepareStatement("SELECT * FROM USERS WHERE mailid=? AND password=?");
+        ps.setString(1,mail);
+        ps.setString(2,pass);
+        return ps.executeQuery();
+    }
+
     final ResultSet getTrainName(String trainid) throws Exception{
         ps = con.prepareStatement("SELECT  * FROM TRAINNAMES WHERE TRAINID = ?");
         ps.setString(1,trainid);
@@ -60,20 +67,28 @@ public class MysqlConnectionUtil {
         return true;
     }
 
-    final public ResultSet getPnr(String mailid, String trainid) throws Exception{
+    final ResultSet getPnr(String mailid, String trainid) throws Exception{
         ps = con.prepareStatement("SELECT * FROM BOOKINGS WHERE MAILID = ? AND TRAINID = ?");
         ps.setString(1,mailid);
         ps.setString(2,trainid);
         return ps.executeQuery();
     }
 
-    final public ResultSet getStation(String location) throws Exception{
+    final ResultSet getStation(String location) throws Exception{
         ps = con.prepareStatement("SELECT * FROM STATIONNAMES WHERE STATIONNAME = ?");
         ps.setString(1,location);
         return ps.executeQuery();
     }
 
-    final public ResultSet getStation(String trainid, String locationid) throws Exception{
+    final ResultSet getTravellingStations(String trainid, String dststopno, String srcstopno)throws Exception{
+        ps = con.prepareStatement("SELECT  * FROM STATIONS WHERE TRAINID = ? AND STOPNO >= ? AND STOPNO < ? ");
+        ps.setString(1,trainid);
+        ps.setString(2,dststopno);
+        ps.setString(3,srcstopno);
+        return ps.executeQuery();
+    }
+
+    final ResultSet getStation(String trainid, String locationid) throws Exception{
         ps = con.prepareStatement("SELECT  * FROM STATIONS WHERE TRAINID = ? AND STATIONID = ?");
         ps.setString(1,trainid);
         ps.setString(2,locationid);
@@ -93,7 +108,7 @@ public class MysqlConnectionUtil {
     }
 
     final boolean updateStatus(String pnr) throws Exception{
-        con.prepareStatement("    UPDATE BOOKINGS SET TICKETSTATUS = \"WAITING LIST\" WHERE PNR = ?");
+        con.prepareStatement("UPDATE BOOKINGS SET TICKETSTATUS = \"WAITING LIST\" WHERE PNR = ?");
         ps.setString(1,pnr);
         ps.executeUpdate();
         return true;
@@ -106,5 +121,16 @@ public class MysqlConnectionUtil {
         ps.setString(3,seattype);
         ps.setString(4,dateoftravel);
         return ps.executeQuery();
+    }
+
+    final boolean updateAvailableSeats(String seatsavailable, String trainid, String dateoftravel, String stationid, String seattype)throws Exception{
+        ps = con.prepareStatement("UPDATE SEATSAVAILABLE SET SEATSAVAILABLE = ? WHERE TRAINID = ? AND DAY = ? AND STATIONID = ?  AND SEATTYPE = ?");
+        ps.setString(1,seatsavailable);
+        ps.setString(2,trainid);
+        ps.setString(3,dateoftravel);
+        ps.setString(4,stationid);
+        ps.setString(5,seattype);
+        ps.executeUpdate();
+        return true;
     }
 }
