@@ -20,8 +20,14 @@ public class ReserveSeat extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
+        boolean access = new Validations().reserveSeatValidation(request);
+        if(!access){
+            new Validations().redirectToSearch(response);
+            return;
+        }
         final MysqlConnectionUtil mysqlDB = new MysqlConnectionUtil();
-            try{
+
+        try{
 
                 HttpSession session = request.getSession();
                 String userid = (String) request.getAttribute("userid");
@@ -33,7 +39,6 @@ public class ReserveSeat extends HttpServlet {
                 String ifsccode = (String) request.getAttribute("ifsccode");
                 String cardnumber = (String) request.getAttribute("cardnumber");
                 String ticketstatus = "CONFIRMED";
-
                 String dateoftravel = (String) request.getAttribute("date");
                 String source = (String) request.getAttribute("from");
                 String dest = (String) request.getAttribute("to");

@@ -17,6 +17,14 @@ public class PnrCheck extends HttpServlet {
     Logger LOG = Logger.getLogger(PnrCheck.class.getName());
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
+
+        boolean access = new Validations().pnrCheckValidation(request);
+
+        if(!access){
+            new Validations().redirectToPnrSearch(response);
+            return;
+        }
+
         final MysqlConnectionUtil mysqlDB = new MysqlConnectionUtil();
         try {
             LOG.info(request.getParameter("pnr"));

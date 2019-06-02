@@ -20,6 +20,13 @@ public class PassengerInfo extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
 
+        Boolean access = new Validations().passengerPageValidation(request);
+
+        if(!access){
+            response.getWriter().print("Please Select Train before Proceeding to this page");
+            return;
+        }
+
         int seats = Integer.valueOf(request.getParameter("seatcount"));
         String seattype = request.getParameter("seattype");
         final MysqlConnectionUtil mysqlDB = new MysqlConnectionUtil();

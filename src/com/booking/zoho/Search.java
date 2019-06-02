@@ -17,9 +17,15 @@ public class Search extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         final MysqlConnectionUtil mysqlDB = new MysqlConnectionUtil();
-
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
+
+        boolean access = new Validations().searchValidation(request);
+
+        if(!access){
+            new Validations().redirectToSearch(response);
+            return;
+        }
         try{
             String source = request.getParameter("from");
             String dest   = request.getParameter("to");

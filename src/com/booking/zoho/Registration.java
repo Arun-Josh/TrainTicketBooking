@@ -15,7 +15,15 @@ import java.util.logging.Logger;
 public class Registration extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
+
         PrintWriter out = response.getWriter();
+        boolean access = new Validations().registerPageValidation(request);
+
+        if(!access){
+            new Validations().redirectToRegister(response);
+            return;
+        }
+
         final MysqlConnectionUtil mysqlDB = new MysqlConnectionUtil();
 
         String uname = request.getParameter("user");

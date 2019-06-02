@@ -13,6 +13,14 @@ import java.io.IOException;
 public class Payment extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
+
+        boolean access =  new Validations().paymentPageValidation(request);
+
+        if (!access){
+            response.getWriter().print("<center> ACCESS DENIED !</center>");
+            return;
+        }
+
         String modeofpayment = request.getParameter("mode");
 
         System.out.println("mop" + modeofpayment);
