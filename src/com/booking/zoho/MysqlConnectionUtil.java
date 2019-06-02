@@ -230,7 +230,7 @@ public class MysqlConnectionUtil {
     }
 
     final ResultSet getPassengerInfo(int pnr) throws Exception{
-        ps = con.prepareStatement("SELECT * FROM bookings where pnr = ?" );
+        ps = con.prepareStatement("SELECT * FROM Passengerinfo where pnr = ?" );
         ps.setInt(1,pnr);
         return  ps.executeQuery();
     }

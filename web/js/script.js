@@ -580,14 +580,21 @@ function pnrCheck() {
     xhr.onreadystatechange = function () {
         if(xhr.status==200 && xhr.readyState==4){
             console.log(xhr.responseText);
-            var ticket = xhr.responseText;
-            sessionStorage.setItem("ticket",ticket);
-            try{
-                console.log("in pnr check "+JSON.parse(ticket))
-            }catch (e) {
+            if(xhr.responseText=="INVALID"){
                 console.log("pnr not found");
                 document.getElementById("nopnr").style.display = "block";
+                return;
             }
+            else {
+                var ticket = xhr.responseText;
+                sessionStorage.setItem("ticket",ticket);
+            }
+
+            // try{
+            //     console.log("in pnr check "+JSON.parse(ticket))
+            // }catch (e) {
+            //     document.getElementById("nopnr").style.display = "block";
+            // }
 
             ticketInfo();
         }

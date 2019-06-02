@@ -18,8 +18,9 @@ public class ReserveSeat extends HttpServlet {
     Logger log = Logger.getLogger(ReserveSeat.class.getName());
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            response.setContentType("text/html");
+        response.setContentType("text/html");
         PrintWriter out = response.getWriter();
+        final MysqlConnectionUtil mysqlDB = new MysqlConnectionUtil();
             try{
 
                 HttpSession session = request.getSession();
@@ -48,17 +49,17 @@ public class ReserveSeat extends HttpServlet {
 
                 log.info(userid + trainid + mailid + modeofpayment + paymentstatus + accountnumber + ifsccode + cardnumber + ticketstatus);
 
-                ResultSet rs = new MysqlConnectionUtil().getStationByStationName(source);
+                ResultSet rs = mysqlDB.getStationByStationName(source);
                 rs.next();
                 String sourceid = rs.getString("stationid");
 
-                rs = new MysqlConnectionUtil().getStationByStationName(dest);
+                rs = mysqlDB.getStationByStationName(dest);
                 rs.next();
                 String destid   = rs.getString("stationid");
                 log.info("ffare " +fare);
-                new MysqlConnectionUtil().bookTicket(userid,trainid,mailid,modeofpayment,paymentstatus,accountnumber,ifsccode,cardnumber,ticketstatus,dateoftravel,sourceid,destid,fare,seattype);
+                mysqlDB.bookTicket(userid,trainid,mailid,modeofpayment,paymentstatus,accountnumber,ifsccode,cardnumber,ticketstatus,dateoftravel,sourceid,destid,fare,seattype);
 
-                rs = new MysqlConnectionUtil().getPnr(mailid,trainid);
+                rs = mysqlDB.getPnr(mailid,trainid);
                 while(rs.next()){}
                 rs.previous();
                 String pnr = rs.getString("pnr");
@@ -76,7 +77,7 @@ public class ReserveSeat extends HttpServlet {
 
                 log.info("src dst iinfo " + srcstopno + dststopno );
 
-                ResultSet rsstations = new MysqlConnectionUtil().getTravellingStations(trainid,dststopno,srcstopno);
+                ResultSet rsstations = mysqlDB.getTravellingStations(trainid,dststopno,srcstopno);
 
                 while(rsstations.next()){
 
@@ -84,7 +85,7 @@ public class ReserveSeat extends HttpServlet {
                     log.info("st id " + stationid);
                         log.info("seattype "+ seattype);
 
-                        ResultSet rsavail = new MysqlConnectionUtil().getAvailableSeat(trainid, stationid, seattype, dateoftravel);
+                        ResultSet rsavail = mysqlDB.getAvailableSeat(trainid, stationid, seattype, dateoftravel);
 
                         String seatsavailable ="";
 
@@ -96,14 +97,14 @@ public class ReserveSeat extends HttpServlet {
 
                             log.info("seatsavailable after modification "+ seatsavailable + " station " + stationid);
 
-                        new MysqlConnectionUtil().updateAvailableSeats(seatsavailable,trainid,dateoftravel,stationid,seattype);
+                        mysqlDB.updateAvailableSeats(seatsavailable,trainid,dateoftravel,stationid,seattype);
                 }
 
-                ResultSet rsseatavail = new MysqlConnectionUtil().getAvailableSeat(trainid,sourceid,seattype,dateoftravel);
+                ResultSet rsseatavail = mysqlDB.getAvailableSeat(trainid,sourceid,seattype,dateoftravel);
                 rsseatavail.next();
                 int srcstationseats = rsseatavail.getInt("seatsavailable") + 1 ;
 
-                rsseatavail =  new MysqlConnectionUtil().getAvailableSeat(trainid,destid,seattype,dateoftravel);
+                rsseatavail =  mysqlDB.getAvailableSeat(trainid,destid,seattype,dateoftravel);
                 rsseatavail.next();
                 int deststationseats = rsseatavail.getInt("seatsavailable") + 1 ;
 
@@ -111,7 +112,7 @@ public class ReserveSeat extends HttpServlet {
                 int minseatcount = (srcstationseats>deststationseats)?deststationseats:srcstationseats;
 
                 if(srcstationseats<1 || deststationseats <1){
-                    new MysqlConnectionUtil().updateStatus(pnr);
+                    mysqlDB.updateStatus(pnr);
                     ticketstatus = "WAITING LIST";
                 }
 
@@ -143,17 +144,17 @@ public class ReserveSeat extends HttpServlet {
                         tstatus = "WAITING LIST "+(Math.abs(minseatcount)+(i+1));
                     }
 
-                    new MysqlConnectionUtil().insertPassengers(pnr,passenger[i],Integer.valueOf(seatno[i]),age[i],gender[i],tstatus);
+                    mysqlDB.insertPassengers(pnr,passenger[i],Integer.valueOf(seatno[i]),age[i],gender[i],tstatus);
                 }
                 log.info("passenger status "+status);
-                rs = new MysqlConnectionUtil().getTrainNameAndNumber(trainid);
+                rs = mysqlDB.getTrainNameAndNumber(trainid);
                 rs.next();
                 String trainname = rs.getString("trainname");
                 String trainnumber = rs.getString("trainnumber");
-                rs = new MysqlConnectionUtil().getStation(trainid,sourceid);
+                rs = mysqlDB.getStation(trainid,sourceid);
                 rs.next();
                 String stime = rs.getString("stationarrtime");
-                rs = new MysqlConnectionUtil().getStation(trainid,destid);
+                rs = mysqlDB.getStation(trainid,destid);
                 rs.next();
                 String dtime = rs.getString("stationarrtime");
 

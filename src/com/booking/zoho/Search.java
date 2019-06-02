@@ -31,44 +31,27 @@ public class Search extends HttpServlet {
                 return;
             }
 
-//            ServletContext sc = getServletContext();
-//            sc.setAttribute("date",date);
-
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation","root","root");
-//            PreparedStatement ps = con.prepareStatement("SELECT * From STATIONNAMES WHERE STATIONNAME = ?");
-//            ps.setString(1,source);
-//            ResultSet rs = ps.executeQuery();
             ResultSet rs = mysqlDB.getStationByStationName(source);
             String sourceid = "";
             if(rs.next()){
                 sourceid = rs.getString("stationid");
             }
             else{
-//                out.print(" SOURCE STATION NOT AVAILABLE");
                 out.print("");
                 return;
             }
 
-//            ps = con.prepareStatement("SELECT * FROM STATIONNAMES WHERE STATIONNAME = ?");
-//            ps.setString(1,dest);
-//            rs = ps.executeQuery();
             rs = mysqlDB.getStationByStationName(dest);
             String destid = "";
             if(rs.next()){
                 destid = rs.getString("stationid");
             }
             else{
-//                out.print("DESTINATION STATION NOT AVAILABLE");
                 out.print("");
                 return;
             }
 
             log.info("Source : " + sourceid + " Dest : "+ destid);
-
-//            ps = con.prepareStatement("SELECT * FROM STATIONS WHERE STATIONID = ?");
-//            ps.setString(1,sourceid);
-//            rs = ps.executeQuery();
 
             rs = mysqlDB.getStationByStationID(sourceid);
 
@@ -77,10 +60,7 @@ public class Search extends HttpServlet {
             while(rs.next()){
                 String sourcetime = rs.getString("stationarrtime");
                 int t2stopno = rs.getInt("stopno");
-//                ps = con.prepareStatement("SELECT  * FROM STATIONS WHERE TRAINID= ? AND STATIONID = ?");
-//                ps.setString(1,rs.getString("trainid"));
-//                ps.setString(2,destid);
-//                ResultSet rs1 = ps.executeQuery();
+
                 ResultSet rs1 = mysqlDB.getStation(rs.getString("trainid"),destid);
                 if(rs1.next()){
 
@@ -90,22 +70,13 @@ public class Search extends HttpServlet {
 
                     new TrainManipulation().insertTrainIfNot(trainid,date);
 
-//                    PreparedStatement ps1 = con.prepareStatement("SELECT * FROM TRAINNAMES WHERE TRAINID = ? ");
-//                    ps1.setString(1,trainid);
-//                    ResultSet rs2 = ps1.executeQuery();
                     ResultSet rs2 = mysqlDB.getTrainNameAndNumber(trainid);
 
                     if(rs2.next()){
                         String trainnumber = rs2.getString("trainnumber");
                         String trainname = rs2.getString("trainname");
-//trains.add(new Train(rs.getString("trainnumber"),rs.getString("trainname"),source,dest,time[tstime],time[tdtime],rs.getInt("totalseats"),trs.getInt("remseats")));
                         LinkedList<Seats> seat = new LinkedList();
 
-//                        PreparedStatement ps3 = con.prepareStatement("SELECT * FROM SEATSAVAILABLE WHERE TRAINID = ? AND DAY = ? AND STATIONID = ?");
-//                        ps3.setString(1,trainid);
-//                        ps3.setString(2,date);
-//                        ps3.setString(3,sourceid);
-//                        ResultSet rs3 = ps3.executeQuery();
                         ResultSet rs3 = mysqlDB.getAvailableSeats(trainid,date,sourceid);
                         Boolean seatvail = false;
 
@@ -118,7 +89,6 @@ public class Search extends HttpServlet {
 
                         if(t1stopno > t2stopno && seatvail){
                             Train train = new Train(trainid, trainnumber,trainname,source, dest, sourcetime, desttime, seat, t1stopno,t2stopno, new MysqlConnectionUtil().getRoute(trainid));
-//                            JSONObject trainJSON = new JSON
                             trains.add(train);
 
                             log.info("tstime = "+sourcetime +" tdtime = " +desttime+ " train no  = "+ trainnumber +" trainn name = " + trainname + " source "+source + "dest "+ dest + "\n");
@@ -133,18 +103,11 @@ public class Search extends HttpServlet {
                 }
             }
             String trainsJSON = new Gson().toJson(trains);
-//            request.setAttribute("trains",trains);
-//            JSONArray jsontrains = new JSONArray(trains);
             request.setAttribute("trainsJSON",trainsJSON );
 
             System.out.println("trains json" + trainsJSON);
             out.print(trainsJSON);
-//            HttpSession session = request.getSession(true);
             log.info("FORWARDED TO Reserve Trains");
-//            request.getRequestDispatcher("searchresult.jsp").forward(request,response);
-
-
-
         }
         catch (Exception e){
             e.printStackTrace();

@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.util.logging.Logger;
 
@@ -21,8 +19,6 @@ public class PnrCheck extends HttpServlet {
         response.setContentType("text/html");
         final MysqlConnectionUtil mysqlDB = new MysqlConnectionUtil();
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation","root","root");
             LOG.info(request.getParameter("pnr"));
             int pnr = 0;
             if(request.getParameter("pnr")!=null){
@@ -31,15 +27,12 @@ public class PnrCheck extends HttpServlet {
                 pnr = Integer.valueOf((String) request.getAttribute("pnr"));
             }
             LOG.info("PNR N " +pnr);
-//            PreparedStatement ps = con.prepareStatement("SELECT * FROM bookings where pnr = ?" );
-//            ps.setInt(1,pnr);
-//            ResultSet rs =  ps.executeQuery();
             ResultSet rs = mysqlDB.getBookingInfoByPnr(pnr);
             Boolean status = rs.next();
             if(!status){
                 PrintWriter out = response.getWriter();
-                out.print("<center><h2 style=\"margin-top: 40px !important\">PNR Number not found !</h2></center>");
-                request.getRequestDispatcher("pnrstatus.html").include(request,response);
+                out.print("INVALID");
+                System.out.println("PNR NOT FOUND !");
                 return;
             }
 
@@ -47,45 +40,26 @@ public class PnrCheck extends HttpServlet {
             String userid = rs.getString("userid");
             String sourceid = rs.getString("source");
             String destid = rs.getString("dest");
-//            String ticketstatus = rs.getString("TICKETSTATUS");
             String fare = rs.getString("fare");
             String dateoftravel = rs.getString("dateoftravel");
             String seattype = rs.getString("seattype");
 
-//            ps = con.prepareStatement("SELECT  * FROM TRAINNAMES WHERE TRAINID = ?");
-//            ps.setString(1,trainid);
-//            rs = ps.executeQuery();
             rs = mysqlDB.getTrainNameAndNumber(trainid);
             rs.next();
             String trainname = rs.getString("trainname");
             String trainnumber = rs.getString("trainnumber");
 
-//            ps = con.prepareStatement("SELECT  * FROM USERS WHERE USERID = ?");
-//            ps.setString(1,userid);
-//            rs = ps.executeQuery();
             rs = mysqlDB.getUserByUserid(userid);
             rs.next();
 
-            String uname = rs.getString("name");
-
-//            ps = con.prepareStatement("SELECT  * FROM STATIONS WHERE TRAINID = ? AND STATIONID = ?");
-//            ps.setString(1,trainid);
-//            ps.setString(2,sourceid);
-//            rs = ps.executeQuery();
             rs = mysqlDB.getStation(trainid,sourceid);
             rs.next();
             String stime = rs.getString("stationarrtime");
 
-
-//            ps.setString(2,destid);
-//            rs = ps.executeQuery();
             rs = mysqlDB.getStation(trainid,destid);
             rs.next();
             String dtime = rs.getString("stationarrtime");
 
-//            ps = con.prepareStatement("SELECT * FROM PASSENGERINFO WHERE PNR = ?");
-//            ps.setInt(1,pnr);
-//            rs = ps.executeQuery();
             rs = mysqlDB.getPassengerInfo(pnr);
             String passengers = "";
             String ages = "";
@@ -100,7 +74,6 @@ public class PnrCheck extends HttpServlet {
                 passengers += rs.getString("passengername") + ",";
                 ages += rs.getString("age") + ",";
                 genders += rs.getString("gender")+",";
-//                seatnos += rs.getString("seatno");
                 seatnos += rs.getString("seatno") + ",";
             }
 
@@ -134,7 +107,6 @@ public class PnrCheck extends HttpServlet {
         catch (Exception E){
             E.printStackTrace();
         }
-//        request.getRequestDispatcher("TicketInfo.jsp").forward(request,response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

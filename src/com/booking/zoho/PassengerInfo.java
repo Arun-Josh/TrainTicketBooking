@@ -2,7 +2,7 @@ package com.booking.zoho;
 
 import org.json.JSONObject;
 
-import javax.servlet.ServletContext;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,9 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.logging.Logger;
 
@@ -49,18 +46,9 @@ public class PassengerInfo extends HttpServlet {
         session.setAttribute("ages",ages);
         session.setAttribute("gender",gender);
         session.setAttribute("seattype",seattype);
-//        ServletContext sc = getServletContext();
-//        sc.setAttribute("passengers",passengers);
-//        sc.setAttribute("ages",ages);
-//        sc.setAttribute("genders",gender);
-//        sc.setAttribute("seatcount", seats);
-//        sc.setAttribute("seattype",seattype);
 
         LOG.info("nnname" + passengers + " ages" + ages + " gneder " + gender);
         LOG.info("tttid" +  request.getParameter("trainid"));
-
-//        int srcstopno =  Integer.valueOf(sc.getAttribute("srcstopno").toString());
-//        int dststopno =  Integer.valueOf(sc.getAttribute("dststopno").toString());
 
         int stops = Math.abs(srcstopno-dststopno);
 
@@ -71,13 +59,6 @@ public class PassengerInfo extends HttpServlet {
 
         int fare = 1;
         try{
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation","root","root");
-//            PreparedStatement ps = con.prepareStatement("SELECT * FROM FARES WHERE SEATTYPE = ? AND TRAINID = ?");
-//            ps.setString(1,seattype);
-//            ps.setString(2,trainid);
-//            ResultSet rs = ps.executeQuery();
-
             ResultSet rs = mysqlDB.getFare(seattype,trainid);
 
             if(rs.next()){
@@ -103,12 +84,6 @@ public class PassengerInfo extends HttpServlet {
 
         out.print(fareJSON);
 
-        try{
-//            request.getRequestDispatcher("payment.jsp").forward(request,response);
-        }
-        catch (Exception E){
-            E.printStackTrace();
-        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

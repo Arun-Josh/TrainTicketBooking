@@ -20,11 +20,6 @@ public class CancelSeat extends HttpServlet {
         String userid = (String) request.getSession().getAttribute("userid");
         try{
             if(new Validations().cancelSeat(passengerid, userid)){
-//                Class.forName("com.mysql.jdbc.Driver");
-//                Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation","root","root");
-//                PreparedStatement ps = con.prepareStatement("UPDATE PASSENGERINFO SET STATUS = \"CANCELLED\" WHERE PASSENGERID = ?");
-//                ps.setString(1,passengerid);
-//                ps.executeUpdate();
                 mysqlDB.cancelSeat(passengerid);
                 System.out.println("Passenger id "+ passengerid + "IS CANCELLED !");
                 response.setContentType("text/plain");
