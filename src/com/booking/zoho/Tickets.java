@@ -1,7 +1,5 @@
 package com.booking.zoho;
 
-import java.util.LinkedList;
-
 public class Tickets {
     String passengerid;
     String pnr;

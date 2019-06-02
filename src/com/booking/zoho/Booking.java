@@ -33,31 +33,28 @@ public class Booking extends HttpServlet {
 
         String[] traininfo = request.getParameter("traininfo").split("#");
         logger.info("ttinfoo "+request.getParameter("traininfo"));
-        String trainid = traininfo[0];
-        String srcstopno = traininfo[7];
-        String dststopno = traininfo[8];
+//        String trainid = traininfo[0];
+//        String srcstopno = traininfo[7];
+//        String dststopno = traininfo[8];
 
 //        HttpSession session = request.getSession(true);
         session.setAttribute("traininfo",traininfo);
         String uname = (String)session.getAttribute("username");
 
         if (uname==null) {
-            out.print("<body><script>alert(\"Please Login Again !\")</script></body>");
-            RequestDispatcher rd = request.getRequestDispatcher("index.html");
-            rd.include(request,response);
+//            out.print("<body><script>alert(\"Please Login Again !\")</script></body>");
+//            RequestDispatcher rd = request.getRequestDispatcher("index.html");
+//            rd.include(request,response);
+            return;
         }
-//        String mail  = (String) session.getAttribute("mail");
-//        session.setAttribute("mail",mail);
-//        request.setAttribute("trainid",trainid);
 
-
-        ServletContext sc = getServletContext();
-        sc.setAttribute("trainid", trainid);
-        sc.setAttribute("trainname", traininfo[1]);
-        sc.setAttribute("from",traininfo[2]);
-        sc.setAttribute("to",traininfo[3]);
-        sc.setAttribute("srcstopno",srcstopno);
-        sc.setAttribute("dststopno",dststopno);
+//        ServletContext sc = getServletContext();
+//        sc.setAttribute("trainid", trainid);
+//        sc.setAttribute("trainname", traininfo[1]);
+//        sc.setAttribute("from",traininfo[2]);
+//        sc.setAttribute("to",traininfo[3]);
+//        sc.setAttribute("srcstopno",srcstopno);
+//        sc.setAttribute("dststopno",dststopno);
 
         try{
             request.getRequestDispatcher("PassengerInfo.jsp").forward(request,response);

@@ -1,23 +1,17 @@
 package com.booking.zoho;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.json.JSONObject;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Random;
 import java.util.logging.Logger;
 
 @WebServlet("/pnrcheck")
@@ -25,6 +19,7 @@ public class PnrCheck extends HttpServlet {
     Logger LOG = Logger.getLogger(PnrCheck.class.getName());
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
+        final MysqlConnectionUtil mysqlDB = new MysqlConnectionUtil();
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation","root","root");
@@ -36,9 +31,10 @@ public class PnrCheck extends HttpServlet {
                 pnr = Integer.valueOf((String) request.getAttribute("pnr"));
             }
             LOG.info("PNR N " +pnr);
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM bookings where pnr = ?" );
-            ps.setInt(1,pnr);
-            ResultSet rs =  ps.executeQuery();
+//            PreparedStatement ps = con.prepareStatement("SELECT * FROM bookings where pnr = ?" );
+//            ps.setInt(1,pnr);
+//            ResultSet rs =  ps.executeQuery();
+            ResultSet rs = mysqlDB.getBookingInfoByPnr(pnr);
             Boolean status = rs.next();
             if(!status){
                 PrintWriter out = response.getWriter();
@@ -56,35 +52,41 @@ public class PnrCheck extends HttpServlet {
             String dateoftravel = rs.getString("dateoftravel");
             String seattype = rs.getString("seattype");
 
-            ps = con.prepareStatement("SELECT  * FROM TRAINNAMES WHERE TRAINID = ?");
-            ps.setString(1,trainid);
-            rs = ps.executeQuery();
+//            ps = con.prepareStatement("SELECT  * FROM TRAINNAMES WHERE TRAINID = ?");
+//            ps.setString(1,trainid);
+//            rs = ps.executeQuery();
+            rs = mysqlDB.getTrainNameAndNumber(trainid);
             rs.next();
             String trainname = rs.getString("trainname");
             String trainnumber = rs.getString("trainnumber");
 
-            ps = con.prepareStatement("SELECT  * FROM USERS WHERE USERID = ?");
-            ps.setString(1,userid);
-            rs = ps.executeQuery();
+//            ps = con.prepareStatement("SELECT  * FROM USERS WHERE USERID = ?");
+//            ps.setString(1,userid);
+//            rs = ps.executeQuery();
+            rs = mysqlDB.getUserByUserid(userid);
             rs.next();
+
             String uname = rs.getString("name");
 
-            ps = con.prepareStatement("SELECT  * FROM STATIONS WHERE TRAINID = ? AND STATIONID = ?");
-            ps.setString(1,trainid);
-            ps.setString(2,sourceid);
-            rs = ps.executeQuery();
+//            ps = con.prepareStatement("SELECT  * FROM STATIONS WHERE TRAINID = ? AND STATIONID = ?");
+//            ps.setString(1,trainid);
+//            ps.setString(2,sourceid);
+//            rs = ps.executeQuery();
+            rs = mysqlDB.getStation(trainid,sourceid);
             rs.next();
             String stime = rs.getString("stationarrtime");
 
 
-            ps.setString(2,destid);
-            rs = ps.executeQuery();
+//            ps.setString(2,destid);
+//            rs = ps.executeQuery();
+            rs = mysqlDB.getStation(trainid,destid);
             rs.next();
             String dtime = rs.getString("stationarrtime");
 
-            ps = con.prepareStatement("SELECT * FROM PASSENGERINFO WHERE PNR = ?");
-            ps.setInt(1,pnr);
-            rs = ps.executeQuery();
+//            ps = con.prepareStatement("SELECT * FROM PASSENGERINFO WHERE PNR = ?");
+//            ps.setInt(1,pnr);
+//            rs = ps.executeQuery();
+            rs = mysqlDB.getPassengerInfo(pnr);
             String passengers = "";
             String ages = "";
             String genders = "";

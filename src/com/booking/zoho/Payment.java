@@ -24,8 +24,8 @@ public class Payment extends HttpServlet {
         String cardnumber = "";
         String ifsccode = "";
         String accountnumber = "";
-        ServletContext sc = getServletContext();
-        sc.setAttribute("modeofpayment",modeofpayment);
+//        ServletContext sc = getServletContext();
+//        sc.setAttribute("modeofpayment",modeofpayment);
         if(modeofpayment.equals("Debit Cars") || modeofpayment.equals("Credit Card")){
 //            sc.setAttribute("cardnumber","1234 5678 9098 1234");
             cardnumber = "1234 5678 9098 1234";

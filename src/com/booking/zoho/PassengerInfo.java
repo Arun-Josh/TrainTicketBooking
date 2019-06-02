@@ -25,6 +25,7 @@ public class PassengerInfo extends HttpServlet {
 
         int seats = Integer.valueOf(request.getParameter("seatcount"));
         String seattype = request.getParameter("seattype");
+        final MysqlConnectionUtil mysqlDB = new MysqlConnectionUtil();
 
         int srcstopno = Integer.valueOf(request.getParameter("srcstopno"));
         int dststopno = Integer.valueOf(request.getParameter("deststopno"));
@@ -72,10 +73,12 @@ public class PassengerInfo extends HttpServlet {
         try{
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost/trainreservation","root","root");
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM FARES WHERE SEATTYPE = ? AND TRAINID = ?");
-            ps.setString(1,seattype);
-            ps.setString(2,trainid);
-            ResultSet rs = ps.executeQuery();
+//            PreparedStatement ps = con.prepareStatement("SELECT * FROM FARES WHERE SEATTYPE = ? AND TRAINID = ?");
+//            ps.setString(1,seattype);
+//            ps.setString(2,trainid);
+//            ResultSet rs = ps.executeQuery();
+
+            ResultSet rs = mysqlDB.getFare(seattype,trainid);
 
             if(rs.next()){
                 fare = rs.getInt("fare");

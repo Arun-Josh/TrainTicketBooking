@@ -28,7 +28,7 @@ public class BookedTickets extends HttpServlet {
         System.out.println("booking userid" + userid);
 
         try {
-            ResultSet rs = mysqlDB.getBookingInfo(userid);
+            ResultSet rs = mysqlDB.getBookingInfoByUserid(userid);
 
             ArrayList<Tickets> tickets = new ArrayList<>();
 
@@ -41,7 +41,7 @@ public class BookedTickets extends HttpServlet {
                 String trainid = rs.getString("trainid");
                 String seattype = rs.getString("seattype");
 
-                ResultSet rstrain = mysqlDB.getTrainName(trainid);
+                ResultSet rstrain = mysqlDB.getTrainNameAndNumber(trainid);
                 String trainname = "";
                 String trainnumber = "";
 
