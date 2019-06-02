@@ -31,53 +31,6 @@
         <input type="submit" value="Done">
     </form>
     <script>
-
-        function validateRegistration() {
-            var pass1 = $("input[name=pass1]").val();
-            // alert(pass1);
-            if(pass1.length<8){
-                return;
-            }
-            else{
-                register();
-            }
-        }
-
-        function register() {
-            document.getElementById("hidden").style.display="none";
-            var uname = document.getElementsByName("user")[0].value;
-            var email = document.getElementsByName("email")[0].value;
-            var phno  = document.getElementsByName("phno")[0].value;
-            var gender = $("input[name=gender]:checked").val();
-            var pass1 = $("input[name=pass1]").val();
-            console.log("INPUTS RIGHT");
-            var url = "Registration";
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function (ev) {
-                if(xhr.readyState==4 && xhr.status==200){
-                    var reply = xhr.responseText;
-                    if(reply=="SUCCESS"){
-                        document.getElementById("regform").style.display="none";
-                        var page = '<div id="success" class="box">' +
-                            '<h1>ACCOUNT CREATED SUCCESSFULLY</h1>' +
-                            '<br>' +
-                            '<h1><i class="fa fa-thumbs-up"></h1></i>' +
-                            '</div>';
-                        document.getElementById("msg").innerHTML = page;
-                        document.getElementById("success").style.width="60%";
-                        setTimeout(1000);
-                        window.location.href='index.html';
-                    }
-                    else if(reply=="Mail ID already registered"){
-                        document.getElementById("hidden").style.color="orange";
-                        document.getElementById("hidden").style.display="block";
-                    }
-                }
-            }
-            xhr.open("POST",url,true);
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send("user="+uname+"&email="+email+"&phno="+phno+"&gender="+gender+"&pass1="+pass1);
-        }
               var myInput = document.getElementById("psw");
 
               myInput.onfocus = function() {
