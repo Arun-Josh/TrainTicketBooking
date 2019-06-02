@@ -65,6 +65,8 @@
                             '</div>';
                         document.getElementById("msg").innerHTML = page;
                         document.getElementById("success").style.width="60%";
+                        setTimeout(1000);
+                        window.location.href='index.html';
                     }
                     else if(reply=="Mail ID already registered"){
                         document.getElementById("hidden").style.color="orange";

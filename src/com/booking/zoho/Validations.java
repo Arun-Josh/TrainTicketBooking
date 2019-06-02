@@ -47,18 +47,13 @@ public class Validations {
         }
     }
     protected final boolean registerPageValidation(HttpServletRequest request){
-        String modeofpayment = request.getParameter("mode");
-        String trainid =  request.getParameter("trainid");
-        String date =  request.getParameter("date");
-        String from =  request.getParameter("from");
-        String to =  request.getParameter("to");
-        String seattype =  request.getParameter("seattype");
-        String fare =  request.getParameter("fare");
-        String seatcount = request.getParameter("seatcount");
-        String srcstopno =  request.getParameter("srcstopno");
-        String deststopno =  request.getParameter("deststopno");
+        String uname = request.getParameter("user");
+        String email = request.getParameter("email");
+        String gender = request.getParameter("gender");
+        String pass  = request.getParameter("pass1");
+        String phno  = request.getParameter("phno");
 
-        if (modeofpayment==null || trainid==null || date==null || from==null || to ==null || seattype==null || fare==null || seatcount==null || srcstopno ==null || deststopno==null){
+        if (uname==null || email==null || gender==null || pass==null || phno==null){
             return false;
         }
         else {
