@@ -18,17 +18,6 @@ body{
     text-align: center;
 }
 
-.resultbox{
-    width: 90%;
-    padding :40px;
-    position: absolute;
-    /* top :50%;
-    left:50%;
-    transform: translate(-50%,-50%); */
-    background: #191919;
-    text-align: center;
-}
-
 .box h1{
     color: white;
     text-transform: uppercase;
@@ -89,7 +78,7 @@ body{
     border-radius: 25px;
 }
 
-.box input[type="submit"]:hover , #subbutton:hover, #subbtn:hover{
+.box input[type="submit"]:hover , #subbutton:hover, #subbtn:hover, #bpnr:hover, #blogout:hover, #home:hover, #bhistory:hover {
     background: #2ecc71;
 }
 
@@ -107,16 +96,17 @@ input[type=number]::-webkit-outer-spin-button {
 
 #bpnr, #bhistory, #blogout, #home{
     border:0;
-    display: block;
-    text-align: center;
-    background: black;
-    margin: 20px auto;
-    border: 2px solid #2ecc71;
-    padding: 14px 40px;
-    outline: none;
-    color: white;
-    border-radius: 25px;
+display: block;
+text-align: center;
+background: black;
+margin: 20px auto;
+border: 2px solid #2ecc71;
+padding: 14px 40px;
+outline: none;
+color: white;
+border-radius: 25px;
 }
+
 
 #length{
     display: none;
@@ -130,10 +120,6 @@ input[type=number]::-webkit-outer-spin-button {
 
 #green{
     color: #2ecc71 !important;
-}
-
-#white{
-    color: white !important;
 }
 
 #datewarn{
@@ -171,16 +157,16 @@ label{
 
 /* Table Props */
 
-table {
-    width:100%;
+  table {
+     width:100%;
   }
   table, th, td {
-    border: 1px solid black;
+    border: 0px solid black;
     border-collapse: collapse;
   }
   th, td {
     padding: 15px;
-    text-align: left;
+    /*text-align: center;*/
   }
   table#t01 tr:nth-child(even) {
     background-color: #eee;
@@ -197,4 +183,30 @@ table {
     #cbtn {
         display: none !important;
     }
+}
+
+.trains th, .trains td{
+    border-collapse: collapse;
+    border: 0px solid ;
+}
+.trains table{
+    border-collapse: collapse;
+    border: 0px solid;
+}
+.boxed{
+    border: 1px solid gray;
+}
+.left{
+    margin-left: 10px;
+    text-align: left;
+}
+.heading{
+    font-size: 20px;
+    color: gray;
+}
+.namebox{
+    text-align: left ; width: 33%;
+}
+.width33{
+    width: 33%;
 }

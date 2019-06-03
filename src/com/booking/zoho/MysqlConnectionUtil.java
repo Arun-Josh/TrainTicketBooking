@@ -31,10 +31,7 @@ public class MysqlConnectionUtil {
         ps.setString(1,trainid);
         ps.setString(2,date);
         ResultSet rs = ps.executeQuery();
-        if (rs.next()){
-            return true;
-        }
-        else return false;
+        return rs.next();
     }
 
     final ResultSet getUserByUserid(String userid)throws Exception{

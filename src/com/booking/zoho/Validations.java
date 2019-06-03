@@ -21,12 +21,7 @@ public class Validations {
 
     protected final boolean passengerPageValidation(HttpServletRequest request){
         // To Prevent Direct Access
-        if(request.getParameter("seatcount")==null || request.getParameter("seattype")==null || request.getParameter("srcstopno")==null || request.getParameter("deststopno")==null){
-            return false;
-        }
-        else {
-            return true;
-        }
+        return request.getParameter("seatcount") != null && request.getParameter("seattype") != null && request.getParameter("srcstopno") != null && request.getParameter("deststopno") != null;
     }
 
     protected final boolean paymentPageValidation(HttpServletRequest request){
@@ -39,12 +34,7 @@ public class Validations {
         String srcstopno =  request.getParameter("srcstopno");
         String deststopno =  request.getParameter("deststopno");
 
-        if(date==null || from == null || to == null || seattype ==null || fare == null || seatcount == null || srcstopno == null || deststopno == null){
-            return false;
-        }
-        else {
-            return true;
-        }
+        return date != null && from != null && to != null && seattype != null && fare != null && seatcount != null && srcstopno != null && deststopno != null;
     }
     protected final boolean registerPageValidation(HttpServletRequest request){
         String uname = request.getParameter("user");
@@ -53,12 +43,7 @@ public class Validations {
         String pass  = request.getParameter("pass1");
         String phno  = request.getParameter("phno");
 
-        if (uname==null || email==null || gender==null || pass==null || phno==null){
-            return false;
-        }
-        else {
-            return true;
-        }
+        return uname != null && email != null && gender != null && pass != null && phno != null;
     }
     protected final boolean reserveSeatValidation(HttpServletRequest request){
         String userid = (String) request.getAttribute("userid");
@@ -74,13 +59,8 @@ public class Validations {
         String seattype = (String) request.getAttribute("seattype");
         String fare = (String) request.getAttribute("fare");
 
-        if(userid==null || trainid == null || mailid ==null || modeofpayment == null || accountnumber == null ||
-                ifsccode==null || cardnumber==null || dateoftravel==null || source==null || seattype == null || dest==null || fare ==null){
-            return false;
-        }
-        else {
-            return true;
-        }
+        return userid != null && trainid != null && mailid != null && modeofpayment != null && accountnumber != null &&
+                ifsccode != null && cardnumber != null && dateoftravel != null && source != null && seattype != null && dest != null && fare != null;
     }
 
     protected final void accessDeniedPrompt(HttpServletResponse response){
@@ -96,12 +76,7 @@ public class Validations {
         String source = request.getParameter("from");
         String dest   = request.getParameter("to");
         String date = request.getParameter("date");
-        if(source==null || dest == null || date ==null){
-            return false;
-        }
-        else {
-            return true;
-        }
+        return source != null && dest != null && date != null;
     }
 
     protected final void redirectToSearch(HttpServletResponse response){
@@ -122,10 +97,7 @@ public class Validations {
 
     protected final boolean pnrCheckValidation(HttpServletRequest request){
         String pnr = request.getParameter("pnr");
-        if(pnr==null){
-            return false;
-        }
-        else return true;
+        return pnr != null;
     }
 
     protected final void redirectToPnrSearch(HttpServletResponse response){

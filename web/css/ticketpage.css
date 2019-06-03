@@ -38,10 +38,6 @@ body{
     border-radius: 30px;
 }
 
-#ch {
-    text-decoration: none;
-}
-
 .box input[type="date"]{
     text-transform: uppercase;
     color: gray;
@@ -52,7 +48,7 @@ body{
     border-color: #2ecc71;
 }
 
-.box input[type="submit"], #subbutton{
+.box input[type="submit"],.box input[type="button"], #subbutton{
     border:0;
     display: block;
     text-align: center;
@@ -65,7 +61,7 @@ body{
     border-radius: 25px;
 }
 
-.box input[type="submit"]:hover , #subbutton:hover{
+.box input[type="submit"]:hover , #subbutton:hover, #bpnr:hover, #blogout:hover, #home:hover, #bhistory:hover, #addbtn:hover{
     background: #2ecc71;
 }
 
@@ -78,19 +74,6 @@ input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
   margin: 0; 
-}
-
-#bpnr, #bhistory, #home{
-    border:0;
-    display: block;
-    text-align: center;
-    background: black;
-    margin: 20px auto;
-    border: 2px solid #2ecc71;
-    padding: 14px 40px;
-    outline: none;
-    color: white;
-    border-radius: 25px;
 }
 
 #length{
@@ -107,16 +90,12 @@ input[type=number]::-webkit-outer-spin-button {
     color: #2ecc71 !important;
 }
 
-#white{
-    color: white !important;
-}
-
 #datewarn{
     color: #e74c3c !important;
     display: none;
 }
 
-#blogout,#addbtn{
+#blogout,#addbtn, #home{
     border:0;
     display: block;
     text-align: center;
@@ -159,12 +138,12 @@ h2{
       width:100%;
   }
   table, th, td {
-      border: 1px solid black;
+      /*border: 1px solid black;*/
       border-collapse: collapse;
   }
   th, td {
       padding: 15px;
-      text-align: left;
+      /*text-align: center;*/
   }
   table#t01 tr:nth-child(even) {
       background-color: #eee;
@@ -187,14 +166,57 @@ h2{
       background-color: red;
   }
 
-  #home{
+#hidden{
+    display: none;
+}
+#home{
     position: fixed;
     top: 0px !important;
     left: 0px;
 }
-#hidden{
-    display: none;
+
+#seatbtn{
+    text-align: center;
+    background: gray;
+    /* margin: 20px auto; */
+    border: 2px solid gray;
+    padding: 14px 40px;
+    outline: none;
+    color: black;
+    border-radius: 25px;
 }
-.hidden{
-    display: none;
+
+#seatbtn:hover{
+    background: ghostwhite;
+    color: black;
+    border: 2px solid black;
+}
+#seatbtn:hover a{
+    color: gray;
+}
+
+.trains th, .trains td{
+    border-collapse: collapse;
+    border: 0px solid ;
+}
+.trains table{
+    border-collapse: collapse;
+    border: 0px solid;
+}
+.boxed{
+    border: 1px solid gray;
+}
+.left{
+    margin-left: 10px;
+    text-align: left;
+}
+.heading{
+    font-size: 15px;
+    color: #bdc3c7;
+}
+.namebox{
+    text-align: left ; width: 33%;
+}
+.width33{
+    width: 33%;
 }

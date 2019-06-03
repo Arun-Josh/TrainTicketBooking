@@ -123,6 +123,7 @@ function register() {
 }
 
 function resultpage(traindetails) {
+    changeCSS("css/ticketpage.css",0);
     var trains ;
     var emptyFlag=false;
     console.log("train details key length"+ Object.keys(traindetails).length);
@@ -141,30 +142,43 @@ function resultpage(traindetails) {
 
     var page ='<div id="form"class="box">'+
         '<h1>SEARCH RESULTS</h1>'+
-        '<hr> ' +
-        '        <center><a id="hidden" style="color: #e67e22">CHOOSE A TRAIN TO CONTINUE !</a></center>';
+
+        '        <center><a id="hidden" style="color: #e67e22">CHOOSE A TRAIN TO CONTINUE !</a></center>' +
+        '<table class="trains">' +
+        '<tr>' +
+        '<th class="namebox width33">' +
+        '<label class="heading"> Train Name </label>' +
+        '</th>' +
+        '<th class="width33">' +
+        '<label class="heading"> Departure </label>' +
+        '</th>' +
+        '<th class="width33">' +
+        '<label class="heading"> Arrival </label>' +
+        '</th>' +
+        '</tr>' +
+        '</table>' +
+        '';
     for(train in trains){
         console.log("trainid" + "  " +trains[train]["trainid"]);
         var traininfo = JSON.stringify(trains[train]);
         console.log("tinfo  " + traininfo);
-        page+= '<label> Train Number </label>' + '<a>' + trains[train]["trainnumber"] +'</a>';
-        page+= '<label> Train Name </label>' + '<a>' + trains[train]["trainname"] +'</a>';
-        page+= '<label> Source </label>' + '<a>' + trains[train]["source"] +'</a>';
-        page+= '<label> Destination </label>' + '<a>' + trains[train]["dest"] +'</a>';
-        page+= '<label> Arrival Time </label>' + '<a>' + trains[train]["sourcetime"] +'</a>';
-        page+= '<label> Reaching Time </label>' + '<a>' + trains[train]["desttime"] +'</a>';
-        page+= '<br><br>';
-        page+= '<label>SEATS AVAILABLE</label>'
-        page+= '<br><br>';
-        for(seat in trains[train]["seats"]){
-            var seatcount = trains[train]["seats"][seat]["seatcount"];
-            if(seatcount<=0){
-                seatcount = "WL "+(Math.abs(seatcount)+1);
-            }
-            page+= ' &nbsp; ' +'<button id="subbtn" onclick="passengerInfo(this)" value="'+trains[train]["trainid"]+'/'+trains[train]["seats"][seat]["seattype"] +'">'+trains[train]["seats"][seat]["seattype"] + ' &nbsp; ' + '<a> '+ seatcount +'</a>' + '</button>';
-        }
-        page+= '<br><br>';
-        page+= '<label>ROUTE</label>'
+        page+=  '<div class="boxed">' +
+            '<table class="trains">' +
+            '<tr class="trains">' +
+            '<td style="text-align:left;width: 33%">' +
+            '<label style=" font-size: 30px;">' + trains[train]["trainname"] +'</label>' +'<br> <a style="color: gray">' + trains[train]["trainnumber"] +'</a>' +
+            '</td>';
+        page+=  '<td style="width: 33%">' +
+            '<a style=" font-size: 25px;">' + trains[train]["sourcetime"] +'</a>' + '<br><a style="color: gray ;">' + trains[train]["source"] +'</a>' +
+            '</td>';
+        page+=  '<td style="width: 33%">' +
+            '<a style=" font-size: 25px;">' + trains[train]["desttime"] +'</a>' + ' <br><a style="color: gray ; ">' + trains[train]["dest"] +'</a>' +
+            '</td>' +
+            '</tr>' +
+            '</table>';
+        page+= '<br>';
+        page+= '<div class="left">' +
+            '<label>ROUTE</label>'
         for(var routeno = 0 ;routeno<trains[train]["route"].length;routeno++){
             var location = trains[train]["route"][routeno];
             page+= ' &nbsp; ' + '<a> '+ location +'</a>' ;
@@ -172,8 +186,21 @@ function resultpage(traindetails) {
                 page+= '<a>  &rarrtl;  </a>';
             }
         }
-        page+="<br><br>";
-        page+="<hr>";
+        page+='</div>';
+        page+="<br>" ;
+        page+= '<label style="font-size: 20px">SEATS AVAILABLE</label>'
+        page+= '<br><br>';
+        for(seat in trains[train]["seats"]){
+            var seatcount = trains[train]["seats"][seat]["seatcount"];
+            if(seatcount<=0){
+                seatcount = "WL "+(Math.abs(seatcount)+1);
+            }
+            page+= ' &nbsp; ' +'<button id="seatbtn" onclick="passengerInfo(this)" value="'+trains[train]["trainid"]+'/'+trains[train]["seats"][seat]["seattype"] +'">'+trains[train]["seats"][seat]["seattype"] + ' &nbsp; ' + '<a> '+ seatcount +'</a>' + '</button>';
+        }
+        page+= '<br><br>' +
+            "</div>" +
+            "<br>";
+        // page+="<hr>";
     }
     if(emptyFlag){
         page+="<h1 style='color:#2ecc71;'>NO TRAINS FOUND IN THE SELECTED ROUTE</h1>"
@@ -425,6 +452,7 @@ function passengerInfo(selection) {
     }
 
     function ticketInfo() {
+        changeCSS("css/ticketpage.css",0);
         var ticket = sessionStorage.getItem("ticket");
         ticket = JSON.parse(ticket);
         document.getElementById("paymentform").style.display="none";
