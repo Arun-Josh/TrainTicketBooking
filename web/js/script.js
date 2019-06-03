@@ -124,6 +124,7 @@ function register() {
 
 function resultpage(traindetails) {
     changeCSS("css/ticketpage.css",0);
+
     var trains ;
     var emptyFlag=false;
     console.log("train details key length"+ Object.keys(traindetails).length);
@@ -165,14 +166,14 @@ function resultpage(traindetails) {
         page+=  '<div class="boxed">' +
             '<table class="trains">' +
             '<tr class="trains">' +
-            '<td style="text-align:left;width: 33%">' +
-            '<label style=" font-size: 30px;">' + trains[train]["trainname"] +'</label>' +'<br> <a style="color: gray">' + trains[train]["trainnumber"] +'</a>' +
+            '<td class="width33 left">' +
+            '<label class="text30">' + trains[train]["trainname"] +'</label>' +'<br> <a style="color: gray">' + trains[train]["trainnumber"] +'</a>' +
             '</td>';
-        page+=  '<td style="width: 33%">' +
-            '<a style=" font-size: 25px;">' + trains[train]["sourcetime"] +'</a>' + '<br><a style="color: gray ;">' + trains[train]["source"] +'</a>' +
+        page+=  '<td class="width33">' +
+            '<a class="text25">' + trains[train]["sourcetime"] +'</a>' + '<br><a style="color: gray ;">' + trains[train]["source"] +'</a>' +
             '</td>';
-        page+=  '<td style="width: 33%">' +
-            '<a style=" font-size: 25px;">' + trains[train]["desttime"] +'</a>' + ' <br><a style="color: gray ; ">' + trains[train]["dest"] +'</a>' +
+        page+=  '<td class="width33">' +
+            '<a class="text25">' + trains[train]["desttime"] +'</a>' + ' <br><a style="color: gray ; ">' + trains[train]["dest"] +'</a>' +
             '</td>' +
             '</tr>' +
             '</table>';
@@ -210,6 +211,7 @@ function resultpage(traindetails) {
 
     document.getElementById("searchresult").innerHTML += page;
     document.getElementById("form").style.width = "90%";
+    document.getElementById("form").style.marginTop="-5%";
 }
 
 function passengerInfo(selection) {
@@ -233,6 +235,7 @@ function passengerInfo(selection) {
         '<br>' +
         '   <h1 style="color: white" >Enter Passenger Details</h1>' +
         '<center><a id ="hidden" style="color: orange">ONLY SIX PASSENGERS CAN TRAVEL PER TICKET</a></center>' +
+        '<center><a class="hidden" id="child" style="color: orange">CHILDREN BELOW THE AGE OF 5 DONT NEED TICKET</a></center>' +
         '<h3 id="fillinfo" style="display: none; color: orange">PLEASE FILL ALL THE NECESSARY INFO</h3>' +
         '<center><a id="missingdetails" style="color: orange;display: none;">Enter the necessary details</a></center>' +
         '<input id="addbtn" type="button" onclick="addpassenger()" value="Add Passenger"/>' +
@@ -281,14 +284,19 @@ function passengerInfo(selection) {
     function validatePassengerInfo() {
         document.getElementById("fillseat").style.display="none";
         document.getElementById("fillinfo").style.display="none";
+        document.getElementById("child").style.display="none";
 
         var infoflag = false;
+        var childflag = false;
         var pnames = document.getElementsByName("pname");
         var pages = document.getElementsByName("page");
         for(var i =0;i<pnames.length;i++){
             if(pnames[i].value ==""){
                 infoflag = true;
                 break;
+            }
+            if(pages[i].value <5 && pages[i].value >0){
+                childflag = true;
             }
             if(pages[i].value=="" || isNaN(pages[i].value) || pages[i].value<1 || (pages[i].value % 1 !== 0) ){
                 infoflag = true;
@@ -312,7 +320,10 @@ function passengerInfo(selection) {
         if (genderflag || infoflag){
             document.getElementById("fillinfo").style.display = "block";
         }
-        if(infoflag==false && genderflag==false){
+        if(childflag){
+            document.getElementById("child").style.display="block";
+        }
+        if(infoflag==false && genderflag==false && childflag==false){
             paymentPage();
         }
 
@@ -452,7 +463,7 @@ function passengerInfo(selection) {
     }
 
     function ticketInfo() {
-        changeCSS("css/ticketpage.css",0);
+        // changeCSS("css/ticketpage.css",0);
         var ticket = sessionStorage.getItem("ticket");
         ticket = JSON.parse(ticket);
         document.getElementById("paymentform").style.display="none";
