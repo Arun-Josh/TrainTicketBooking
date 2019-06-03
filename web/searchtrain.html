@@ -11,10 +11,6 @@
             src="https://code.jquery.com/jquery-3.4.1.js"
             integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
             crossorigin="anonymous"></script>
-    <script
-            src="https://code.jquery.com/jquery-3.4.1.js"
-            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-            crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 </head>
 <body>
@@ -59,15 +55,17 @@
     setMail();
     function setDateMinMax() {
         var today = new Date();
+        // console.log(" today "+today.getDay())
+        // console.log(" today "+today.getDate())
         today.setDate(today.getDate()+1);
         var dd = today.getDate();
         if(dd==1){
             today.setMonth(today.getMonth()+1);
         }
-        var mm = today.getMonth();
+        var mm = today.getMonth()+1;
         var yyyy = today.getFullYear();
         if(mm<10){
-            console.log(yyyy+"-0"+mm+"-0"+dd);
+            console.log("min day : " + yyyy+"-0"+mm+"-0"+dd);
             document.getElementById("date").setAttribute("min",yyyy+"-0"+mm+"-0"+dd);
             mm = mm+2;
             document.getElementById("date").setAttribute("max",yyyy+"-0"+mm+"-0"+dd);

@@ -6,6 +6,10 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="js/script.js"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -13,7 +17,9 @@
     checkCookie();
 </script>
 
-<button type="submit" id="blogout" onclick="logOut()" class="submit-button" >LOG OUT <a><i class="fa fa-sign-out"></i> </a> </button>
+    <input type="submit" id="home" onclick="window.location.href = 'searchtrain.html';" class="submit-button" value="HOME">
+
+    <button type="submit" id="blogout" onclick="logOut()" class="submit-button" >LOG OUT <a><i class="fa fa-sign-out"></i> </a> </button>
 
 
     <div id="searchresult"></div>

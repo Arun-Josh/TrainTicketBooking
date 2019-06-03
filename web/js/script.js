@@ -76,7 +76,6 @@ function checkCookie() {
 
 function validateRegistration() {
     var pass1 = $("input[name=pass1]").val();
-    // alert(pass1);
     if(pass1.length<8){
         return;
     }
@@ -126,11 +125,17 @@ function register() {
 function resultpage(traindetails) {
     var trains ;
     var emptyFlag=false;
-    if(traindetails==""){
+    console.log("train details key length"+ Object.keys(traindetails).length);
+    console.log("traindetails.length" + jQuery.isEmptyObject(traindetails));
+    console.log("traindetails " + traindetails);
+    if(traindetails=="" || traindetails.length==2 ){
         console.log("No trains");
         emptyFlag = true;
     }else {
         trains = JSON.parse(traindetails);
+        console.log("traindetails after parse" + traindetails);
+        console.log("traindetails.length" + traindetails.length);
+        console.log("traindetails " + traindetails);
         sessionStorage.setItem("traindetails",traindetails);
     }
 
@@ -142,7 +147,6 @@ function resultpage(traindetails) {
         console.log("trainid" + "  " +trains[train]["trainid"]);
         var traininfo = JSON.stringify(trains[train]);
         console.log("tinfo  " + traininfo);
-        // page+= '<input id="rad" name="trainchosen" type="radio" value="'+trains[train]["trainid"]+'" required/> ';
         page+= '<label> Train Number </label>' + '<a>' + trains[train]["trainnumber"] +'</a>';
         page+= '<label> Train Name </label>' + '<a>' + trains[train]["trainname"] +'</a>';
         page+= '<label> Source </label>' + '<a>' + trains[train]["source"] +'</a>';
@@ -174,9 +178,7 @@ function resultpage(traindetails) {
     if(emptyFlag){
         page+="<h1 style='color:#2ecc71;'>NO TRAINS FOUND IN THE SELECTED ROUTE</h1>"
     }
-    // if(traindetails!=""){
-    //     page+='<input id="bookbtn" type="button" value="BOOK TICKET" onclick="passengerInfo()"/>';
-    // }
+
     page+="</div>";
 
     document.getElementById("searchresult").innerHTML += page;
@@ -184,45 +186,22 @@ function resultpage(traindetails) {
 }
 
 function passengerInfo(selection) {
-    // var trains = document.getElementsByName("trainchosen");
+
     var selectioninfo = selection.value.split("/");
     console.log("selection : "+selectioninfo)
     console.log("selection : "+selectioninfo[0]);
     console.log("selection : "+selectioninfo[1]);
-    // var flag = 0;
+
     var trainchosen = selectioninfo[0];
     var seatchosen  = selectioninfo[1];
-    // for(var i=0;i<trains.length;i++){
-    //     console.log("checking checkeeD  "+ trains[i].value);
-    //     if(trains[i].checked){
-    //         trainchosen = trains[i].value;
-    //         flag = 1;
-    //     }
-    // }
+
     sessionStorage.setItem("trainchosen",trainchosen);
     sessionStorage.setItem("seatchosen",seatchosen);
-    // if(flag==0){
-    //     document.getElementById("hidden").style.display = "block";
-    //     document.getElementById("hidden").style.color = "#2ecc7 !important";
-    //     return;
-    // }
+
     console.log("In passenger train chosen " + trainchosen);
 
-    // var trainsJSON = JSON.parse(sessionStorage.getItem("traindetails"));
-    // var seats= "";
-
-    // for(train in trainsJSON){
-    //     if(trainsJSON[train]["trainid"]==trainchosen){
-    //         for(seat in trainsJSON[train]["seats"]){
-    //             seats+='<input name="seattype" type="radio" value="'+ trainsJSON[train]["seats"][seat]["seattype"] +'"/><label>'+trainsJSON[train]["seats"][seat]["seattype"]+'</label>&emsp;';
-    //         }
-    //     }
-    // }
-
-    // passcount = 0;
     var passinfopage = ' <div id="passform" style="width: 90%" class="box" >\n' +
-        // '   <h3 style="color: WHITE">SELECT SEAT TYPE</h3>' +
-        // seats +
+
         '<h3 id="fillseat" style="display: none; color: orange">SELECT THE SEAT TYPE</h3>' +
         '<br>' +
         '   <h1 style="color: white" >Enter Passenger Details</h1>' +
@@ -234,7 +213,7 @@ function passengerInfo(selection) {
         '<br>' +
         '<button id="subbutton" onclick="validatePassengerInfo()">SUBMIT</button>' +
         '            </div>\n';
-    // document.getElementById("form").style.width = "90%";
+
     document.getElementById("searchresult").innerHTML = passinfopage;
     addpassenger();
     }
@@ -275,16 +254,7 @@ function passengerInfo(selection) {
     function validatePassengerInfo() {
         document.getElementById("fillseat").style.display="none";
         document.getElementById("fillinfo").style.display="none";
-        // var seattype = document.getElementsByName("seattype");
-        // var seatflag = true; //TRUE indicates issue
-        // for(var i=0;i<seattype.length;i++){
-        //     if(seattype[i].checked==true){
-        //         seatflag = false;
-        //     }
-        // }
-        // if(seatflag){
-        //     document.getElementById("fillseat").style.display = "block";
-        // }
+
         var infoflag = false;
         var pnames = document.getElementsByName("pname");
         var pages = document.getElementsByName("page");
@@ -324,17 +294,6 @@ function passengerInfo(selection) {
     function paymentPage() {
 
         changeCSS("css/style.css",0);
-        // var seattypes = document.getElementsByName("seattype");
-
-        // var seatchosen;
-        //
-        // for(var i=0;i<seattypes.length;i++){
-        //     if(seattypes[i].checked==true){
-        //         seatchosen=seattypes[i].value;
-        //         sessionStorage.setItem("seatchosen",seatchosen);
-        //         console.log("seatchosen "+seatchosen)
-        //     }
-        // }
 
         console.log("passcount" + passcount);
         var index = 1;
@@ -600,19 +559,21 @@ function  searchInputValidation() {
     var idate = new Date(inputdate);
     var today = new Date();
 
-    var mm = today.setMonth(today.getMonth()+2);
+    // var maxmm = today.setMonth(today.getMonth()+2);
     var yyyy = today.getFullYear();
 
-    var limitdate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-    var ldate = new Date(limitdate);
+    var maxdate = today.getFullYear()+'-'+(today.getMonth()+2)+'-'+today.getDate();
+    maxdate = new Date(maxdate);
+    maxmonth = maxdate.getMonth();
+
     today = new Date();
 
     var imm = idate.getMonth();
     var iyyyy = idate.getFullYear();
 
-    console.log("tt"+ idate +" ldate \n" + ldate);
+    console.log("today"+today+"inpu"+ idate +" ldate \n" + maxdate);
 
-    if(idate>=today || (imm<=mm) && iyyyy==yyyy){
+    if(idate>=today && (imm<=maxmonth) && iyyyy==yyyy ){
         document.getElementById("datewarn").style.display = "none";
 
         form.submit();
@@ -638,13 +599,6 @@ function pnrCheck() {
                 var ticket = xhr.responseText;
                 sessionStorage.setItem("ticket",ticket);
             }
-
-            // try{
-            //     console.log("in pnr check "+JSON.parse(ticket))
-            // }catch (e) {
-            //     document.getElementById("nopnr").style.display = "block";
-            // }
-
             ticketInfo();
         }
     }
