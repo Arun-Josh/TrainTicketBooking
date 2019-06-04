@@ -71,6 +71,7 @@ public class ReserveSeat extends HttpServlet {
 
                 int seats = Integer.valueOf((String)request.getAttribute("seatcount"));
                 log.info("seaats : "+ seats);
+
                 System.out.println("passenegers in reserve "+session.getAttribute("passengers"));
                 String passenger[] = ((String) session.getAttribute("passengers")).split(",");
                 String age[] = ((String) session.getAttribute("ages")).split(",");

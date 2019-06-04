@@ -122,7 +122,7 @@ public class MysqlConnectionUtil {
     }
 
     final boolean updateStatus(String pnr) throws Exception{
-        con.prepareStatement("UPDATE BOOKINGS SET TICKETSTATUS = \"WAITING LIST\" WHERE PNR = ?");
+        ps = con.prepareStatement("UPDATE BOOKINGS SET TICKETSTATUS = \"WAITING LIST\" WHERE PNR = ?");
         ps.setString(1,pnr);
         ps.executeUpdate();
         return true;

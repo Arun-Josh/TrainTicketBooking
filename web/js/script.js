@@ -22,9 +22,15 @@ function login(){
             }
         }
     }
+    var pass1 = document.getElementsByName("pass")[0].value;
+    var hashObj = new jsSHA("SHA-512","TEXT",{numRounds:1});
+    hashObj.update(pass1);
+    var hash = hashObj.getHash("HEX");
+    // pass1 = hash;
+    // alert(hash);
     xhr.open("POST",url,true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send("mail="+document.getElementsByName("mail")[0].value+"&pass="+document.getElementsByName("pass")[0].value);
+    xhr.send("mail="+document.getElementsByName("mail")[0].value+"&pass="+hash);
 }
 
 function getCookie(cname) {
@@ -61,16 +67,17 @@ function checkCookie() {
         console.log("user not logged in : ");
         if(dir=='index.html' || dir=='""' || dir==""){
             // window.location.href = "index.html";
-            return;
         }
-        else if(dir!='index.html' && dir!='""' && dir!="/"){
+        else if(dir!='index.html' && dir!='""' && dir!="/" && dir!='pnrstatus.html'){
             window.location.href = "index.html";
         }
+        return false;
     } else {
         console.log("user already logged in : " + user);
-        if(dir == "" || dir == "index.html"){
+        if(dir == "" || dir == "index.html" || dir == "index.html?"){
             window.location.href = "searchtrain.html";
         }
+        return true;
     }
 }
 
@@ -117,9 +124,14 @@ function register() {
             }
         }
     }
+    var hashObj = new jsSHA("SHA-512","TEXT",{numRounds:1});
+    hashObj.update(pass1);
+    var hash = hashObj.getHash("HEX");
+    // pass1 = hash;
+    // alert(hash);
     xhr.open("POST",url,true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send("user="+uname+"&email="+email+"&phno="+phno+"&gender="+gender+"&pass1="+pass1);
+    xhr.send("user="+uname+"&email="+email+"&phno="+phno+"&gender="+gender+"&pass1="+hash);
 }
 
 function resultpage(traindetails) {
@@ -467,7 +479,18 @@ function passengerInfo(selection) {
         var ticket = sessionStorage.getItem("ticket");
         ticket = JSON.parse(ticket);
         document.getElementById("paymentform").style.display="none";
-        var ticketPage='<div style="width: 90%" class="box">\n' +
+        var ticketPage='' +
+            '        <div>\n' +
+            '            <form action="index.html">\n' +
+            '                <input type="submit" id="home" class="submit-button" value="HOME">\n' +
+            '            </form>\n' +
+            '        </div>' ;
+         // if(checkCookie()){
+         //     ticketPage+='  <div>\n' +
+         //         '                <button type="submit" id="blogout" onclick="logOut()" class="submit-button" >LOG OUT <a><i class="fa fa-sign-out"></i> </a></button>\n' +
+         //         '        </div>';
+         // }
+         ticketPage+= '<div style="width: 90%" class="box">\n' +
             '  <h1 style="color: #2ecc71">TICKET INFO <i class="fa fa-ticket" aria-hidden="true"></i> </h1>\n' +
             '    <h2 style="color: #2ecc71;text-align: left;">TRAIN INFO : <i class="fa fa-subway" aria-hidden="true"></i> </h2>\n' +
             '  <table id="t01">\n' +

@@ -42,7 +42,7 @@ public class Validations {
         String gender = request.getParameter("gender");
         String pass  = request.getParameter("pass1");
         String phno  = request.getParameter("phno");
-
+        System.out.println(uname+" "+email+gender+pass+phno );
         return uname != null && email != null && gender != null && pass != null && phno != null;
     }
     protected final boolean reserveSeatValidation(HttpServletRequest request){
