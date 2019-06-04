@@ -63,15 +63,6 @@ public class Validations {
                 ifsccode != null && cardnumber != null && dateoftravel != null && source != null && seattype != null && dest != null && fare != null;
     }
 
-    protected final void accessDeniedPrompt(HttpServletResponse response){
-        try{
-            response.getWriter().print("<center>ACCESS DENIED !</center>");
-        }
-        catch (Exception E){
-            E.printStackTrace();
-        }
-    }
-
     protected final boolean searchValidation(HttpServletRequest request){
         String source = request.getParameter("from");
         String dest   = request.getParameter("to");

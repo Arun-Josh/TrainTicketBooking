@@ -34,12 +34,6 @@ public class MysqlConnectionUtil {
         return rs.next();
     }
 
-    final ResultSet getUserByUserid(String userid)throws Exception{
-        ps = con.prepareStatement("SELECT * FROM USERS where USERID = ?" );
-        ps.setString(1,userid);
-        return   ps.executeQuery();
-    }
-
     final ResultSet getUserByMailID(String email)throws Exception{
         PreparedStatement pscheck = con.prepareStatement("SELECT * FROM USERS WHERE MAILID = ?");
         pscheck.setString(1,email);
@@ -65,12 +59,6 @@ public class MysqlConnectionUtil {
             E.printStackTrace();
         }
         return route;
-    }
-
-    final ResultSet getStationIDByTrainID(String trainid)throws Exception{
-        ps = con.prepareStatement("SELECT * FROM STATIONS WHERE TRAINID = ?");
-        ps.setString(1,trainid);
-        return ps.executeQuery();
     }
 
     final boolean bookTicket(String userid,String trainid,String mailid,String modeofpayment,String paymentstatus,String accountnumber,String ifsccode,String cardnumber,String ticketstatus,String dateoftravel,String sourceid,String destid,String fare,String seattype) throws Exception{
@@ -103,12 +91,6 @@ public class MysqlConnectionUtil {
     final ResultSet getStationByStationName(String location) throws Exception{
         ps = con.prepareStatement("SELECT * FROM STATIONNAMES WHERE STATIONNAME = ?");
         ps.setString(1,location);
-        return ps.executeQuery();
-    }
-
-    final ResultSet getStationByStationID(String stationid)throws Exception{
-        ps = con.prepareStatement("SELECT * FROM STATIONS WHERE STATIONID = ?");
-        ps.setString(1,stationid);
         return ps.executeQuery();
     }
 
@@ -163,10 +145,10 @@ public class MysqlConnectionUtil {
         return ps.executeQuery();
     }
 
-    final ResultSet getSeatsInfo(String trainid)throws Exception{
-        ps = con.prepareStatement("SELECT * FROM SEATSINFO WHERE TRAINID = ?");
+    final ResultSet getTrainInsertData(String trainid)throws Exception{
+        ps = con.prepareStatement("select stations.stationid, seatsinfo.seattype, seatsinfo.seatcount from stations inner join SEATSINFO on seatsinfo.trainid = stations.trainid  where seatsinfo.trainid = ?");
         ps.setString(1,trainid);
-        return  ps.executeQuery();
+        return ps.executeQuery();
     }
 
     final int insertSeats(String trainid, String stationid, String seattype, String seatcount, String date)throws Exception{
@@ -197,18 +179,24 @@ public class MysqlConnectionUtil {
         return true;
     }
 
-    final ResultSet getBookingInfoByUserid(String userid)throws Exception{
-        ps = con.prepareStatement("SELECT BOOKINGS.PNR, BOOKINGS.USERID, BOOKINGS.TRAINID,\n" +
-                "                    BOOKINGS.TICKETSTATUS, BOOKINGS.DATEOFTRAVEL, BOOKINGS.SOURCE, BOOKINGS.DEST, BOOKINGS.FARE, BOOKINGS.SEATTYPE, \n" +
-                "                    PASSENGERINFO.PASSENGERID, PASSENGERINFO.PASSENGERNAME, PASSENGERINFO.SEATNO, PASSENGERINFO.AGE, PASSENGERINFO.GENDER, PASSENGERINFO.STATUS\n" +
-                "                    FROM BOOKINGS,PASSENGERINFO  WHERE BOOKINGS.USERID = ? AND PASSENGERINFO.PNR = BOOKINGS.PNR;");
-        ps.setString(1, userid);
-        return ps.executeQuery();
-    }
-
-    final ResultSet getBookingInfoByPnr(int pnr)throws Exception{
-        ps = con.prepareStatement("SELECT * FROM bookings where pnr = ?" );
-        ps.setInt(1,pnr);
+    final ResultSet getBookedTickets(String userid) throws Exception{
+        ps = con.prepareStatement("SELECT  BOOKINGS.USERID, PASSENGERINFO.PASSENGERID, \n" +
+                "        BOOKINGS.PNR, BOOKINGS.SOURCE, BOOKINGS.DEST, \n" +
+                "        TRAINNAMES.TRAINNUMBER,TRAINNAMES.TRAINNAME, \n" +
+                "        PASSENGERINFO.STATUS,\n" +
+                "        BOOKINGS.DATEOFTRAVEL, BOOKINGS.FARE,\n" +
+                "        PASSENGERINFO.PASSENGERNAME, PASSENGERINFO.AGE, PASSENGERINFO.SEATNO, PASSENGERINFO.GENDER,\n" +
+                "        FROMSTATION.STATIONARRTIME AS FROMSTATIONARRTIME, \n" +
+                "        TOSTATION.STATIONARRTIME AS TOSTATIONARRTIME,\n" +
+                "        BOOKINGS.SEATTYPE, \n" +
+                "        BOOKINGS.TRAINID\n" +
+                "        FROM PASSENGERINFO \n" +
+                "        INNER JOIN BOOKINGS ON BOOKINGS.PNR = PASSENGERINFO.PNR\n" +
+                "        INNER JOIN TRAINNAMES ON BOOKINGS.TRAINID = TRAINNAMES.TRAINID\n" +
+                "        INNER JOIN STATIONS AS FROMSTATION ON BOOKINGS.SOURCE = FROMSTATION.STATIONID AND BOOKINGS.TRAINID = FROMSTATION.TRAINID\n" +
+                "        INNER JOIN STATIONS AS TOSTATION   ON BOOKINGS.DEST = TOSTATION.STATIONID  AND BOOKINGS.TRAINID = TOSTATION.TRAINID\n" +
+                "        WHERE BOOKINGS.USERID = ?");
+        ps.setString(1,userid);
         return ps.executeQuery();
     }
 
@@ -240,5 +228,40 @@ public class MysqlConnectionUtil {
         ps.setString(4,gender);
         ps.setString(5,pass);
         return ps.executeUpdate();
+    }
+
+    final ResultSet getTicketByPnr(int pnr)throws Exception{
+        ps = con.prepareStatement("SELECT  BOOKINGS.TRAINID,\n" +
+                "        BOOKINGS.USERID, \n" +
+                "        BOOKINGS.PNR, BOOKINGS.SOURCE, BOOKINGS.DEST, \n" +
+                "        TRAINNAMES.TRAINNUMBER,TRAINNAMES.TRAINNAME, \n" +
+                "        BOOKINGS.DATEOFTRAVEL, BOOKINGS.FARE,\n" +
+                "        FROMSTATION.STATIONARRTIME AS FROMSTATIONARRTIME, \n" +
+                "        TOSTATION.STATIONARRTIME AS TOSTATIONARRTIME,\n" +
+                "        BOOKINGS.SEATTYPE \n" +
+                "        FROM BOOKINGS \n" +
+                "        INNER JOIN TRAINNAMES ON BOOKINGS.TRAINID = TRAINNAMES.TRAINID\n" +
+                "        INNER JOIN STATIONS AS FROMSTATION ON BOOKINGS.SOURCE = FROMSTATION.STATIONID AND BOOKINGS.TRAINID = FROMSTATION.TRAINID\n" +
+                "        INNER JOIN STATIONS AS TOSTATION   ON BOOKINGS.DEST = TOSTATION.STATIONID  AND BOOKINGS.TRAINID = TOSTATION.TRAINID\n" +
+                "        WHERE BOOKINGS.PNR = ?");
+        ps.setInt(1,pnr);
+        return ps.executeQuery();
+    }
+
+    final ResultSet getTrainsBetween(String from, String to)throws Exception{
+        ps = con.prepareStatement("\n" +
+                "SELECT FROMSTATION.TRAINID , FROMSTATION.STATIONID AS FROMSTATIONID, TOSTATION.STATIONID AS TOSTATIONID, FROMSTATION.STATIONARRTIME AS FROMSTATIONARRTIME, TOSTATION.STATIONARRTIME AS TOSTATIONARRTIME, FROMSTATION.STOPNO AS FROMSTATIONSTOPNO, TOSTATION.STOPNO AS TOSTATIONSTOPNO, \n" +
+                "       TRAINNAMES.TRAINNAME, TRAINNAMES.TRAINNUMBER\n" +
+                "       FROM\n" +
+                "       TRAINNAMES\n" +
+                "       INNER JOIN STATIONS FROMSTATION ON FROMSTATION.TRAINID = TRAINNAMES.TRAINID\n" +
+                "       INNER JOIN STATIONS TOSTATION   ON TOSTATION.TRAINID   = TRAINNAMES.TRAINID  \n" +
+                "       INNER JOIN STATIONNAMES FROMSTATIONNAME ON FROMSTATIONNAME.STATIONID = FROMSTATION.STATIONID\n" +
+                "       INNER JOIN STATIONNAMES TOSTATIONNAME   ON TOSTATIONNAME.STATIONID = TOSTATION.STATIONID\n" +
+                "       WHERE \n" +
+                "       FROMSTATIONNAME.STATIONNAME = ? AND TOSTATIONNAME.STATIONNAME = ? AND FROMSTATION.STOPNO < TOSTATION.STOPNO\n");
+        ps.setString(1,from);
+        ps.setString(2,to);
+        return ps.executeQuery();
     }
 }

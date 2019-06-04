@@ -28,7 +28,8 @@ public class BookedTickets extends HttpServlet {
         System.out.println("booking userid" + userid);
 
         try {
-            ResultSet rs = mysqlDB.getBookingInfoByUserid(userid);
+
+            ResultSet rs = mysqlDB.getBookedTickets(userid);
 
             ArrayList<Tickets> tickets = new ArrayList<>();
 
@@ -38,32 +39,12 @@ public class BookedTickets extends HttpServlet {
                 String pnr = rs.getString("pnr");
                 String from = rs.getString("source");
                 String to = rs.getString("dest");
-                String trainid = rs.getString("trainid");
+//                String trainid = rs.getString("trainid");
                 String seattype = rs.getString("seattype");
-
-                ResultSet rstrain = mysqlDB.getTrainNameAndNumber(trainid);
-                String trainname = "";
-                String trainnumber = "";
-
-                if(rstrain.next()){
-                    trainname = rstrain.getString("trainname");
-                    trainnumber = rstrain.getString("trainnumber");
-                }
-
-                ResultSet rsstations = mysqlDB.getStation(trainid,from);
-
-                String stime = "";
-                if (rsstations.next()){
-                    stime = rsstations.getString("stationarrtime");
-                }
-
-                rsstations = mysqlDB.getStation(trainid,from);
-
-                String dtime = "";
-                if (rsstations.next()){
-                    dtime = rsstations.getString("stationarrtime");
-                }
-
+                String trainname = rs.getString("trainname");
+                String trainnumber = rs.getString("trainnumber");
+                String stime = rs.getString("fromstationarrtime");
+                String  dtime = rs.getString("tostationarrtime");
                 String ticketstatus = rs.getString("status");
                 String dateoftravel = rs.getString("dateoftravel");
                 String ticketfare = rs.getString("fare");

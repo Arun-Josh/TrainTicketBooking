@@ -37,75 +37,49 @@ public class Search extends HttpServlet {
                 return;
             }
 
-            ResultSet rs = mysqlDB.getStationByStationName(source);
-            String sourceid = "";
-            if(rs.next()){
-                sourceid = rs.getString("stationid");
-            }
-            else{
-                out.print("");
-                return;
-            }
-
-            rs = mysqlDB.getStationByStationName(dest);
-            String destid = "";
-            if(rs.next()){
-                destid = rs.getString("stationid");
-            }
-            else{
-                out.print("");
-                return;
-            }
-
-            log.info("Source : " + sourceid + " Dest : "+ destid);
-
-            rs = mysqlDB.getStationByStationID(sourceid);
-
-            ArrayList<Train> trains = new ArrayList<Train>();
+            ArrayList<Train> trains = new ArrayList();
+            ResultSet rs = mysqlDB.getTrainsBetween(source,dest);
 
             while(rs.next()){
-                String sourcetime = rs.getString("stationarrtime");
-                int t2stopno = rs.getInt("stopno");
+               String sourceid = rs.getString("fromstationid");
+               String destid = rs.getString("tostationid");
+               log.info("Source : " + sourceid + " Dest : "+ destid);
+               String sourcetime = rs.getString("fromstationarrtime");
+               int t2stopno = rs.getInt("fromstationstopno");
+               String trainid = rs.getString("trainid");
+               String desttime = rs.getString("tostationarrtime");
+               int t1stopno =  rs.getInt("tostationstopno");
+               new TrainManipulation().insertTrainIfNot(trainid,date);
 
-                ResultSet rs1 = mysqlDB.getStation(rs.getString("trainid"),destid);
-                if(rs1.next()){
+               log.info("modification success");
+               log.info("from TRAIN arr time"+ rs.getString("fromstationarrtime"));
+               log.info("to TRAIN arr time"+ rs.getString("tostationarrtime"));
 
-                    String trainid = rs1.getString("trainid");
-                    String desttime = rs1.getString("stationarrtime");
-                    int t1stopno =  rs1.getInt("stopno");
+                String trainnumber = rs.getString("trainnumber");
+                String trainname = rs.getString("trainname");
 
-                    new TrainManipulation().insertTrainIfNot(trainid,date);
+                LinkedList<Seats> seat = new LinkedList();
 
-                    ResultSet rs2 = mysqlDB.getTrainNameAndNumber(trainid);
+                ResultSet rs3 = mysqlDB.getAvailableSeats(trainid,date,sourceid);
+                Boolean seatvail = false;
 
-                    if(rs2.next()){
-                        String trainnumber = rs2.getString("trainnumber");
-                        String trainname = rs2.getString("trainname");
-                        LinkedList<Seats> seat = new LinkedList();
+                while(rs3.next()){
+                    seatvail = true;
+                    String seattype = rs3.getString("seattype");
+                    int seatcount = rs3.getInt("seatsavailable");
+                    seat.add( new Seats(seattype,seatcount));
+                }
 
-                        ResultSet rs3 = mysqlDB.getAvailableSeats(trainid,date,sourceid);
-                        Boolean seatvail = false;
+                if(seatvail){
+                    Train train = new Train(trainid, trainnumber,trainname,source, dest, sourcetime, desttime, seat, t1stopno,t2stopno, new MysqlConnectionUtil().getRoute(trainid));
+                    trains.add(train);
 
-                        while(rs3.next()){
-                            seatvail = true;
-                            String seattype = rs3.getString("seattype");
-                            int seatcount = rs3.getInt("seatsavailable");
-                            seat.add( new Seats(seattype,seatcount));
-                        }
-
-                        if(t1stopno > t2stopno && seatvail){
-                            Train train = new Train(trainid, trainnumber,trainname,source, dest, sourcetime, desttime, seat, t1stopno,t2stopno, new MysqlConnectionUtil().getRoute(trainid));
-                            trains.add(train);
-
-                            log.info("tstime = "+sourcetime +" tdtime = " +desttime+ " train no  = "+ trainnumber +" trainn name = " + trainname + " source "+source + "dest "+ dest + "\n");
-                        for(int i=0;i < seat.size();i++){
-                            log.info("SEAT TYPE "+ seat.get(i).seattype);
-                            log.info("SEAT COUNT "+ seat.get(i).seatcount);
-                        }
-                            log.info("tttid"+ trainid);
-                        }
-
-                    }
+                    log.info("tstime = "+sourcetime +" tdtime = " +desttime+ " train no  = "+ trainnumber +" trainn name = " + trainname + " source "+source + "dest "+ dest + "\n");
+                for(int i=0;i < seat.size();i++){
+                    log.info("SEAT TYPE "+ seat.get(i).seattype);
+                    log.info("SEAT COUNT "+ seat.get(i).seatcount);
+                }
+                    log.info("tttid"+ trainid);
                 }
             }
             String trainsJSON = new Gson().toJson(trains);

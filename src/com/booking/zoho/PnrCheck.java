@@ -35,7 +35,8 @@ public class PnrCheck extends HttpServlet {
                 pnr = Integer.valueOf((String) request.getAttribute("pnr"));
             }
             LOG.info("PNR N " +pnr);
-            ResultSet rs = mysqlDB.getBookingInfoByPnr(pnr);
+
+            ResultSet rs = mysqlDB.getTicketByPnr(pnr);
             Boolean status = rs.next();
             if(!status){
                 PrintWriter out = response.getWriter();
@@ -51,22 +52,10 @@ public class PnrCheck extends HttpServlet {
             String fare = rs.getString("fare");
             String dateoftravel = rs.getString("dateoftravel");
             String seattype = rs.getString("seattype");
-
-            rs = mysqlDB.getTrainNameAndNumber(trainid);
-            rs.next();
             String trainname = rs.getString("trainname");
             String trainnumber = rs.getString("trainnumber");
-
-            rs = mysqlDB.getUserByUserid(userid);
-            rs.next();
-
-            rs = mysqlDB.getStation(trainid,sourceid);
-            rs.next();
-            String stime = rs.getString("stationarrtime");
-
-            rs = mysqlDB.getStation(trainid,destid);
-            rs.next();
-            String dtime = rs.getString("stationarrtime");
+            String stime = rs.getString("fromstationarrtime");
+            String dtime = rs.getString("tostationarrtime");
 
             rs = mysqlDB.getPassengerInfo(pnr);
             String passengers = "";
