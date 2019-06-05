@@ -40,7 +40,7 @@ public class Payment extends HttpServlet {
         String srcstopno =  request.getParameter("srcstopno");
         String deststopno =  request.getParameter("deststopno");
 
-        if(modeofpayment.equals("Debit Cars") || modeofpayment.equals("Credit Card")){
+        if(modeofpayment.equals("Debit Card") || modeofpayment.equals("Credit Card")){
             cardnumber = "1234 5678 9098 1234";
         }
         else if(modeofpayment.equals("Net Banking")){
