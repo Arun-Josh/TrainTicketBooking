@@ -81,16 +81,30 @@ public class MysqlConnectionUtil {
         return true;
     }
 
+    final int getMinSeatCount(String trainid, String sourceid, String destid, String seattype, String dateoftravel)throws Exception{
+        ps = con.prepareStatement("SELECT LEAST(FROMSA.SEATSAVAILABLE, TOSA.SEATSAVAILABLE) AS SA\n" +
+                "FROM \n" +
+                "SEATSAVAILABLE FROMSA, SEATSAVAILABLE TOSA \n" +
+                "WHERE \n" +
+                "FROMSA.TRAINID = ? AND FROMSA.STATIONID = ? AND FROMSA.SEATTYPE = ? AND FROMSA.DAY = ? AND\n" +
+                "TOSA.TRAINID = ? AND TOSA.STATIONID = ? AND TOSA.SEATTYPE = ? AND TOSA.DAY = ?");
+        ps.setString(1,trainid);
+        ps.setString(2,sourceid);
+        ps.setString(3,seattype);
+        ps.setString(4,dateoftravel);
+        ps.setString(5,trainid);
+        ps.setString(6,destid);
+        ps.setString(7,seattype);
+        ps.setString(8,dateoftravel);
+        ResultSet rs =  ps.executeQuery();
+        rs.next();
+        return rs.getInt("SA");
+    }
+
     final ResultSet getPnr(String mailid, String trainid) throws Exception{
         ps = con.prepareStatement("SELECT * FROM BOOKINGS WHERE MAILID = ? AND TRAINID = ?");
         ps.setString(1,mailid);
         ps.setString(2,trainid);
-        return ps.executeQuery();
-    }
-
-    final ResultSet getStationByStationName(String location) throws Exception{
-        ps = con.prepareStatement("SELECT * FROM STATIONNAMES WHERE STATIONNAME = ?");
-        ps.setString(1,location);
         return ps.executeQuery();
     }
 
@@ -102,10 +116,26 @@ public class MysqlConnectionUtil {
         return ps.executeQuery();
     }
 
-    final ResultSet getStation(String trainid, String stationid) throws Exception{
-        ps = con.prepareStatement("SELECT  * FROM STATIONS WHERE TRAINID = ? AND STATIONID = ?");
-        ps.setString(1,trainid);
-        ps.setString(2,stationid);
+    final ResultSet getTicketTrainInfo(String trainid, String sourceid, String destid)throws Exception{
+        ps = con.prepareStatement("SELECT TRAINNAMES.TRAINNAME, TRAINNAMES.TRAINNUMBER,\n" +
+                "       FROMSN.STATIONARRTIME AS FROMSNARRTIME, TOSN.STATIONARRTIME AS TOSNARRTIME\n" +
+                "       FROM \n" +
+                "       TRAINNAMES \n" +
+                "       INNER JOIN \n" +
+                "       STATIONS FROMSN ON TRAINNAMES.TRAINID = FROMSN.TRAINID AND FROMSN.STATIONID = ? AND TRAINNAMES.TRAINID = ?\n" +
+                "       INNER JOIN\n" +
+                "       STATIONS TOSN  ON TRAINNAMES.TRAINID = TOSN.TRAINID AND TOSN.STATIONID = ? AND TRAINNAMES.TRAINID = ?\n");
+        ps.setString(1,sourceid);
+        ps.setString(2,trainid);
+        ps.setString(3,destid);
+        ps.setString(4,trainid);
+        return ps.executeQuery();
+    }
+
+    final ResultSet getStationIDs(String from, String to)throws Exception{
+        ps = con.prepareStatement("SELECT FROMSN.STATIONID AS FROMSTATIONID, TOSN.STATIONID AS TOSTATIONID FROM STATIONNAMES FROMSN, STATIONNAMES TOSN WHERE FROMSN.STATIONNAME = ? AND TOSN.STATIONNAME = ?");
+        ps.setString(1,from);
+        ps.setString(2,to);
         return ps.executeQuery();
     }
 

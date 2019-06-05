@@ -78,7 +78,7 @@ body{
 }
 
 .box a{
-    color:whitesmoke; 
+    color:azure; 
     padding-bottom: 10px; 
 }
 
@@ -131,7 +131,11 @@ label{
     color: #2ecc71;
     text-transform: uppercase;
 }
-        
+
+.seatcount{
+    color: black !important;
+    font-weight: bold;
+}
 h2{
     color: #2ecc71;
     text-transform: uppercase;
@@ -193,7 +197,7 @@ h2{
 
 #seatbtn{
     text-align: center;
-    background: gray;
+    background: gainsboro;
     /* margin: 20px auto; */
     border: 2px solid gray;
     padding: 14px 40px;
@@ -221,6 +225,7 @@ h2{
 }
 .boxed{
     border: 1px solid gray;
+    background-color : #3d3d3d ;
 }
 .left{
     margin-left: 10px;

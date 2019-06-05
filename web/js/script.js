@@ -208,7 +208,7 @@ function resultpage(traindetails) {
             if(seatcount<=0){
                 seatcount = "WL "+(Math.abs(seatcount)+1);
             }
-            page+= ' &nbsp; ' +'<button id="seatbtn" onclick="passengerInfo(this)" value="'+trains[train]["trainid"]+'/'+trains[train]["seats"][seat]["seattype"] +'">'+trains[train]["seats"][seat]["seattype"] + ' &nbsp; ' + '<a> '+ seatcount +'</a>' + '</button>';
+            page+= ' &nbsp; ' +'<button id="seatbtn" onclick="passengerInfo(this)" value="'+trains[train]["trainid"]+'/'+trains[train]["seats"][seat]["seattype"] +'">'+trains[train]["seats"][seat]["seattype"] + ' &nbsp; ' + '<a class="seatcount"> '+ seatcount +'</a>' + '</button>';
         }
         page+= '<br><br>' +
             "</div>" +
@@ -467,6 +467,7 @@ function passengerInfo(selection) {
             url+="&to="+sessionStorage.getItem("to")+"&seattype="+sessionStorage.getItem("seatchosen");
             url+="&fare="+sessionStorage.getItem("totalfare")+"&seatcount="+sessionStorage.getItem("passcount");
             url+="&srcstopno="+sessionStorage.getItem("srcstopno");
+
             url+="&deststopno="+sessionStorage.getItem("dststopno");
 
         console.log("url :"+url);
