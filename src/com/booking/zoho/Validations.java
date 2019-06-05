@@ -3,15 +3,35 @@ package com.booking.zoho;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Logger;
 
 public class Validations {
+    final Logger log = Logger.getLogger(Validations.class.getName());
     protected final boolean cancelSeat(String passengerid, String userid){
         final MysqlConnectionUtil mysqlDB = new MysqlConnectionUtil();
         try{
 
             ResultSet rs = mysqlDB.validateTicketAuthority(passengerid,userid);
             if(rs.next()){
-                return true;
+//                String inputdate = ;
+                Date date = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date traindate = sdf.parse(rs.getString("dateoftravel"));
+                Date today = sdf.parse(sdf.format(date));
+
+                System.out.println("traindate : " + sdf.format(traindate));
+                System.out.println("today : " + sdf.format(today));
+
+                if (traindate.compareTo(today) >= 0) {
+                    System.out.println("denied");
+                    return false;
+                } else if (traindate.compareTo(today) < 0) {
+                    System.out.println("cancelled");
+                    return true;
+                }
+//                return true;
             }
         }catch (Exception E){
             E.printStackTrace();

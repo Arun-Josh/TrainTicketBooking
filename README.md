@@ -5,7 +5,7 @@ This is a Experimental Project to Book the Tickets
 
 Sessions and Cookies are used for Validation
 
-SHA-512 Encytion is used for Password Encryption
+SHA-512 Encryption is used for Password Encryption
 
 The DB Queries are Present in queries.sql
 </br>

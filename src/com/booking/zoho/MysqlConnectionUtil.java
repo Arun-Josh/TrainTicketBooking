@@ -40,12 +40,6 @@ public class MysqlConnectionUtil {
         return pscheck.executeQuery();
     }
 
-    final ResultSet getTrainNameAndNumber(String trainid) throws Exception{
-        ps = con.prepareStatement("SELECT  * FROM TRAINNAMES WHERE TRAINID = ?");
-        ps.setString(1,trainid);
-        return ps.executeQuery();
-    }
-
     final LinkedList<String> getRoute(String trainid){
         LinkedList<String> route = new LinkedList<>();
         try{
