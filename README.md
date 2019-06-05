@@ -8,6 +8,7 @@ Sessions and Cookies are used for Validation
 SHA-512 Encytion is used for Password Encryption
 
 The DB Queries are Present in queries.sql
+</br>
 Note: Don't Execute the File Completely Execute only the DDL commands
 
 UI as on 05-06-2019
