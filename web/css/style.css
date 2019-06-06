@@ -47,7 +47,7 @@ body{
     color: gray;
 }
 
-.box input[type="text"]:focus, .box input[type="password"]:focus, .box input[type="number"]:focus, .box input[type="email"]:focus{
+.box input[type="text"]:focus, .box input[type="password"]:focus, .box input[type="number"]:focus, .box input[type="email"]:focus, box input[type="date"]{
     /* width: 250px; */
     border-color: #2ecc71;
 }

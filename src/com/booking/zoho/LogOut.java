@@ -10,7 +10,12 @@ public class LogOut extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
             Cookie ck[] = request.getCookies();
 
-            System.out.println("inSIDE LOGOUT ");
+            System.out.println("inSIDE LOGOUT " );
+
+            if(ck==null){
+                response.sendRedirect("index.html");
+                return;
+            }
 
             for(Cookie c : ck){
                 c.setValue(null);
