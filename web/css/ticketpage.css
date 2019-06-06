@@ -197,7 +197,7 @@ h2{
 
 #seatbtn{
     text-align: center;
-    background: gainsboro;
+    background: white !important;
     /* margin: 20px auto; */
     border: 2px solid gray;
     padding: 14px 40px;

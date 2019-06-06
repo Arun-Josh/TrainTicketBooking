@@ -855,14 +855,6 @@ function bookedTicketsPage(lowerlimit,upperlimit) {
     }
     page += '</div>';
 
-    // document.getElementById("bookedtickets").innerHTML += page;
-    // console.log("TO HIDE : length "+hide.length)
-
-    // for(var i =0;i<hide.length;i++){
-    //     document.getElementById(hide[i]).style.display="none";
-    //     console.log("hidden "+ hide[i])
-    // }
-
     page+='<span>';
     if(lowerlimit!=0){
         page += '<button style="float: left; margin-left: 10px" id="subbutton" onclick="bookedTickets('+(lowerlimit-10)+','+(10)+')"> PREVIOUS PAGE</button>';
