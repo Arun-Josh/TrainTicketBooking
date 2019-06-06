@@ -15,7 +15,6 @@ public class Validations {
 
             ResultSet rs = mysqlDB.validateTicketAuthority(passengerid,userid);
             if(rs.next()){
-//                String inputdate = ;
                 Date date = new Date();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 Date traindate = sdf.parse(rs.getString("dateoftravel"));
@@ -24,12 +23,12 @@ public class Validations {
                 System.out.println("traindate : " + sdf.format(traindate));
                 System.out.println("today : " + sdf.format(today));
 
-                if (traindate.compareTo(today) >= 0) {
-                    System.out.println("denied");
-                    return false;
-                } else if (traindate.compareTo(today) < 0) {
+                if (traindate.compareTo(today) > 0) {
                     System.out.println("cancelled");
                     return true;
+                } else if (traindate.compareTo(today) <= 0) {
+                    System.out.println("denied");
+                    return false;
                 }
 //                return true;
             }
@@ -37,6 +36,15 @@ public class Validations {
             E.printStackTrace();
         }
         return false;
+    }
+
+    protected boolean validateBookedTickets(HttpServletRequest request){
+        if(request.getParameter("lowerlimit")==null || request.getParameter("upperlimit")==null){
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     protected final boolean passengerPageValidation(HttpServletRequest request){

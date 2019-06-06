@@ -23,13 +23,21 @@ public class BookedTickets extends HttpServlet {
             return;
         }
         HttpSession session = request.getSession();
+        boolean access = new Validations().validateBookedTickets(request);
+        if(!access){
+            return;
+        }else {
+
+        }
 
         String userid = (String) session.getAttribute("userid");
+        String lowerlimit = request.getParameter("lowerlimit");
+        String upperlimit = request.getParameter("upperlimit");
         System.out.println("booking userid" + userid);
 
         try {
 
-            ResultSet rs = mysqlDB.getBookedTickets(userid);
+            ResultSet rs = mysqlDB.getBookedTickets(userid,lowerlimit,upperlimit);
 
             ArrayList<Tickets> tickets = new ArrayList<>();
 

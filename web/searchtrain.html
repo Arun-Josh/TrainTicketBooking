@@ -20,14 +20,14 @@
 </script>
 
         <div>
-            <form action="pnrstatus.html" method="get">
-                <input type="submit" id="home" class="submit-button" value="PNR STATUS">
-            </form>
+<!--            <form action="pnrstatus.html" method="get">-->
+            <button id="home" class="submit-button">PNR STATUS</button>
+<!--            </form>-->
         </div>
 
         <div>
             <div>
-                <input type="submit" onclick="bookedTickets()" id="bhistory" class="submit-button" value="BOOKED TICKETS">
+                <input type="submit" onclick="bookedTickets(0,10)" id="bhistory" class="submit-button" value="BOOKED TICKETS">
             </div>
         </div>
 
@@ -52,6 +52,10 @@
 
     </form>
 <script>
+    document.getElementById("home").onclick = function () {
+        if(window.location.href.split('/').pop() == 'searchtrain.html')
+            window.location.href = "pnrstatus.html";
+    }
     setMail();
     function setDateMinMax() {
         var today = new Date();

@@ -674,9 +674,9 @@ function printTicket() {
     window.print();
 }
 
-function bookedTickets() {
+function bookedTickets(lowerlimit,upperlimit) {
     var xhr = new XMLHttpRequest();
-    var url = "bookedtickets";
+    var url = "bookedtickets?";
     xhr.onreadystatechange = function () {
         if(xhr.status=200 && xhr.readyState==4){
             var tickets = xhr.responseText;
@@ -687,15 +687,24 @@ function bookedTickets() {
             sessionStorage.setItem("tickets",tickets);
             console.log("tickets json pared = "+JSON.parse(tickets));
             console.log("tickets json no parse = "+tickets);
-            bookedTicketsPage();
+            bookedTicketsPage(lowerlimit,upperlimit);
         }
     }
+    url+= 'lowerlimit='+lowerlimit+'&upperlimit='+upperlimit;
     console.log("inside booked Tickets "+url)
     xhr.open("GET",url,true);
     xhr.send();
 }
 
-function bookedTicketsPage() {
+function bookedTicketsPage(lowerlimit,upperlimit) {
+
+        document.getElementById("home").onclick = function () {
+            window.location.href = "searchtrain.html";
+        }
+
+        document.getElementById("home").innerHTML="HOME";
+
+    window.scrollTo(0, 0);
     document.getElementById("searchform").style.display = "none";
     document.getElementById("bhistory").style.display = "none";
     changeCSS('css/ticketpage.css', 0);
@@ -713,10 +722,12 @@ function bookedTicketsPage() {
 
     tickets = JSON.parse(tickets);
 
+    var hide = [];
 
     for(var ticket = 0;ticket<tickets.length;ticket++){
         console.log("Ticket "+ticket);
         console.log("passid"+tickets[ticket]["passengerid"]);
+        var tpnr = tickets[ticket]["pnr"];
         page += '    <h1 >TICKET INFO <i class="fa fa-ticket" aria-hidden="true"></i> </h1>\n' +
             '    <h2 >TRAIN INFO  <i class="fa fa-subway" aria-hidden="true"></i>  : </h2>';
         page += '\n' +
@@ -763,24 +774,26 @@ function bookedTicketsPage() {
             '            <th>AGE</th>\n' +
             '            <th>SEAT NUMBER</th>\n' +
             '            <th>STATUS</th>\n' +
-            '            <th>CANCELLATION</th>\n' +
+            '            <th name="cantab'+tpnr+'">CANCELLATION</th>\n' +
             '        </tr>';
+        console.log("in t "+"cantab"+tpnr);
             var p = 1;
-            var tpnr = tickets[ticket]["pnr"];
-            do{
 
+            var canflag = 0;
+            var ticketpasscount = 0;
+            do{
                 if(tickets[ticket]["pnr"]!=tpnr){
                     break;
                 }
                 console.log(ticket);
                 var pname = tickets[ticket]["passenger"];
                 var gender = tickets[ticket]["gender"];
-                var age = tickets[ticket]["gender"];
+                var age = tickets[ticket]["age"];
                 var seatno = tickets[ticket]["seatno"];
                 var passid = tickets[ticket]["passengerid"];
                 var status = tickets[ticket]["ticketstatus"];
                 var cancelbtn = "CANCEL THIS TICKET";
-                if(status=="CANCELLED"){
+                if(status=="CANCELLED" || status=="REFUNDED"){
                     cancelbtn = "CANCELLED SUCCESSFULLY";
                 }
 
@@ -796,31 +809,76 @@ function bookedTicketsPage() {
                     '            <td> '+gender+' </td>\n' +
                     '            <td> '+age+' </td>\n' +
                     '            <td> '+seatno+' </td>\n' +
-                    '            <td id="'+passid+'" > '+status+' </td>\n' +
-                    '            <td>\n' +
+                    '            <td id="'+passid+'" > '+status+' </td>\n' ;
+
+                if(status=="CONFIRMED"){
+
+                page+=' <td>\n' +
                     '                <input id="passid" name="passengerid" type="hidden" value="">\n' +
                     '                <button id="canbtn" name="'+passid+'" onclick="cancelSeat(this)" type="button" ';
-                if(status=="CANCELLED") {
-                    page += ' disabled ';
+                        if(status=="CANCELLED" || status=="REFUNDED") {
+                            page += ' disabled ';
+                        }
+                        page += ' value="'+passid+'">'+cancelbtn+'</button>\n' +
+                            '            </td>\n' ;
+                        ticketpasscount++;
+                }else {
+                        page+='<td name="cantab'+tpnr+'">' +
+                            ' ' +
+                            '</td>'
+                        canflag++;
+                         ticketpasscount++;
                 }
-                page += ' value="'+passid+'">'+cancelbtn+'</button>\n' +
-                    '            </td>\n' +
                     '        </tr>'    ;
 
                 if(ticket>=Object.keys(tickets).length){
                     break;
                 }
                 var newpnr = tickets[ticket]["pnr"];
+
             }while (newpnr===tpnr);
+
         page+='</table>\n' +
             '\n' +
             '    <br><br>\n' +
             '    <hr color="#2ecc71">\n' +
             '    <br><br>';
         ticket--;
+
+        console.log("thispasscount "+ticketpasscount+ "  canflag "+canflag);
+
+        if(canflag==ticketpasscount){
+            console.log("in t "+"cantab"+tpnr);
+            hide.push("cantab"+tpnr);
+        }
+
     }
-    page += '</div>'
+    page += '</div>';
+
+    // document.getElementById("bookedtickets").innerHTML += page;
+    // console.log("TO HIDE : length "+hide.length)
+
+    // for(var i =0;i<hide.length;i++){
+    //     document.getElementById(hide[i]).style.display="none";
+    //     console.log("hidden "+ hide[i])
+    // }
+
+    page+='<span>';
+    if(lowerlimit!=0){
+        page += '<button style="float: left; margin-left: 10px" id="subbutton" onclick="bookedTickets('+(lowerlimit-10)+','+(10)+')"> PREVIOUS PAGE</button>';
+    }
+    page += '<button style="float: right;margin-right: 10px" id="subbutton" onclick="bookedTickets('+(lowerlimit+10)+','+(10)+')"> NEXT PAGE </button>';
+    page +='</span>'
     document.getElementById("bookedtickets").innerHTML = page;
+    // document.getElementById("bookedtickets").innerHTML += page;
+
+    console.log("TO HIDE : length "+hide.length)
+    for(var i =0;i<hide.length;i++){
+        var e = document.getElementsByName(hide[i]);
+        e[0].style.display="none";
+        e[1].style.display="none";
+        console.log("hidden "+ hide[i])
+    }
 }
 
 function CancelServletCall(passid) {

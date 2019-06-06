@@ -172,14 +172,14 @@ h2{
       background-color: black;
       color: white;
   }
-  button{
+  #canbtn{
       background-color: #f44336;
       color: white;
       padding: 14px 25px;
       text-align: center;
 
   }
-  button:hover{
+  #canbtn:hover{
       background-color: red;
   }
 
@@ -189,7 +189,7 @@ h2{
 .hidden{
     display: none;
 }
-#home{
+#home, #topleftbtn{
     position: fixed;
     top: 0px !important;
     left: 0px;

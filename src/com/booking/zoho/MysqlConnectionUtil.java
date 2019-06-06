@@ -203,7 +203,7 @@ public class MysqlConnectionUtil {
         return true;
     }
 
-    final ResultSet getBookedTickets(String userid) throws Exception{
+    final ResultSet getBookedTickets(String userid,String lowerlimit, String upperlimit) throws Exception{
         ps = con.prepareStatement("SELECT  BOOKINGS.USERID, PASSENGERINFO.PASSENGERID, \n" +
                 "        BOOKINGS.PNR, BOOKINGS.SOURCE, BOOKINGS.DEST, \n" +
                 "        TRAINNAMES.TRAINNUMBER,TRAINNAMES.TRAINNAME, \n" +
@@ -219,13 +219,15 @@ public class MysqlConnectionUtil {
                 "        INNER JOIN TRAINNAMES ON BOOKINGS.TRAINID = TRAINNAMES.TRAINID\n" +
                 "        INNER JOIN STATIONS AS FROMSTATION ON BOOKINGS.SOURCE = FROMSTATION.STATIONID AND BOOKINGS.TRAINID = FROMSTATION.TRAINID\n" +
                 "        INNER JOIN STATIONS AS TOSTATION   ON BOOKINGS.DEST = TOSTATION.STATIONID  AND BOOKINGS.TRAINID = TOSTATION.TRAINID\n" +
-                "        WHERE BOOKINGS.USERID = ?");
+                "        WHERE BOOKINGS.USERID = ? ORDER BY PASSENGERINFO.passengerid DESC LIMIT ?,?");
         ps.setString(1,userid);
+        ps.setInt(2,Integer.valueOf(lowerlimit));
+        ps.setInt(3,Integer.valueOf(upperlimit));
         return ps.executeQuery();
     }
 
     final boolean cancelSeat(String passengerid)throws Exception{
-        ps = con.prepareStatement("UPDATE PASSENGERINFO SET STATUS = \"CANCELLED\" WHERE PASSENGERID = ?");
+        ps = con.prepareStatement("UPDATE PASSENGERINFO SET STATUS = \"REFUNDED\" WHERE PASSENGERID = ?");
         ps.setString(1,passengerid);
         ps.executeUpdate();
         return true;
