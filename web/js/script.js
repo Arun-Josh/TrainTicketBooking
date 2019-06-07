@@ -778,7 +778,11 @@ function bookedTicketsPage(lowerlimit,upperlimit) {
             '        </tr>';
         console.log("in t "+"cantab"+tpnr);
             var p = 1;
-
+            var dateoftravel = tickets[ticket]["dateoftravel"];
+            dateoftravel = new Date(dateoftravel)
+            console.log("dot : "+dateoftravel)
+            var today = new Date();
+            console.log("today : "+today)
             var canflag = 0;
             var ticketpasscount = 0;
             do{
@@ -792,6 +796,7 @@ function bookedTicketsPage(lowerlimit,upperlimit) {
                 var seatno = tickets[ticket]["seatno"];
                 var passid = tickets[ticket]["passengerid"];
                 var status = tickets[ticket]["ticketstatus"];
+
                 var cancelbtn = "CANCEL THIS TICKET";
                 if(status=="CANCELLED" || status=="REFUNDED"){
                     cancelbtn = "CANCELLED SUCCESSFULLY";
@@ -813,10 +818,10 @@ function bookedTicketsPage(lowerlimit,upperlimit) {
 
                 if(status=="CONFIRMED"){
 
-                page+=' <td>\n' +
+                page+=' <td name="'+passid+'">\n' +
                     '                <input id="passid" name="passengerid" type="hidden" value="">\n' +
                     '                <button id="canbtn" name="'+passid+'" onclick="cancelSeat(this)" type="button" ';
-                        if(status=="CANCELLED" || status=="REFUNDED") {
+                        if(status=="CANCELLED" || status=="REFUNDED" ) {
                             page += ' disabled ';
                         }
                         page += ' value="'+passid+'">'+cancelbtn+'</button>\n' +
@@ -827,7 +832,12 @@ function bookedTicketsPage(lowerlimit,upperlimit) {
                             ' ' +
                             '</td>'
                         canflag++;
-                         ticketpasscount++;
+                        ticketpasscount++;
+                }
+                if(+dateoftravel<=+today){
+                    // status="CANCELLED"
+                    hide.push("cantab"+tpnr);
+                    hide.push(passid);
                 }
                     '        </tr>'    ;
 
@@ -867,8 +877,10 @@ function bookedTicketsPage(lowerlimit,upperlimit) {
     console.log("TO HIDE : length "+hide.length)
     for(var i =0;i<hide.length;i++){
         var e = document.getElementsByName(hide[i]);
-        e[0].style.display="none";
-        e[1].style.display="none";
+        for(var j=0;j<e.length;j++){
+            e[j].style.display="none";
+        }
+        // e[1].style.display="none";
         console.log("hidden "+ hide[i])
     }
 }
@@ -880,12 +892,32 @@ function CancelServletCall(passid) {
         if(xhr.status == 200 && xhr.readyState==4){
             // alert(xhr.responseText);
             if(xhr.responseText=="CANCELLED"){
+                $.alert({
+                    theme: 'modern',
+                    alignMiddle:true,
+                    title: '<center><a>TICKET CANCELLED SUCCESSFULLY</a></center>',
+                    content:' ',
+                    columnClass: 'small',
+                    // content: 'Drag this modal out of the window',
+                    draggable: true,
+                    dragWindowBorder: false,
+                });
                 console.log("Cancelled");
                 document.getElementById(passid).innerHTML = "CANCELLED";
                 document.getElementsByName(passid)[0].innerHTML = "CANCELLED SUCCESSFULLY";
                 document.getElementsByName(passid)[0].disabled = true;
             }
             else{
+                $.alert({
+                    theme: 'modern',
+                    alignMiddle:true,
+                    title: '<center><a>This Ticket Can\'t Be Cancelled !</a></center>',
+                    columnClass: 'small',
+                    content:' ',
+                    // content: 'Drag this modal out of the window',
+                    draggable: true,
+                    dragWindowBorder: false,
+                });
                 console.log(xhr.responseText);
             }
         }
@@ -898,7 +930,56 @@ function CancelServletCall(passid) {
 function cancelSeat(el) {
     var passid = document.getElementById("passid").value = el.value;
     console.log("CLICK MADE TO CANCEL " + passid);
-    CancelServletCall(passid);
+
+    $.confirm({
+        theme : 'modern',
+        useBootstrap: false,
+        columnClass: 'small',
+        title: 'Cancel Ticket ?',
+        // content: 'This dialog will automatically trigger \'No\' in 8 seconds if you don\'t respond.',
+        content:' <pre><a>Refund Amount %</a>' +
+                ' <br><br>' +
+                ' <a>3 days before : 80% </a>' +
+            '<br>' +
+                '<a> 2 Days Before : 50% </a>' +
+                '<br>' +
+                '<a> 1 Day Before &nbsp;: 10% </a>' +
+                '<br><br>' +
+            // '<a> Last Day : Can\'t Be Cancelled </a> ' +
+            '</pre>',
+        autoClose: 'No|10000',
+        buttons: {
+            deleteUser: {
+                text: 'Confirm',
+                boxWidth: '30%',
+                action: function () {
+                    CancelServletCall(passid);
+                }
+            },
+            No: {
+                columnClass: 'small',
+                boxWidth: '30%',
+                action:function () {
+                notCancelled();
+                    // $.alert('Ticket Not Cancelled');
+            }
+        }
+        }
+    });
+
+}
+
+function notCancelled() {
+    $.alert({
+        theme: 'modern',
+        columnClass: 'small',
+        alignMiddle:true,
+        title: '<center>Ticket Not Cancelled</center>',
+        content:' ',
+        // content: 'Drag this modal out of the window',
+        draggable: true,
+        dragWindowBorder: false,
+    });
 }
 
 function changeCSS(cssFile, cssLinkIndex) {

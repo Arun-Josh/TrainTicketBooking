@@ -53,6 +53,7 @@ body{
 }
 
 .box input[type="submit"],.box input[type="button"], #subbutton{
+    cursor: pointer;
     border:0;
     display: block;
     text-align: center;
@@ -66,6 +67,7 @@ body{
 }
 
 #subbtn{
+    cursor: pointer;
     /* border:0; */
     /* display: block; */
     text-align: center;
@@ -95,6 +97,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 #bpnr, #bhistory, #blogout, #home, #topleftbtn{
+    cursor: pointer;
     z-index: 10;
     border:0;
     display: block;
@@ -129,6 +132,7 @@ input[type=number]::-webkit-outer-spin-button {
     display: none;
 }
 #blogout{
+    cursor: pointer;
     position: fixed;
     top: 0px !important;
     right: 10px;
@@ -141,6 +145,7 @@ input[type=number]::-webkit-outer-spin-button {
     display: none;
 }
 #home, #topleftbtn{
+    cursor: pointer;
     position: fixed;
     top: 0px !important;
     left: 0px;
@@ -182,7 +187,7 @@ label{
   }
 
 @media print {
-    #cbtn {
+    #cbtn, #blogout, #home {
         display: none !important;
     }
 }
