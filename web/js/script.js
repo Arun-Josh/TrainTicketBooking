@@ -975,7 +975,7 @@ function cancelSeat(el,pnr,day,month,year,fare) {
                 '<br>' +
                 '<a> 1 Day Before &nbsp;: 10% </a>' +
                 '<br><br>' +
-            '<a> Refund Amount =  </a>' +
+            '<a> Refund Amount = &#8377; </a>' +
             '<a>' + (fare - fare * percent)/flag +
             '</a>' +
             // '<a> Last Day : Can\'t Be Cancelled </a> ' +
