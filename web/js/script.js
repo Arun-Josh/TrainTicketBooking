@@ -779,6 +779,7 @@ function bookedTicketsPage(lowerlimit,upperlimit) {
         console.log("in t "+"cantab"+tpnr);
             var p = 1;
             var dateoftravel = tickets[ticket]["dateoftravel"];
+            var fare = tickets[ticket]["ticketfare"];
             dateoftravel = new Date(dateoftravel)
             console.log("dot : "+dateoftravel)
             var today = new Date();
@@ -820,7 +821,7 @@ function bookedTicketsPage(lowerlimit,upperlimit) {
 
                 page+=' <td name="'+passid+'">\n' +
                     '                <input id="passid" name="passengerid" type="hidden" value="">\n' +
-                    '                <button id="canbtn" name="'+passid+'" onclick="cancelSeat(this)" type="button" ';
+                    '                <button id="canbtn" name="'+passid+'" onclick="cancelSeat(this,'+tpnr+','+ dateoftravel.getDate()+','+ dateoftravel.getMonth()+','+ dateoftravel.getFullYear()+','+ fare +')" type="button" ';
                         if(status=="CANCELLED" || status=="REFUNDED" ) {
                             page += ' disabled ';
                         }
@@ -927,11 +928,40 @@ function CancelServletCall(passid) {
     xhr.send("passengerid="+passid);
 }
 
-function cancelSeat(el) {
+function cancelSeat(el,pnr,day,month,year,fare) {
     var passid = document.getElementById("passid").value = el.value;
     console.log("CLICK MADE TO CANCEL " + passid);
+    var percent = 0;
+    var flag = 0;
+    console.log("clicked pnr "+pnr)
+    console.log("canseat dot : "+day +" "+month+" "+year)
+    var tickets = sessionStorage.getItem("tickets");
+    tickets = JSON.parse(tickets)
+    for(var i =0;i<tickets.length;i++){
+        if(tickets[i]["pnr"]==pnr){
+            flag++;
+        }
+    }
+    console.log("pass count "+flag)
+    var dateoftravel = new Date()
+    dateoftravel.setDate(day);
+    dateoftravel.setMonth(month);
+    dateoftravel.setFullYear(year);
+    console.log("canseat dot : "+dateoftravel)
+    var today = new Date;
+    var difference = dateoftravel.getDate() - today.getDate();
+    console.log("day diff" + difference);
+    if(difference>=3){
+        percent = 0.2;
+    }
+    else if(difference >= 2){
+        percent = .5;
+    }
+    else if(difference >= 1){
+        percent = .90;
+    }
 
-    $.confirm({
+        $.confirm({
         theme : 'modern',
         useBootstrap: false,
         columnClass: 'small',
@@ -945,6 +975,9 @@ function cancelSeat(el) {
                 '<br>' +
                 '<a> 1 Day Before &nbsp;: 10% </a>' +
                 '<br><br>' +
+            '<a> Refund Amount =  </a>' +
+            '<a>' + (fare - fare * percent)/flag +
+            '</a>' +
             // '<a> Last Day : Can\'t Be Cancelled </a> ' +
             '</pre>',
         autoClose: 'No|10000',
