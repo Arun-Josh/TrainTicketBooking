@@ -81,7 +81,10 @@ public class ReserveSeat extends HttpServlet {
 
                 log.info("src dst iinfo " + srcstopno + dststopno );
 
-                ResultSet rsstations = mysqlDB.getTravellingStations(trainid,dststopno,srcstopno);
+            int minseatcount =  mysqlDB.getMinSeatCount(trainid,sourceid,destid,seattype,dateoftravel) - seats + 1 ;
+
+
+            ResultSet rsstations = mysqlDB.getTravellingStations(trainid,dststopno,srcstopno);
 
                 while(rsstations.next()){
 
@@ -104,8 +107,9 @@ public class ReserveSeat extends HttpServlet {
                         mysqlDB.updateAvailableSeats(seatsavailable,trainid,dateoftravel,stationid,seattype);
                 }
 
-                int minseatcount =  mysqlDB.getMinSeatCount(trainid,sourceid,destid,seattype,dateoftravel);
+//                int minseatcount =  mysqlDB.getMinSeatCount(trainid,sourceid,destid,seattype,dateoftravel) ;
 
+                log.info("min seat   "+minseatcount);
                 if(minseatcount <=0){
                     mysqlDB.updateStatus(pnr);
                     ticketstatus = "WAITING LIST";

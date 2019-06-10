@@ -18,8 +18,8 @@
 
 <form id="regform" class="box" onsubmit="validateRegistration(); return false;">
         <h1>Registration</h1>
-        <input name="user" type="text" placeholder="Username" maxlength="25" autocomplete="off" required>
-        <input name="email" type="email" placeholder="Email ID" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" autocomplete="off" required>
+        <input name="user" type="text" placeholder="Username" pattern="[a-zA-Z0-9]{1,}" maxlength="25" autocomplete="off" required>
+        <input name="email" type="email" placeholder="Email ID" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" maxlength="40" autocomplete="off" required>
         <h4 id="hidden">MAIL ID ALREADY REGISTERED</h4>
         <input name="phno" type="text" placeholder="Phone number" autocomplete="off" required pattern="[6-9]{1}[0-9]{9}" title="Enter a valid mobile number">
         <input name="gender" type="radio" Value="Male" required><a id="ch">MALE</a>

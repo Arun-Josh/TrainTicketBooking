@@ -23,11 +23,13 @@ function login(){
         }
     }
     var pass1 = document.getElementsByName("pass")[0].value;
+    var mail = document.getElementsByName("mail")[0].value;
     var hashObj = new jsSHA("SHA-512","TEXT",{numRounds:1});
-    hashObj.update(pass1);
+    hashObj.update(mail+pass1);
     var hash = hashObj.getHash("HEX");
     // pass1 = hash;
     // alert(hash);
+    console.log(hash)
     xhr.open("POST",url,true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.send("mail="+document.getElementsByName("mail")[0].value+"&pass="+hash);
@@ -83,6 +85,7 @@ function checkCookie() {
 
 function validateRegistration() {
     var pass1 = $("input[name=pass1]").val();
+
     if(pass1.length<8){
         return;
     }
@@ -98,6 +101,7 @@ function register() {
     var phno  = document.getElementsByName("phno")[0].value;
     var gender = $("input[name=gender]:checked").val();
     var pass1 = $("input[name=pass1]").val();
+    pass1=email+pass1;
     console.log("INPUTS RIGHT");
     var url = "Registration";
     var xhr = new XMLHttpRequest();

@@ -1,5 +1,6 @@
 package com.booking.zoho;
 
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.ResultSet;
@@ -8,6 +9,7 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 public class Validations {
+
     final Logger log = Logger.getLogger(Validations.class.getName());
     protected final boolean cancelSeat(String passengerid, String userid){
         final MysqlConnectionUtil mysqlDB = new MysqlConnectionUtil();

@@ -26,8 +26,6 @@ public class BookedTickets extends HttpServlet {
         boolean access = new Validations().validateBookedTickets(request);
         if(!access){
             return;
-        }else {
-
         }
 
         String userid = (String) session.getAttribute("userid");

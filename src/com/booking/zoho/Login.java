@@ -19,7 +19,7 @@ public class Login extends HttpServlet {
         HttpSession session = request.getSession();
 
         try {
-            System.out.println("checking mail pwd "+mail + pass);
+            System.out.println("checking mail pwd "+mail +" "+ pass);
 
             ResultSet rs = new MysqlConnectionUtil().authLogin(mail,pass);
             Boolean status = rs.next();
@@ -44,7 +44,6 @@ public class Login extends HttpServlet {
             }
             else{
                 response.getWriter().write("FAILED");
-
             }
         } catch (Exception e) {
             e.printStackTrace();

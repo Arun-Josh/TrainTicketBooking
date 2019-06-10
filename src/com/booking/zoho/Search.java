@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 
 @WebServlet("/search")
 public class Search extends HttpServlet {
+
+
     Logger log = Logger.getLogger(Search.class.getName());
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
