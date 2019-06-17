@@ -95,6 +95,7 @@ function validateRegistration() {
 }
 
 function register() {
+
     document.getElementById("hidden").style.display="none";
     var uname = document.getElementsByName("user")[0].value;
     var email = document.getElementsByName("email")[0].value;
